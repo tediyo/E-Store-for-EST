@@ -2,14 +2,21 @@ const mongoose = require('mongoose');
 
 const saleSchema = new mongoose.Schema({
   item: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.Mixed, // Can be ObjectId (for store sales) or String (for out-of-store sales)
     ref: 'Item',
-    required: true
+    required: function() {
+      return this.saleType === 'store';
+    }
   },
   quantity: {
     type: Number,
     required: true,
     min: 1
+  },
+  basePrice: {
+    type: Number,
+    required: true,
+    min: 0
   },
   sellingPrice: {
     type: Number,
@@ -30,6 +37,27 @@ const saleSchema = new mongoose.Schema({
     type: String,
     enum: ['store', 'out_of_store'],
     required: true
+  },
+  fromWhom: {
+    type: String,
+    trim: true,
+    required: function() {
+      return this.saleType === 'out_of_store';
+    }
+  },
+  itemName: {
+    type: String,
+    trim: true,
+    required: function() {
+      return this.saleType === 'out_of_store';
+    }
+  },
+  itemType: {
+    type: String,
+    trim: true,
+    required: function() {
+      return this.saleType === 'out_of_store';
+    }
   },
   clientDetails: {
     phone: {
