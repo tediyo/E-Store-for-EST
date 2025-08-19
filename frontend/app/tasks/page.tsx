@@ -5,6 +5,7 @@ import axios from 'axios'
 import { Plus, Search, ClipboardList, Calendar, TrendingUp } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
+import PageLayout from '../../components/layout/PageLayout'
 
 interface Task {
   _id: string
@@ -77,7 +78,8 @@ export default function TasksPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <PageLayout>
+      <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -220,6 +222,7 @@ export default function TasksPage() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </PageLayout>
   )
 }

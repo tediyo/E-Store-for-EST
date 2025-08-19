@@ -8,6 +8,7 @@ import toast from 'react-hot-toast'
 import SalesForm from '../../components/sales/SalesForm'
 import SalesStats from '../../components/sales/SalesStats'
 import SalesFilters from '../../components/sales/SalesFilters'
+import PageLayout from '../../components/layout/PageLayout'
 
 interface Sale {
   _id: string
@@ -231,7 +232,8 @@ export default function SalesPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <PageLayout>
+      <div className="space-y-8">
       {/* Header */}
       <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl p-8 text-white shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -916,6 +918,7 @@ export default function SalesPage() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </PageLayout>
   )
 }
