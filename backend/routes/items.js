@@ -55,17 +55,21 @@ router.get('/:id', auth, async (req, res) => {
 
 // Add new item
 router.post('/', [auth, adminAuth], [
-  body('name').notEmpty().trim().escape(),
-  body('shoeType').notEmpty().trim().escape(),
-  body('basePrice').isFloat({ min: 0 }),
-  body('sellingPrice').isFloat({ min: 0 }),
-  body('quantity').isInt({ min: 0 }),
-  body('supplier').notEmpty().trim().escape(),
+  body('name').notEmpty().withMessage('Name is required').trim().escape(),
+  body('shoeType').notEmpty().withMessage('Shoe type is required').trim().escape(),
+  body('basePrice').isFloat({ min: 0 }).withMessage('Base price must be a positive number'),
+  body('sellingPrice').isFloat({ min: 0 }).withMessage('Selling price must be a positive number'),
+  body('quantity').isInt({ min: 0 }).withMessage('Quantity must be a positive integer'),
+  body('supplier').notEmpty().withMessage('Supplier is required').trim().escape(),
   body('description').optional().trim().escape()
 ], async (req, res) => {
   try {
+    console.log('POST /api/items - Request body:', req.body);
+    console.log('User:', req.user);
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('Validation errors:', errors.array());
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -82,14 +86,19 @@ router.post('/', [auth, adminAuth], [
       addedBy: req.user._id
     });
 
+    console.log('Creating item:', item);
+
     await item.save();
     await item.populate('addedBy', 'username');
+
+    console.log('Item saved successfully:', item);
 
     res.status(201).json({
       message: 'Item added successfully',
       item
     });
   } catch (error) {
+    console.error('Error creating item:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
