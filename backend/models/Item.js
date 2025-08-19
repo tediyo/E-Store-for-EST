@@ -66,4 +66,30 @@ itemSchema.pre('save', function(next) {
   next();
 });
 
+// Note: Pre-update hooks don't work reliably with findByIdAndUpdate
+// Status updates are now handled manually in the routes
+
+// Instance method to update status based on quantity
+itemSchema.methods.updateStatus = function() {
+  if (this.quantity === 0) {
+    this.status = 'out_of_stock';
+  } else if (this.quantity <= 5) {
+    this.status = 'low_stock';
+  } else {
+    this.status = 'in_stock';
+  }
+  return this.status;
+};
+
+// Static method to update status for any item
+itemSchema.statics.updateItemStatus = async function(itemId) {
+  const item = await this.findById(itemId);
+  if (item) {
+    item.updateStatus();
+    await item.save();
+    return item.status;
+  }
+  return null;
+};
+
 module.exports = mongoose.model('Item', itemSchema);

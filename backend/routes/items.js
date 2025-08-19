@@ -223,6 +223,13 @@ router.put('/:id', [auth, adminAuth], (req, res, next) => {
 
     console.log('Updating item with data:', updateData);
 
+    // First, get the current item to check if quantity is being updated
+    const currentItem = await Item.findById(req.params.id);
+    if (!currentItem) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+
+    // Update the item
     const item = await Item.findByIdAndUpdate(
       req.params.id,
       updateData,
@@ -231,6 +238,31 @@ router.put('/:id', [auth, adminAuth], (req, res, next) => {
 
     if (!item) {
       return res.status(404).json({ message: 'Item not found' });
+    }
+
+    // If quantity was updated, manually update the status
+    if (updateData.quantity !== undefined && updateData.quantity !== currentItem.quantity) {
+      console.log(`Quantity changed from ${currentItem.quantity} to ${updateData.quantity}`);
+      
+      // Update status based on new quantity
+      let newStatus;
+      if (updateData.quantity === 0) {
+        newStatus = 'out_of_stock';
+      } else if (updateData.quantity <= 5) {
+        newStatus = 'low_stock';
+      } else {
+        newStatus = 'in_stock';
+      }
+      
+      console.log(`Status updating from ${item.status} to ${newStatus}`);
+      
+      // Update the status directly in the database
+      await Item.findByIdAndUpdate(req.params.id, { status: newStatus });
+      
+      // Update the returned item object
+      item.status = newStatus;
+      
+      console.log(`Item updated successfully with new status: ${newStatus}`);
     }
 
     console.log('Item updated successfully:', item);
@@ -265,6 +297,99 @@ router.delete('/:id', [auth, adminAuth], async (req, res) => {
 
     res.json({ message: 'Item deleted successfully' });
   } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Update all items status based on their quantities
+router.put('/status/bulk-update', auth, adminAuth, async (req, res) => {
+  try {
+    const items = await Item.find({});
+    let updatedCount = 0;
+    
+    for (const item of items) {
+      const oldStatus = item.status;
+      item.updateStatus();
+      if (oldStatus !== item.status) {
+        await item.save();
+        updatedCount++;
+      }
+    }
+
+    res.json({
+      message: `Updated status for ${updatedCount} items`,
+      totalItems: items.length,
+      updatedCount
+    });
+  } catch (error) {
+    console.error('Error updating items status:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Force update item status based on current quantity
+router.put('/:id/fix-status', auth, adminAuth, async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+
+    const oldStatus = item.status;
+    
+    // Calculate new status based on current quantity
+    let newStatus;
+    if (item.quantity === 0) {
+      newStatus = 'out_of_stock';
+    } else if (item.quantity <= 5) {
+      newStatus = 'low_stock';
+    } else {
+      newStatus = 'in_stock';
+    }
+    
+    console.log(`Fixing status for item ${item.name}:`);
+    console.log(`  Quantity: ${item.quantity}`);
+    console.log(`  Old Status: ${oldStatus}`);
+    console.log(`  New Status: ${newStatus}`);
+    
+    // Update the status in the database
+    await Item.findByIdAndUpdate(req.params.id, { status: newStatus });
+    
+    // Get the updated item
+    const updatedItem = await Item.findById(req.params.id).populate('addedBy', 'username');
+
+    res.json({
+      message: 'Item status fixed successfully',
+      oldStatus,
+      newStatus,
+      item: updatedItem
+    });
+  } catch (error) {
+    console.error('Error fixing item status:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Update item status based on quantity
+router.put('/:id/status', auth, adminAuth, async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+
+    const oldStatus = item.status;
+    item.updateStatus();
+    await item.save();
+
+    res.json({
+      message: 'Item status updated successfully',
+      oldStatus,
+      newStatus: item.status,
+      item
+    });
+  } catch (error) {
+    console.error('Error updating item status:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
