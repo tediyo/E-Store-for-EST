@@ -36,6 +36,10 @@ const itemSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  image: {
+    type: String, // Store the image URL/path
+    default: null
+  },
   status: {
     type: String,
     enum: ['in_stock', 'low_stock', 'out_of_stock'],
