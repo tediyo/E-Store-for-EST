@@ -16,6 +16,7 @@ interface Item {
   supplier: string
   status: string
   description?: string
+  image?: string
   addedBy: {
     username: string
   }
@@ -30,6 +31,7 @@ interface ItemFormData {
   quantity: number
   supplier: string
   description: string
+  image?: File | null
 }
 
 export default function InventoryPage() {
@@ -51,7 +53,8 @@ export default function InventoryPage() {
     sellingPrice: 0,
     quantity: 0,
     supplier: '',
-    description: ''
+    description: '',
+    image: null
   })
 
   useEffect(() => {
@@ -73,24 +76,41 @@ export default function InventoryPage() {
     e.preventDefault()
     
     try {
-      // Ensure proper data types
-      const submitData = {
-        ...formData,
-        basePrice: parseFloat(formData.basePrice.toString()),
-        sellingPrice: parseFloat(formData.sellingPrice.toString()),
-        quantity: parseInt(formData.quantity.toString())
+      // Create FormData for file upload
+      const formDataToSend = new FormData()
+      
+      // Add text fields
+      formDataToSend.append('name', formData.name)
+      formDataToSend.append('shoeType', formData.shoeType)
+      formDataToSend.append('basePrice', formData.basePrice.toString())
+      formDataToSend.append('sellingPrice', formData.sellingPrice.toString())
+      formDataToSend.append('quantity', formData.quantity.toString())
+      formDataToSend.append('supplier', formData.supplier)
+      formDataToSend.append('description', formData.description)
+      
+      // Add image if selected
+      if (formData.image) {
+        formDataToSend.append('image', formData.image)
       }
       
-      console.log('Submitting form data:', submitData)
+      console.log('Submitting form data:', formData)
       console.log('Auth token:', localStorage.getItem('token'))
       console.log('Axios headers:', axios.defaults.headers.common)
       
       if (editingItem) {
-        const response = await axios.put(`http://localhost:5000/api/items/${editingItem._id}`, submitData)
+        const response = await axios.put(`http://localhost:5000/api/items/${editingItem._id}`, formDataToSend, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
         toast.success('Item updated successfully!')
         console.log('Update response:', response.data)
       } else {
-        const response = await axios.post('http://localhost:5000/api/items', submitData)
+        const response = await axios.post('http://localhost:5000/api/items', formDataToSend, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
         toast.success('Item added successfully!')
         console.log('Create response:', response.data)
       }
@@ -128,7 +148,8 @@ export default function InventoryPage() {
       sellingPrice: item.sellingPrice,
       quantity: item.quantity,
       supplier: item.supplier,
-      description: item.description || ''
+      description: item.description || '',
+      image: null // Reset image for edit
     })
     setShowAddForm(true)
   }
@@ -153,7 +174,8 @@ export default function InventoryPage() {
       sellingPrice: 0,
       quantity: 0,
       supplier: '',
-      description: ''
+      description: '',
+      image: null
     })
   }
 
@@ -375,6 +397,20 @@ export default function InventoryPage() {
               </span>
             </div>
 
+            {/* Product Image */}
+            {item.image && (
+              <div className="mb-4">
+                <img 
+                  src={`http://localhost:5000${item.image}`} 
+                  alt={item.name}
+                  className="w-full h-48 object-cover rounded-lg border border-gray-200"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
+
             <div className="space-y-2 mb-4">
               <div className="flex justify-between">
                 <span className="text-gray-600">Base Price:</span>
@@ -547,6 +583,43 @@ export default function InventoryPage() {
                     className="input w-full"
                     placeholder="Enter supplier name"
                   />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Product Image (Optional)
+                </label>
+                <div className="space-y-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setFormData({...formData, image: e.target.files?.[0] || null})}
+                    className="input w-full"
+                  />
+                  <p className="text-xs text-gray-500">
+                    Supported formats: JPG, PNG, GIF. Max size: 5MB
+                  </p>
+                  {formData.image && (
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-600">Selected: {formData.image.name}</p>
+                      <img 
+                        src={URL.createObjectURL(formData.image)} 
+                        alt="Preview" 
+                        className="w-32 h-32 object-cover rounded border mt-2"
+                      />
+                    </div>
+                  )}
+                  {editingItem && editingItem.image && !formData.image && (
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-600">Current image:</p>
+                      <img 
+                        src={`http://localhost:5000${editingItem.image}`} 
+                        alt="Current" 
+                        className="w-32 h-32 object-cover rounded border mt-2"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
