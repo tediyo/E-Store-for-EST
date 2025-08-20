@@ -30,15 +30,34 @@ interface Task {
   taskDate: string
 }
 
+interface Reminder {
+  _id: string
+  title: string
+  description?: string
+  actionAt: string
+  sent: boolean
+}
+
 export default function TasksPage() {
   const { user } = useAuth()
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [showAddForm, setShowAddForm] = useState(false)
+  const [showReminderForm, setShowReminderForm] = useState(false)
+  const [reminders, setReminders] = useState<Reminder[]>([])
+  const [reminderTitle, setReminderTitle] = useState('')
+  const [reminderDescription, setReminderDescription] = useState('')
+  const [reminderActionAt, setReminderActionAt] = useState('') // datetime-local
 
   useEffect(() => {
     fetchTasks()
+    fetchReminders()
+    requestNotificationPermission()
+    const intervalId = setInterval(() => {
+      pollDueReminders()
+    }, 30000)
+    return () => clearInterval(intervalId)
   }, [])
 
   const fetchTasks = async () => {
@@ -49,6 +68,67 @@ export default function TasksPage() {
       toast.error('Failed to fetch tasks')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchReminders = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/reminders', { params: { upcoming: true } })
+      setReminders(response.data.reminders)
+    } catch (error) {
+      // silent
+    }
+  }
+
+  const requestNotificationPermission = async () => {
+    try {
+      if ('Notification' in window && Notification.permission === 'default') {
+        await Notification.requestPermission()
+      }
+    } catch {}
+  }
+
+  const showNotification = (title: string, body?: string) => {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification(title, { body })
+    } else {
+      toast.success(title + (body ? ` — ${body}` : ''))
+    }
+  }
+
+  const pollDueReminders = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/reminders/due', { windowMinutes: 1 })
+      const due: Reminder[] = response.data.reminders
+      if (due && due.length) {
+        due.forEach(r => showNotification(r.title, new Date(r.actionAt).toLocaleString()))
+        // refresh list to reflect sent ones
+        fetchReminders()
+      }
+    } catch {}
+  }
+
+  const createReminder = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      if (!reminderTitle || !reminderActionAt) {
+        toast.error('Title and date/time are required')
+        return
+      }
+      const iso = new Date(reminderActionAt).toISOString()
+      await axios.post('http://localhost:5000/api/reminders', {
+        title: reminderTitle,
+        description: reminderDescription || undefined,
+        actionAt: iso
+      })
+      toast.success('Action day created')
+      setReminderTitle('')
+      setReminderDescription('')
+      setReminderActionAt('')
+      setShowReminderForm(false)
+      fetchReminders()
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to create action day')
     }
   }
 
@@ -108,6 +188,32 @@ export default function TasksPage() {
             className="input pl-10"
           />
         </div>
+      </div>
+
+      {/* Action Days (Reminders) */}
+      <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-6 w-6 text-primary-600" />
+            <h3 className="text-lg font-semibold text-gray-900">Upcoming Action Days</h3>
+          </div>
+          <button onClick={() => setShowReminderForm(true)} className="btn btn-primary btn-sm">Add Action Day</button>
+        </div>
+        {reminders.length === 0 ? (
+          <p className="text-sm text-gray-500">No upcoming action days.</p>
+        ) : (
+          <ul className="divide-y divide-gray-200">
+            {reminders.map((r) => (
+              <li key={r._id} className="py-2 flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-900">{r.title}</p>
+                  {r.description && <p className="text-xs text-gray-500">{r.description}</p>}
+                </div>
+                <span className="text-xs text-gray-600">{new Date(r.actionAt).toLocaleString()}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {/* Tasks Grid */}
@@ -219,6 +325,51 @@ export default function TasksPage() {
             >
               Close
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Add Action Day (Reminder) Modal */}
+      {showReminderForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">Add Action Day</h2>
+            <form onSubmit={createReminder} className="space-y-4">
+              <div>
+                <label className="label">Title</label>
+                <input
+                  type="text"
+                  className="input"
+                  value={reminderTitle}
+                  onChange={(e) => setReminderTitle(e.target.value)}
+                  placeholder="Follow up with client"
+                  required
+                />
+              </div>
+              <div>
+                <label className="label">Description</label>
+                <textarea
+                  className="input min-h-[80px]"
+                  value={reminderDescription}
+                  onChange={(e) => setReminderDescription(e.target.value)}
+                  placeholder="Optional notes"
+                />
+              </div>
+              <div>
+                <label className="label">Date & Time</label>
+                <input
+                  type="datetime-local"
+                  className="input"
+                  value={reminderActionAt}
+                  onChange={(e) => setReminderActionAt(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <button type="button" onClick={() => setShowReminderForm(false)} className="btn btn-secondary">Cancel</button>
+                <button type="submit" className="btn btn-primary">Save</button>
+              </div>
+            </form>
           </div>
         </div>
       )}
