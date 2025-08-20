@@ -8,8 +8,11 @@ const router = express.Router();
 // Create reminder
 router.post('/', auth, [
   body('title').notEmpty().trim().escape(),
+  body('actionType').isIn(['follow_up', 'meeting', 'delivery', 'pickup', 'payment', 'inspection', 'other']),
   body('description').optional().trim().escape(),
-  body('actionAt').isISO8601().toDate()
+  body('place').optional().trim().escape(),
+  body('actionAt').isISO8601().toDate(),
+  body('priority').optional().isIn(['low', 'medium', 'high', 'urgent'])
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -17,11 +20,14 @@ router.post('/', auth, [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { title, description, actionAt } = req.body;
+    const { title, actionType, description, place, actionAt, priority } = req.body;
     const reminder = new Reminder({
       title,
+      actionType,
       description,
+      place,
       actionAt,
+      priority,
       createdBy: req.user._id
     });
     await reminder.save();
@@ -75,8 +81,11 @@ router.post('/due', auth, async (req, res) => {
 // Update reminder
 router.put('/:id', auth, [
   body('title').optional().trim().escape(),
+  body('actionType').optional().isIn(['follow_up', 'meeting', 'delivery', 'pickup', 'payment', 'inspection', 'other']),
   body('description').optional().trim().escape(),
+  body('place').optional().trim().escape(),
   body('actionAt').optional().isISO8601().toDate(),
+  body('priority').optional().isIn(['low', 'medium', 'high', 'urgent']),
   body('sent').optional().isBoolean()
 ], async (req, res) => {
   try {

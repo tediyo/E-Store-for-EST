@@ -6,7 +6,17 @@ const reminderSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  actionType: {
+    type: String,
+    enum: ['follow_up', 'meeting', 'delivery', 'pickup', 'payment', 'inspection', 'other'],
+    required: true,
+    default: 'follow_up'
+  },
   description: {
+    type: String,
+    trim: true
+  },
+  place: {
     type: String,
     trim: true
   },
@@ -14,6 +24,11 @@ const reminderSchema = new mongoose.Schema({
     type: Date,
     required: true,
     index: true
+  },
+  priority: {
+    type: String,
+    enum: ['low', 'medium', 'high', 'urgent'],
+    default: 'medium'
   },
   sent: {
     type: Boolean,
