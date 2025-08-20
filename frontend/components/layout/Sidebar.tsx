@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useAuth } from '../../hooks/useAuth'
 import {
   Home,
@@ -18,6 +19,7 @@ import {
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false)
   const { user, logout } = useAuth()
+  const pathname = usePathname()
 
   const navigation = [
     { name: 'Dashboard', href: '/', icon: Home },
@@ -59,11 +61,16 @@ export default function Sidebar() {
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {
               const Icon = item.icon
+              const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
               return (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
+                  className={`flex items-center px-4 py-3 rounded-lg transition-colors duration-200 ${
+                    isActive
+                      ? 'bg-primary-100 text-primary-700 border-r-2 border-primary-600'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                  }`}
                   onClick={() => setIsOpen(false)}
                 >
                   <Icon size={20} className="mr-3" />

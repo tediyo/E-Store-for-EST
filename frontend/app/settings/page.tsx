@@ -5,6 +5,7 @@ import axios from 'axios'
 import { User, Settings, Shield, Key, Mail } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
+import PageLayout from '../../components/layout/PageLayout'
 
 interface UserProfile {
   id: string
@@ -63,7 +64,8 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <PageLayout>
+      <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -209,6 +211,7 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </PageLayout>
   )
 }

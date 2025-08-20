@@ -24,6 +24,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/items', require('./routes/items'));
 app.use('/api/sales', require('./routes/sales'));
 app.use('/api/tasks', require('./routes/tasks'));
+app.use('/api/reminders', require('./routes/reminders'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 
 // Serve static files from the React app
