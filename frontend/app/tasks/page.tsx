@@ -46,9 +46,10 @@ export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const [showAddForm, setShowAddForm] = useState(false)
   const [showReminderForm, setShowReminderForm] = useState(false)
   const [reminders, setReminders] = useState<Reminder[]>([])
+  
+  // Reminder form state
   const [reminderTitle, setReminderTitle] = useState('')
   const [reminderActionType, setReminderActionType] = useState<'follow_up' | 'meeting' | 'delivery' | 'pickup' | 'payment' | 'inspection' | 'other'>('follow_up')
   const [reminderDescription, setReminderDescription] = useState('')
@@ -212,8 +213,8 @@ export default function TasksPage() {
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-4xl font-bold mb-2">Daily Task Counter</h1>
-              <p className="text-blue-100 text-lg">Track your daily tasks, costs, and action days</p>
+              <h1 className="text-4xl font-bold mb-2">Action Days & Tasks</h1>
+              <p className="text-blue-100 text-lg">Manage your scheduled actions and view existing tasks</p>
             </div>
             
             <div className="flex gap-3 mt-4 sm:mt-0">
@@ -223,13 +224,6 @@ export default function TasksPage() {
               >
                 <Calendar size={20} className="mr-2" />
                 Add Action Day
-              </button>
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="bg-white hover:bg-gray-100 text-blue-600 rounded-xl px-6 py-3 flex items-center font-medium transition-all duration-200 hover:scale-105"
-              >
-                <Plus size={20} className="mr-2" />
-                Create Task
               </button>
             </div>
           </div>
@@ -463,28 +457,6 @@ export default function TasksPage() {
             <p className="text-gray-500 mb-6">
               {searchTerm ? 'Try adjusting your search terms.' : 'Get started by creating your first task.'}
             </p>
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition-colors"
-            >
-              Create First Task
-            </button>
-          </div>
-        )}
-
-        {/* Add Task Modal */}
-        {showAddForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
-              <h2 className="text-2xl font-bold mb-6 text-center">Create New Task</h2>
-              <p className="text-gray-600 mb-6 text-center">Task form will be implemented here.</p>
-              <button
-                onClick={() => setShowAddForm(false)}
-                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-medium transition-colors"
-              >
-                Close
-              </button>
-            </div>
           </div>
         )}
 
