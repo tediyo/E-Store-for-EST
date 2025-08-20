@@ -209,10 +209,10 @@ export default function TasksPage() {
   return (
     <PageLayout>
       <div className="space-y-8">
-        {/* Header */}
+      {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div>
               <h1 className="text-4xl font-bold mb-2">Action Days & Tasks</h1>
               <p className="text-blue-100 text-lg">Manage your scheduled actions and view existing tasks</p>
             </div>
@@ -247,8 +247,8 @@ export default function TasksPage() {
                 <div className="text-sm text-gray-500">Active</div>
               </div>
             </div>
-          </div>
-          
+        </div>
+        
           <div className="p-8">
             {reminders.length === 0 ? (
               <div className="text-center py-12">
@@ -257,7 +257,7 @@ export default function TasksPage() {
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No upcoming action days</h3>
                 <p className="text-gray-500 mb-6">Start planning by adding your first action day</p>
-                <button 
+        <button
                   onClick={() => setShowReminderForm(true)}
                   className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-medium transition-colors"
                 >
@@ -327,7 +327,7 @@ export default function TasksPage() {
                         </button>
                         <button className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                           <Trash2 size={16} />
-                        </button>
+        </button>
                       </div>
                     </div>
                   </div>
@@ -335,134 +335,134 @@ export default function TasksPage() {
               </div>
             )}
           </div>
-        </div>
+      </div>
 
-        {/* Search and Filters */}
+      {/* Search and Filters */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              <input
-                type="text"
-                placeholder="Search tasks by shoe type, supplier, or location..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+          <input
+            type="text"
+            placeholder="Search tasks by shoe type, supplier, or location..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-              />
+          />
             </div>
-          </div>
         </div>
+      </div>
 
-        {/* Tasks Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredTasks.map((task) => (
+      {/* Tasks Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredTasks.map((task) => (
             <div key={task._id} className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-200">
               <div className="flex items-start justify-between mb-6">
-                <div className="flex items-center">
+              <div className="flex items-center">
                   <div className="p-3 bg-blue-100 rounded-xl mr-4">
                     <ClipboardList className="h-8 w-8 text-blue-600" />
                   </div>
-                  <div>
+                <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">{task.shoeType}</h3>
-                    <p className="text-sm text-gray-500">Supplier: {task.supplier}</p>
-                  </div>
+                  <p className="text-sm text-gray-500">Supplier: {task.supplier}</p>
                 </div>
-                <span className={`px-3 py-2 rounded-full text-xs font-medium ${getLocationColor(task.saleLocation)}`}>
-                  {task.saleLocation.replace('_', ' ')}
-                </span>
               </div>
+                <span className={`px-3 py-2 rounded-full text-xs font-medium ${getLocationColor(task.saleLocation)}`}>
+                {task.saleLocation.replace('_', ' ')}
+              </span>
+            </div>
 
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Base Price:</span>
+                <span className="text-gray-600">Base Price:</span>
                   <span className="font-semibold text-lg">{formatCurrency(task.basePrice)}</span>
-                </div>
+              </div>
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Profit Gained:</span>
+                <span className="text-gray-600">Profit Gained:</span>
                   <span className="font-semibold text-lg text-emerald-600">{formatCurrency(task.profitGained)}</span>
-                </div>
+              </div>
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Taxi Cost:</span>
+                <span className="text-gray-600">Taxi Cost:</span>
                   <span className="font-semibold text-lg text-red-600">{formatCurrency(task.taxiCost)}</span>
-                </div>
+              </div>
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Other Costs:</span>
+                <span className="text-gray-600">Other Costs:</span>
                   <span className="font-semibold text-lg text-red-600">{formatCurrency(task.otherCosts)}</span>
-                </div>
+              </div>
                 <div className="flex justify-between items-center py-2 border-t border-gray-100 pt-3">
                   <span className="text-gray-900 font-medium text-lg">Total Cost:</span>
                   <span className="font-bold text-xl text-red-600">{formatCurrency(task.totalCost)}</span>
-                </div>
+              </div>
                 <div className="flex justify-between items-center py-3 bg-gradient-to-r from-gray-50 to-white rounded-xl px-4">
                   <span className="text-gray-900 font-bold text-lg">Net Profit:</span>
                   <span className={`font-bold text-2xl ${task.netProfit >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                    {formatCurrency(task.netProfit)}
-                  </span>
-                </div>
+                  {formatCurrency(task.netProfit)}
+                </span>
               </div>
+            </div>
 
-              {task.clientDetails && (
+            {task.clientDetails && (
                 <div className="border-t border-gray-100 pt-6 mb-6">
                   <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                     <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                     Client Details
                   </h4>
                   <div className="space-y-2 text-sm">
-                    {task.clientDetails.phone && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Phone:</span>
+                  {task.clientDetails.phone && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Phone:</span>
                         <span className="font-medium">{task.clientDetails.phone}</span>
-                      </div>
-                    )}
-                    {task.clientDetails.address && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Address:</span>
+                    </div>
+                  )}
+                  {task.clientDetails.address && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Address:</span>
                         <span className="font-medium">{task.clientDetails.address}</span>
-                      </div>
-                    )}
-                    {task.clientDetails.intentionalBehaviour && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Behavior:</span>
+                    </div>
+                  )}
+                  {task.clientDetails.intentionalBehaviour && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Behavior:</span>
                         <span className="font-medium">{task.clientDetails.intentionalBehaviour}</span>
-                      </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
+            )}
 
-              {task.notes && (
+            {task.notes && (
                 <div className="border-t border-gray-100 pt-6 mb-6">
                   <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                     <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
                     Notes
                   </h4>
                   <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">{task.notes}</p>
-                </div>
-              )}
+              </div>
+            )}
 
               <div className="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-100">
-                <span>Created by {task.createdBy.username}</span>
-                <span>{new Date(task.taskDate).toLocaleDateString()}</span>
-              </div>
+              <span>Created by {task.createdBy.username}</span>
+              <span>{new Date(task.taskDate).toLocaleDateString()}</span>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
+      </div>
 
-        {filteredTasks.length === 0 && (
+      {filteredTasks.length === 0 && (
           <div className="text-center py-16 bg-white rounded-2xl shadow-lg border border-gray-100">
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <ClipboardList className="h-12 w-12 text-gray-400" />
             </div>
             <h3 className="text-xl font-medium text-gray-900 mb-2">No tasks found</h3>
             <p className="text-gray-500 mb-6">
-              {searchTerm ? 'Try adjusting your search terms.' : 'Get started by creating your first task.'}
-            </p>
-          </div>
-        )}
+            {searchTerm ? 'Try adjusting your search terms.' : 'Get started by creating your first task.'}
+          </p>
+        </div>
+      )}
 
         {/* Add Action Day Modal */}
         {showReminderForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
               <div className="text-center mb-8">
                 <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -564,17 +564,17 @@ export default function TasksPage() {
                   >
                     Cancel
                   </button>
-                  <button 
+            <button
                     type="submit" 
                     className="py-3 px-6 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium transition-colors"
-                  >
+            >
                     Create Action Day
-                  </button>
+            </button>
                 </div>
               </form>
-            </div>
           </div>
-        )}
+        </div>
+      )}
       </div>
     </PageLayout>
   )
