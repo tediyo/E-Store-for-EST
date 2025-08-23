@@ -13,30 +13,33 @@ const taskSchema = new mongoose.Schema({
   },
   basePrice: {
     type: Number,
-    required: true,
-    min: 0
+    required: false,
+    min: 0,
+    default: 0
   },
   profitGained: {
     type: Number,
-    required: true,
-    min: 0
+    required: false,
+    min: 0,
+    default: 0
   },
   taxiCost: {
     type: Number,
-    required: true,
+    required: false,
     min: 0,
     default: 0
   },
   otherCosts: {
     type: Number,
-    required: true,
+    required: false,
     min: 0,
     default: 0
   },
   supplier: {
     type: String,
-    required: true,
-    trim: true
+    required: false,
+    trim: true,
+    default: 'N/A'
   },
   clientDetails: {
     phone: {
@@ -52,15 +55,39 @@ const taskSchema = new mongoose.Schema({
       trim: true
     }
   },
+  // New fields for unsuccessful/annoying clients
+  clientStatus: {
+    type: String,
+    enum: ['successful', 'unsuccessful', 'annoying', 'blocked'],
+    default: 'successful'
+  },
+  clientPhone: {
+    type: String,
+    trim: true
+  },
+  behavioralDetails: {
+    type: String,
+    trim: true
+  },
+  cause: {
+    type: String,
+    trim: true
+  },
+  preferredShoeType: {
+    type: String,
+    trim: true
+  },
   totalCost: {
     type: Number,
-    required: true,
-    min: 0
+    required: false,
+    min: 0,
+    default: 0
   },
   netProfit: {
     type: Number,
-    required: true,
-    min: 0
+    required: false,
+    min: 0,
+    default: 0
   },
   taskDate: {
     type: Date,
@@ -81,6 +108,13 @@ const taskSchema = new mongoose.Schema({
 
 // Calculate total cost and net profit before saving
 taskSchema.pre('save', function(next) {
+  // Ensure financial fields are numbers
+  this.basePrice = Number(this.basePrice) || 0;
+  this.profitGained = Number(this.profitGained) || 0;
+  this.taxiCost = Number(this.taxiCost) || 0;
+  this.otherCosts = Number(this.otherCosts) || 0;
+  
+  // Calculate totals
   this.totalCost = this.basePrice + this.taxiCost + this.otherCosts;
   this.netProfit = this.profitGained - this.totalCost;
   next();

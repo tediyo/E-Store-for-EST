@@ -56,14 +56,19 @@ router.get('/:id', auth, async (req, res) => {
 router.post('/', auth, [
   body('shoeType').notEmpty().trim().escape(),
   body('saleLocation').isIn(['store', 'out_of_store']),
-  body('basePrice').isFloat({ min: 0 }),
-  body('profitGained').isFloat({ min: 0 }),
-  body('taxiCost').isFloat({ min: 0 }),
-  body('otherCosts').isFloat({ min: 0 }),
-  body('supplier').notEmpty().trim().escape(),
+  body('basePrice').optional().isFloat({ min: 0 }),
+  body('profitGained').optional().isFloat({ min: 0 }),
+  body('taxiCost').optional().isFloat({ min: 0 }),
+  body('otherCosts').optional().isFloat({ min: 0 }),
+  body('supplier').optional().trim().escape(),
   body('clientDetails.phone').optional().trim(),
   body('clientDetails.address').optional().trim(),
   body('clientDetails.intentionalBehaviour').optional().trim(),
+  body('clientStatus').optional().isIn(['successful', 'unsuccessful', 'annoying', 'blocked']),
+  body('clientPhone').optional().trim(),
+  body('behavioralDetails').optional().trim(),
+  body('cause').optional().trim(),
+  body('preferredShoeType').optional().trim(),
   body('notes').optional().trim().escape()
 ], async (req, res) => {
   try {
@@ -81,6 +86,11 @@ router.post('/', auth, [
       otherCosts,
       supplier,
       clientDetails,
+      clientStatus,
+      clientPhone,
+      behavioralDetails,
+      cause,
+      preferredShoeType,
       notes
     } = req.body;
 
@@ -93,6 +103,11 @@ router.post('/', auth, [
       otherCosts,
       supplier,
       clientDetails,
+      clientStatus,
+      clientPhone,
+      behavioralDetails,
+      cause,
+      preferredShoeType,
       notes,
       createdBy: req.user._id
     });
@@ -121,6 +136,11 @@ router.put('/:id', auth, [
   body('clientDetails.phone').optional().trim(),
   body('clientDetails.address').optional().trim(),
   body('clientDetails.intentionalBehaviour').optional().trim(),
+  body('clientStatus').optional().isIn(['successful', 'unsuccessful', 'annoying', 'blocked']),
+  body('clientPhone').optional().trim(),
+  body('behavioralDetails').optional().trim(),
+  body('cause').optional().trim(),
+  body('preferredShoeType').optional().trim(),
   body('notes').optional().trim().escape()
 ], async (req, res) => {
   try {
