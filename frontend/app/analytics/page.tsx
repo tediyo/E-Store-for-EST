@@ -107,6 +107,39 @@ export default function AnalyticsPage() {
     { metric: 'Task Efficiency', value: 88, target: 100, color: '#8B5CF6' },
   ]
 
+  const handleQuickAction = async (action: string) => {
+    try {
+      switch (action) {
+        case 'export':
+          toast.success('Exporting report...')
+          // Simulate export process
+          await new Promise(resolve => setTimeout(resolve, 1000))
+          toast.success('Report exported successfully!')
+          break
+        case 'view':
+          setViewMode(viewMode === 'overview' ? 'detailed' : 'overview')
+          toast.success(`Switched to ${viewMode === 'overview' ? 'detailed' : 'overview'} view`)
+          break
+        case 'filter':
+          toast.success('Opening advanced filters...')
+          // Simulate filter process
+          await new Promise(resolve => setTimeout(resolve, 500))
+          toast.success('Filters applied!')
+          break
+        case 'generate':
+          toast.success('Generating custom report...')
+          // Simulate report generation
+          await new Promise(resolve => setTimeout(resolve, 1500))
+          toast.success('Custom report generated!')
+          break
+        default:
+          break
+      }
+    } catch (error) {
+      toast.error('Action failed. Please try again.')
+    }
+  }
+
   if (loading) {
     return (
       <PageLayout>
@@ -288,41 +321,122 @@ export default function AnalyticsPage() {
 
         {analyticsData ? (
           <>
-            {/* Interactive Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Performance Trends Chart */}
-              <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                    <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl">
-                      <TrendingUp className="h-6 w-6 text-white" />
+            {/* Interactive Charts Section - Only show in Overview mode */}
+            {viewMode === 'overview' && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Performance Trends Chart */}
+                <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                      <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl">
+                        <TrendingUp className="h-6 w-6 text-white" />
+                      </div>
+                      Performance Trends
+                    </h3>
+                    <div className="flex gap-2">
+                      {['line', 'area', 'bar'].map((type) => (
+                        <button
+                          key={type}
+                          onClick={() => setSelectedChart(type)}
+                          className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
+                            selectedChart === type
+                              ? 'bg-blue-500 text-white shadow-lg'
+                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          }`}
+                        >
+                          {type.charAt(0).toUpperCase() + type.slice(1)}
+                        </button>
+                      ))}
                     </div>
-                    Performance Trends
-                  </h3>
-                  <div className="flex gap-2">
-                    {['line', 'area', 'bar'].map((type) => (
-                      <button
-                        key={type}
-                        onClick={() => setSelectedChart(type)}
-                        className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
-                          selectedChart === type
-                            ? 'bg-blue-500 text-white shadow-lg'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                        }`}
-                      >
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </button>
-                    ))}
+                  </div>
+                  
+                  <div className="h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      {selectedChart === 'line' ? (
+                        <RechartsLineChart data={enhancedChartData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                          <XAxis dataKey="name" stroke="#6B7280" />
+                          <YAxis stroke="#6B7280" />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'white', 
+                              border: 'none', 
+                              borderRadius: '12px', 
+                              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
+                            }}
+                          />
+                          <Line type="monotone" dataKey="sales" stroke="#3B82F6" strokeWidth={3} />
+                          <Line type="monotone" dataKey="revenue" stroke="#10B981" strokeWidth={3} />
+                          <Line type="monotone" dataKey="profit" stroke="#F59E0B" strokeWidth={3} />
+                        </RechartsLineChart>
+                      ) : selectedChart === 'area' ? (
+                        <AreaChart data={enhancedChartData}>
+                          <defs>
+                            <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                              <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1}/>
+                            </linearGradient>
+                            <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
+                              <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                          <XAxis dataKey="name" stroke="#6B7280" />
+                          <YAxis stroke="#6B7280" />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'white', 
+                              border: 'none', 
+                              borderRadius: '12px', 
+                              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
+                            }}
+                          />
+                          <Area type="monotone" dataKey="sales" stroke="#3B82F6" fill="url(#colorSales)" />
+                          <Area type="monotone" dataKey="revenue" stroke="#10B981" fill="url(#colorRevenue)" />
+                        </AreaChart>
+                      ) : (
+                        <RechartsBarChart data={enhancedChartData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                          <XAxis dataKey="name" stroke="#6B7280" />
+                          <YAxis stroke="#6B7280" />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'white', 
+                              border: 'none', 
+                              borderRadius: '12px', 
+                              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
+                            }}
+                          />
+                          <Bar dataKey="sales" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="revenue" fill="#10B981" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="profit" fill="#F59E0B" radius={[4, 4, 0, 0]} />
+                        </RechartsBarChart>
+                      )}
+                    </ResponsiveContainer>
                   </div>
                 </div>
-                
-                <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    {selectedChart === 'line' ? (
-                      <RechartsLineChart data={enhancedChartData}>
+
+                {/* Performance Metrics Radar Chart */}
+                <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                      <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl">
+                        <Target className="h-6 w-6 text-white" />
+                      </div>
+                      Performance Metrics
+                    </h3>
+                    <div className="text-sm text-gray-500">
+                      Overall Score: <span className="font-bold text-indigo-600">85.8%</span>
+                    </div>
+                  </div>
+                  
+                  <div className="h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <ComposedChart data={performanceData} layout="horizontal">
                         <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                        <XAxis dataKey="name" stroke="#6B7280" />
-                        <YAxis stroke="#6B7280" />
+                        <XAxis type="number" domain={[0, 100]} stroke="#6B7280" />
+                        <YAxis dataKey="metric" type="category" stroke="#6B7280" />
                         <Tooltip 
                           contentStyle={{ 
                             backgroundColor: 'white', 
@@ -331,104 +445,80 @@ export default function AnalyticsPage() {
                             boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
                           }}
                         />
-                        <Line type="monotone" dataKey="sales" stroke="#3B82F6" strokeWidth={3} />
-                        <Line type="monotone" dataKey="revenue" stroke="#10B981" strokeWidth={3} />
-                        <Line type="monotone" dataKey="profit" stroke="#F59E0B" strokeWidth={3} />
-                      </RechartsLineChart>
-                    ) : selectedChart === 'area' ? (
-                      <AreaChart data={enhancedChartData}>
-                        <defs>
-                          <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1}/>
-                          </linearGradient>
-                          <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                        <XAxis dataKey="name" stroke="#6B7280" />
-                        <YAxis stroke="#6B7280" />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: 'white', 
-                            border: 'none', 
-                            borderRadius: '12px', 
-                            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
-                          }}
+                        <Bar 
+                          dataKey="value" 
+                          fill={(entry) => entry.color}
+                          radius={[0, 4, 4, 0]}
                         />
-                        <Area type="monotone" dataKey="sales" stroke="#3B82F6" fill="url(#colorSales)" />
-                        <Area type="monotone" dataKey="revenue" stroke="#10B981" fill="url(#colorRevenue)" />
-                      </AreaChart>
-                    ) : (
-                      <RechartsBarChart data={enhancedChartData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                        <XAxis dataKey="name" stroke="#6B7280" />
-                        <YAxis stroke="#6B7280" />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: 'white', 
-                            border: 'none', 
-                            borderRadius: '12px', 
-                            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
-                          }}
+                        <Line 
+                          type="monotone" 
+                          dataKey="target" 
+                          stroke="#EF4444" 
+                          strokeWidth={2}
+                          strokeDasharray="5 5"
+                          dot={false}
                         />
-                        <Bar dataKey="sales" fill="#3B82F6" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="revenue" fill="#10B981" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="profit" fill="#F59E0B" radius={[4, 4, 0, 0]} />
-                      </RechartsBarChart>
-                    )}
-                  </ResponsiveContainer>
+                      </ComposedChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
               </div>
+            )}
 
-              {/* Performance Metrics Radar Chart */}
+            {/* Detailed View - Show more comprehensive data */}
+            {viewMode === 'detailed' && (
               <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                    <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl">
-                      <Target className="h-6 w-6 text-white" />
+                    <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl">
+                      <BarChart3 className="h-6 w-6 text-white" />
                     </div>
-                    Performance Metrics
+                    Detailed Analytics View
                   </h3>
                   <div className="text-sm text-gray-500">
-                    Overall Score: <span className="font-bold text-indigo-600">85.8%</span>
+                    <span className="font-bold text-purple-600">Advanced Insights</span>
                   </div>
                 </div>
                 
-                <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={performanceData} layout="horizontal">
-                      <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                      <XAxis type="number" domain={[0, 100]} stroke="#6B7280" />
-                      <YAxis dataKey="metric" type="category" stroke="#6B7280" />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: 'white', 
-                          border: 'none', 
-                          borderRadius: '12px', 
-                          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
-                        }}
-                      />
-                      <Bar 
-                        dataKey="value" 
-                        fill={(entry) => entry.color}
-                        radius={[0, 4, 4, 0]}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="target" 
-                        stroke="#EF4444" 
-                        strokeWidth={2}
-                        strokeDasharray="5 5"
-                        dot={false}
-                      />
-                    </ComposedChart>
-                  </ResponsiveContainer>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-gray-800">Sales Performance</h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center p-3 bg-blue-50 rounded-xl">
+                        <span className="text-gray-700">Average Daily Sales</span>
+                        <span className="font-bold text-blue-600">24.5</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-green-50 rounded-xl">
+                        <span className="text-gray-700">Conversion Rate</span>
+                        <span className="font-bold text-green-600">68.2%</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-orange-50 rounded-xl">
+                        <span className="text-gray-700">Customer Retention</span>
+                        <span className="font-bold text-orange-600">85.7%</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-gray-800">Financial Metrics</h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center p-3 bg-emerald-50 rounded-xl">
+                        <span className="text-gray-700">Profit Margin</span>
+                        <span className="font-bold text-emerald-600">42.3%</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-purple-50 rounded-xl">
+                        <span className="text-gray-700">ROI</span>
+                        <span className="font-bold text-purple-600">156.8%</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-red-50 rounded-xl">
+                        <span className="text-gray-700">Cost Ratio</span>
+                        <span className="font-bold text-red-600">23.1%</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Enhanced Data Tables */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -544,47 +634,59 @@ export default function AnalyticsPage() {
                 Quick Actions
               </h3>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <button className="group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                      <Download className="h-6 w-6 text-white" />
-                    </div>
-                    <div className="font-semibold text-gray-900">Export Report</div>
-                    <div className="text-sm text-gray-500">Download PDF</div>
-                  </div>
-                </button>
-                
-                <button className="group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                      <Eye className="h-6 w-6 text-white" />
-                    </div>
-                    <div className="font-semibold text-gray-900">View Details</div>
-                    <div className="text-sm text-gray-500">Deep dive</div>
-                  </div>
-                </button>
-                
-                <button className="group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                      <Filter className="h-6 w-6 text-white" />
-                    </div>
-                    <div className="font-semibold text-gray-900">Advanced Filter</div>
-                    <div className="text-sm text-gray-500">Customize view</div>
-                  </div>
-                </button>
-                
-                <button className="group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                      <BarChart3 className="h-6 w-6 text-white" />
-                    </div>
-                    <div className="font-semibold text-gray-900">Generate Report</div>
-                    <div className="text-sm text-gray-500">Create custom</div>
-                  </div>
-                </button>
-              </div>
+                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                 <button 
+                   onClick={() => handleQuickAction('export')}
+                   className="group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100 cursor-pointer"
+                 >
+                   <div className="text-center">
+                     <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                       <Download className="h-6 w-6 text-white" />
+                     </div>
+                     <div className="font-semibold text-gray-900">Export Report</div>
+                     <div className="text-sm text-gray-500">Download PDF</div>
+                   </div>
+                 </button>
+                 
+                 <button 
+                   onClick={() => handleQuickAction('view')}
+                   className="group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100 cursor-pointer"
+                 >
+                   <div className="text-center">
+                     <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                       <Eye className="h-6 w-6 text-white" />
+                     </div>
+                     <div className="font-semibold text-gray-900">View Details</div>
+                     <div className="text-sm text-gray-500">Deep dive</div>
+                   </div>
+                 </button>
+                 
+                 <button 
+                   onClick={() => handleQuickAction('filter')}
+                   className="group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100 cursor-pointer"
+                 >
+                   <div className="text-center">
+                     <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                       <Filter className="h-6 w-6 text-white" />
+                     </div>
+                     <div className="font-semibold text-gray-900">Advanced Filter</div>
+                     <div className="text-sm text-gray-500">Customize view</div>
+                   </div>
+                 </button>
+                 
+                 <button 
+                   onClick={() => handleQuickAction('generate')}
+                   className="group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100 cursor-pointer"
+                 >
+                   <div className="text-center">
+                     <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                       <BarChart3 className="h-6 w-6 text-white" />
+                     </div>
+                     <div className="font-semibold text-gray-900">Generate Report</div>
+                     <div className="text-sm text-gray-500">Create custom</div>
+                   </div>
+                 </button>
+               </div>
             </div>
           </>
         ) : (
