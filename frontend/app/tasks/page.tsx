@@ -9,21 +9,15 @@ import PageLayout from '../../components/layout/PageLayout'
 
 interface Task {
   _id: string
-  shoeType: string
-  saleLocation: 'store' | 'out_of_store'
-  basePrice: number
-  profitGained: number
-  taxiCost: number
-  otherCosts: number
-  supplier: string
-  totalCost: number
-  netProfit: number
-  clientDetails?: {
-    phone?: string
-    address?: string
-    intentionalBehaviour?: string
-  }
+  clientStatus: 'unsuccessful' | 'annoying' | 'blocked'
+  clientPhone: string
+  behavioralDetails: string
+  cause: string
+  preferredShoeType: string
   notes?: string
+  taxiCost?: number
+  otherCosts?: number
+  totalCost?: number
   createdBy: {
     username: string
   }
@@ -48,6 +42,7 @@ export default function TasksPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [showReminderForm, setShowReminderForm] = useState(false)
   const [reminders, setReminders] = useState<Reminder[]>([])
+  const [taskFilter, setTaskFilter] = useState<'all' | 'client_issues' | 'sales'>('all')
   
   // Reminder form state
   const [reminderTitle, setReminderTitle] = useState('')
@@ -56,6 +51,17 @@ export default function TasksPage() {
   const [reminderPlace, setReminderPlace] = useState('')
   const [reminderActionAt, setReminderActionAt] = useState('')
   const [reminderPriority, setReminderPriority] = useState<'low' | 'medium' | 'high' | 'urgent'>('medium')
+
+  // Client registration form state
+  const [showClientForm, setShowClientForm] = useState(false)
+  const [clientStatus, setClientStatus] = useState<'unsuccessful' | 'annoying' | 'blocked'>('unsuccessful')
+  const [clientPhone, setClientPhone] = useState('')
+  const [behavioralDetails, setBehavioralDetails] = useState('')
+  const [cause, setCause] = useState('')
+  const [preferredShoeType, setPreferredShoeType] = useState('')
+  const [clientNotes, setClientNotes] = useState('')
+  const [taxiCost, setTaxiCost] = useState(0)
+  const [otherCosts, setOtherCosts] = useState(0)
 
   useEffect(() => {
     fetchTasks()
@@ -145,17 +151,66 @@ export default function TasksPage() {
     }
   }
 
-  const filteredTasks = tasks.filter(task =>
-    task.shoeType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    task.supplier.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    task.saleLocation.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const createClientTask = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      if (!clientPhone || !behavioralDetails || !cause || !preferredShoeType) {
+        toast.error('Phone number, behavioral details, cause, and preferred shoe type are required')
+        return
+      }
+
+      await axios.post('http://localhost:5000/api/tasks', {
+        clientStatus,
+        clientPhone,
+        behavioralDetails,
+        cause,
+        preferredShoeType,
+        notes: clientNotes || undefined,
+        taxiCost,
+        otherCosts
+      })
+
+      toast.success('Client registered successfully!')
+      setClientStatus('unsuccessful')
+      setClientPhone('')
+      setBehavioralDetails('')
+      setCause('')
+      setPreferredShoeType('')
+      setClientNotes('')
+      setTaxiCost(0)
+      setOtherCosts(0)
+      setShowClientForm(false)
+      fetchTasks()
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to register client')
+    }
+  }
+
+  const filteredTasks = tasks.filter(task => {
+    const matchesSearch = 
+      task.clientPhone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.behavioralDetails.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.cause.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.preferredShoeType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (task.notes && task.notes.toLowerCase().includes(searchTerm.toLowerCase()))
+
+    if (taskFilter === 'unsuccessful') {
+      return matchesSearch && task.clientStatus === 'unsuccessful'
+    } else if (taskFilter === 'annoying') {
+      return matchesSearch && task.clientStatus === 'annoying'
+    } else if (taskFilter === 'blocked') {
+      return matchesSearch && task.clientStatus === 'blocked'
+    }
+    
+    return matchesSearch
+  })
 
   const getLocationColor = (location: string) => {
     return location === 'store' ? 'text-success-600 bg-success-50' : 'text-warning-600 bg-warning-50'
   }
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number | undefined) => {
+    if (amount === undefined || amount === null) return '$0.00'
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD'
@@ -198,11 +253,99 @@ export default function TasksPage() {
     return colors[type as keyof typeof colors] || 'text-gray-600 bg-gray-50'
   }
 
+  const getClientStatusColor = (status: string) => {
+    const colors = {
+      unsuccessful: 'text-orange-600 bg-orange-50',
+      annoying: 'text-red-600 bg-red-50',
+      blocked: 'text-gray-600 bg-gray-50'
+    }
+    return colors[status as keyof typeof colors] || 'text-gray-600 bg-gray-50'
+  }
+
+  const getTaskIcon = (task: Task) => {
+    if (task.clientStatus === 'unsuccessful') {
+      return <AlertCircle className="h-8 w-8 text-orange-600" />
+    } else if (task.clientStatus === 'annoying') {
+      return <AlertCircle className="h-8 w-8 text-red-600" />
+    } else if (task.clientStatus === 'blocked') {
+      return <XCircle className="h-8 w-8 text-gray-600" />
+    }
+    return <AlertCircle className="h-8 w-8 text-red-600" />
+  }
+
+  const getTaskBorderColor = (task: Task) => {
+    if (task.clientStatus === 'unsuccessful') {
+      return 'border-orange-200 hover:border-orange-300'
+    } else if (task.clientStatus === 'annoying') {
+      return 'border-red-200 hover:border-red-300'
+    } else if (task.clientStatus === 'blocked') {
+      return 'border-gray-200 hover:border-gray-300'
+    }
+    return 'border-gray-100 hover:border-gray-200'
+  }
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
-      </div>
+      <PageLayout>
+        <div className="space-y-8">
+          {/* Header Skeleton */}
+          <div className="bg-gradient-to-br from-red-500 via-orange-500 to-red-600 rounded-3xl p-8 text-white overflow-hidden">
+            <div className="animate-pulse">
+              <div className="h-12 bg-white/20 rounded-2xl mb-4 w-1/3"></div>
+              <div className="h-6 bg-white/20 rounded-xl mb-6 w-1/2"></div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="bg-white/20 rounded-2xl p-4">
+                    <div className="h-8 bg-white/20 rounded mb-2"></div>
+                    <div className="h-4 bg-white/20 rounded"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          {/* Search Skeleton */}
+          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+            <div className="animate-pulse">
+              <div className="h-16 bg-gray-200 rounded-2xl mb-6"></div>
+              <div className="flex gap-6">
+                <div className="h-16 bg-gray-200 rounded-2xl w-48"></div>
+                <div className="h-16 bg-gray-200 rounded-2xl w-32"></div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Cards Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="bg-white rounded-3xl shadow-lg border p-6 animate-pulse">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex items-center">
+                    <div className="w-16 h-16 bg-gray-200 rounded-2xl mr-4"></div>
+                    <div>
+                      <div className="h-6 bg-gray-200 rounded mb-2 w-32"></div>
+                      <div className="h-4 bg-gray-200 rounded w-24"></div>
+                    </div>
+                  </div>
+                  <div className="w-24 h-8 bg-gray-200 rounded-full"></div>
+                </div>
+                <div className="space-y-4 mb-6">
+                  <div className="h-12 bg-gray-200 rounded-2xl"></div>
+                  <div className="h-12 bg-gray-200 rounded-2xl"></div>
+                </div>
+                <div className="space-y-4 mb-6">
+                  <div className="h-12 bg-gray-200 rounded-2xl"></div>
+                  <div className="h-12 bg-gray-200 rounded-2xl"></div>
+                  <div className="h-16 bg-gray-200 rounded-2xl"></div>
+                </div>
+                <div className="border-t border-gray-100 pt-6">
+                  <div className="h-12 bg-gray-200 rounded-xl"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </PageLayout>
     )
   }
 
@@ -210,20 +353,79 @@ export default function TasksPage() {
     <PageLayout>
       <div className="space-y-8">
       {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-              <h1 className="text-4xl font-bold mb-2">Action Days & Tasks</h1>
-              <p className="text-blue-100 text-lg">Manage your scheduled actions and view existing tasks</p>
+        <div className="relative bg-gradient-to-br from-red-500 via-orange-500 to-red-600 rounded-3xl p-8 text-white overflow-hidden">
+          {/* Animated background elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+            <div className="absolute top-1/2 left-1/4 w-20 h-20 bg-white/5 rounded-full blur-lg animate-bounce delay-500"></div>
+          </div>
+          
+          <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div className="mb-6 sm:mb-0">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl border border-white/30">
+                  <AlertCircle className="h-8 w-8 text-white" />
+                </div>
+                <h1 className="text-5xl font-bold bg-gradient-to-r from-white to-yellow-100 bg-clip-text text-transparent">
+                  Client Registry
+                </h1>
+              </div>
+              <p className="text-xl text-white/90 mb-6">Track and manage problematic clients with ease</p>
+              
+              {/* Enhanced Statistics Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
+                  <div className="text-3xl font-bold text-white mb-1">{tasks.length}</div>
+                  <div className="text-sm text-white/80">Total Clients</div>
+                  <div className="w-full bg-white/20 rounded-full h-1 mt-2">
+                    <div className="bg-white rounded-full h-1" style={{ width: `${Math.min((tasks.length / 10) * 100, 100)}%` }}></div>
+                  </div>
+                </div>
+                
+                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
+                  <div className="text-3xl font-bold text-orange-200 mb-1">{tasks.filter(t => t.clientStatus === 'annoying').length}</div>
+                  <div className="text-sm text-white/80">Annoying</div>
+                  <div className="w-full bg-white/20 rounded-full h-1 mt-2">
+                    <div className="bg-orange-300 rounded-full h-1" style={{ width: `${tasks.length > 0 ? (tasks.filter(t => t.clientStatus === 'annoying').length / tasks.length) * 100 : 0}%` }}></div>
+                  </div>
+                </div>
+                
+                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
+                  <div className="text-3xl font-bold text-red-200 mb-1">{tasks.filter(t => t.clientStatus === 'blocked').length}</div>
+                  <div className="text-sm text-white/80">Blocked</div>
+                  <div className="w-full bg-white/20 rounded-full h-1 mt-2">
+                    <div className="bg-red-300 rounded-full h-1" style={{ width: `${tasks.length > 0 ? (tasks.filter(t => t.clientStatus === 'blocked').length / tasks.length) * 100 : 0}%` }}></div>
+                  </div>
+                </div>
+              </div>
             </div>
             
-            <div className="flex gap-3 mt-4 sm:mt-0">
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => setShowClientForm(true)}
+                className="group bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-2xl px-8 py-4 flex items-center font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+              >
+                <div className="p-2 bg-red-500 rounded-xl mr-3 group-hover:bg-red-600 transition-colors">
+                  <AlertCircle size={24} className="text-white" />
+                </div>
+                <div className="text-left">
+                  <div className="text-lg font-bold">Register Client</div>
+                  <div className="text-sm text-white/80">Add new entry</div>
+                </div>
+              </button>
+              
               <button
                 onClick={() => setShowReminderForm(true)}
-                className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl px-6 py-3 flex items-center font-medium transition-all duration-200 hover:scale-105"
+                className="group bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-2xl px-8 py-4 flex items-center font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
               >
-                <Calendar size={20} className="mr-2" />
-                Add Action Day
+                <div className="p-2 bg-blue-500 rounded-xl mr-3 group-hover:bg-blue-600 transition-colors">
+                  <Calendar size={24} className="text-white" />
+                </div>
+                <div className="text-left">
+                  <div className="text-lg font-bold">Add Action Day</div>
+                  <div className="text-sm text-white/80">Schedule reminder</div>
+                </div>
               </button>
             </div>
           </div>
@@ -337,132 +539,303 @@ export default function TasksPage() {
           </div>
       </div>
 
-      {/* Search and Filters */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-          <input
-            type="text"
-            placeholder="Search tasks by shoe type, supplier, or location..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-          />
+        {/* Enhanced Search and Filters */}
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300">
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Search Input */}
+            <div className="relative flex-1 group">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-blue-500 transition-colors duration-300" size={20} />
+                <input
+                  type="text"
+                  placeholder="Search by client phone, behavior, cause, shoe type, or notes..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 text-lg"
+                />
+              </div>
             </div>
+            
+            {/* Filter Dropdown */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+              <div className="relative">
+                <select
+                  value={taskFilter}
+                  onChange={(e) => setTaskFilter(e.target.value as any)}
+                  className="px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-300 text-lg font-medium bg-white min-w-[180px] cursor-pointer"
+                >
+                  <option value="all">🔍 All Clients</option>
+                  <option value="unsuccessful">❌ Unsuccessful</option>
+                  <option value="annoying">😤 Annoying</option>
+                  <option value="blocked">🚫 Blocked</option>
+                </select>
+              </div>
+            </div>
+            
+            {/* Clear Button */}
+            <button
+              onClick={() => {
+                setSearchTerm('')
+                setTaskFilter('all')
+              }}
+              className="group px-8 py-4 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white rounded-2xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
+            >
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 rounded-full bg-white/20 group-hover:bg-white/30 transition-colors"></div>
+                Clear All
+              </div>
+            </button>
+          </div>
+          
+          {/* Active Filters Display */}
+          {(searchTerm || taskFilter !== 'all') && (
+            <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl border border-blue-200">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium text-blue-700">Active Filters:</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {searchTerm && (
+                  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium flex items-center gap-1">
+                    🔍 "{searchTerm}"
+                    <button 
+                      onClick={() => setSearchTerm('')}
+                      className="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition-colors"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+                {taskFilter !== 'all' && (
+                  <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium flex items-center gap-1">
+                    {taskFilter === 'unsuccessful' ? '❌' : taskFilter === 'annoying' ? '😤' : '🚫'} {taskFilter}
+                    <button 
+                      onClick={() => setTaskFilter('all')}
+                      className="ml-1 hover:bg-orange-200 rounded-full p-0.5 transition-colors"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
-      </div>
 
-      {/* Tasks Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredTasks.map((task) => (
-            <div key={task._id} className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-200">
-              <div className="flex items-start justify-between mb-6">
+        {/* Floating Action Button */}
+        <div className="fixed bottom-8 right-8 z-40">
+          <button
+            onClick={() => setShowClientForm(true)}
+            className="group bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white w-16 h-16 rounded-full shadow-2xl hover:shadow-red-500/50 transition-all duration-300 hover:scale-110 active:scale-95 flex items-center justify-center"
+          >
+            <AlertCircle className="h-8 w-8 group-hover:rotate-12 transition-transform duration-300" />
+          </button>
+          
+          {/* Tooltip */}
+          <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+            Register New Client
+            <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+          </div>
+        </div>
+
+        {/* Enhanced Tasks Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {filteredTasks.map((task, index) => (
+          <div 
+            key={task._id} 
+            className={`group bg-white rounded-3xl shadow-lg border p-6 hover:shadow-2xl transition-all duration-500 hover:scale-105 ${getTaskBorderColor(task)} transform-gpu animate-in slide-in-from-bottom-4 duration-500`}
+            style={{ 
+              animationDelay: `${index * 150}ms`,
+              animationFillMode: 'both'
+            }}
+          >
+            {/* Card Header */}
+            <div className="flex items-start justify-between mb-6">
               <div className="flex items-center">
-                  <div className="p-3 bg-blue-100 rounded-xl mr-4">
-                    <ClipboardList className="h-8 w-8 text-blue-600" />
-                  </div>
+                <div className={`p-4 rounded-2xl mr-4 group-hover:scale-110 transition-transform duration-300 ${
+                  task.clientStatus === 'unsuccessful' 
+                    ? 'bg-gradient-to-br from-orange-100 to-orange-200' 
+                    : task.clientStatus === 'annoying'
+                    ? 'bg-gradient-to-br from-red-100 to-red-200'
+                    : 'bg-gradient-to-br from-gray-100 to-gray-200'
+                }`}>
+                  {getTaskIcon(task)}
+                </div>
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">{task.shoeType}</h3>
-                  <p className="text-sm text-gray-500">Supplier: {task.supplier}</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors duration-300">
+                    {task.preferredShoeType}
+                  </h3>
+                  <p className="text-sm text-gray-500 font-medium">Status: {task.clientStatus}</p>
                 </div>
               </div>
-                <span className={`px-3 py-2 rounded-full text-xs font-medium ${getLocationColor(task.saleLocation)}`}>
-                {task.saleLocation.replace('_', ' ')}
-              </span>
+              
+              {/* Status Badge */}
+              <div className="relative">
+                <span className={`px-4 py-2 rounded-full text-sm font-bold shadow-lg ${getClientStatusColor(task.clientStatus)} group-hover:scale-110 transition-transform duration-300`}>
+                  {task.clientStatus === 'unsuccessful' ? '❌ Unsuccessful' :
+                   task.clientStatus === 'annoying' ? '😤 Annoying' :
+                   '🚫 Blocked'}
+                </span>
+                {/* Animated ring */}
+                <div className={`absolute inset-0 rounded-full border-2 border-dashed opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${
+                  task.clientStatus === 'unsuccessful' ? 'border-orange-400' :
+                  task.clientStatus === 'annoying' ? 'border-red-400' :
+                  'border-gray-400'
+                }`}></div>
+              </div>
             </div>
 
-              <div className="space-y-3 mb-6">
-                <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600">Base Price:</span>
-                  <span className="font-semibold text-lg">{formatCurrency(task.basePrice)}</span>
+            {/* Client Information */}
+            <div className="space-y-4 mb-6">
+              <div className="flex justify-between items-center py-3 px-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl group-hover:from-blue-100 group-hover:to-indigo-100 transition-all duration-300">
+                <span className="text-gray-600 font-medium">📱 Phone:</span>
+                <span className="font-bold text-lg text-blue-600 group-hover:text-blue-700 transition-colors">
+                  {task.clientPhone}
+                </span>
               </div>
-                <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600">Profit Gained:</span>
-                  <span className="font-semibold text-lg text-emerald-600">{formatCurrency(task.profitGained)}</span>
-              </div>
-                <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600">Taxi Cost:</span>
-                  <span className="font-semibold text-lg text-red-600">{formatCurrency(task.taxiCost)}</span>
-              </div>
-                <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600">Other Costs:</span>
-                  <span className="font-semibold text-lg text-red-600">{formatCurrency(task.otherCosts)}</span>
-              </div>
-                <div className="flex justify-between items-center py-2 border-t border-gray-100 pt-3">
-                  <span className="text-gray-900 font-medium text-lg">Total Cost:</span>
-                  <span className="font-bold text-xl text-red-600">{formatCurrency(task.totalCost)}</span>
-              </div>
-                <div className="flex justify-between items-center py-3 bg-gradient-to-r from-gray-50 to-white rounded-xl px-4">
-                  <span className="text-gray-900 font-bold text-lg">Net Profit:</span>
-                  <span className={`font-bold text-2xl ${task.netProfit >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                  {formatCurrency(task.netProfit)}
+              <div className="flex justify-between items-center py-3 px-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl group-hover:from-green-100 group-hover:to-emerald-100 transition-all duration-300">
+                <span className="text-gray-600 font-medium">👟 Shoe Type:</span>
+                <span className="font-bold text-lg text-green-600 group-hover:text-green-700 transition-colors">
+                  {task.preferredShoeType}
                 </span>
               </div>
             </div>
 
-            {task.clientDetails && (
-                <div className="border-t border-gray-100 pt-6 mb-6">
-                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    Client Details
-                  </h4>
-                  <div className="space-y-2 text-sm">
-                  {task.clientDetails.phone && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Phone:</span>
-                        <span className="font-medium">{task.clientDetails.phone}</span>
-                    </div>
-                  )}
-                  {task.clientDetails.address && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Address:</span>
-                        <span className="font-medium">{task.clientDetails.address}</span>
-                    </div>
-                  )}
-                  {task.clientDetails.intentionalBehaviour && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Behavior:</span>
-                        <span className="font-medium">{task.clientDetails.intentionalBehaviour}</span>
-                    </div>
-                  )}
+            {/* Cost Information with Animations */}
+            <div className="space-y-4 mb-6">
+              <div className="flex justify-between items-center py-3 px-4 bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl group-hover:from-red-100 group-hover:to-pink-100 transition-all duration-300">
+                <span className="text-gray-600 font-medium">🚕 Taxi Cost:</span>
+                <span className="font-bold text-lg text-red-600 group-hover:text-red-700 transition-colors">
+                  {formatCurrency(task.taxiCost)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-3 px-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-2xl group-hover:from-purple-100 group-hover:to-violet-100 transition-all duration-300">
+                <span className="text-gray-600 font-medium">💰 Other Costs:</span>
+                <span className="font-bold text-lg text-purple-600 group-hover:text-purple-700 transition-colors">
+                  {formatCurrency(task.otherCosts)}
+                </span>
+              </div>
+              
+              {/* Total Cost with Special Styling */}
+              <div className="relative overflow-hidden">
+                <div className="flex justify-between items-center py-4 px-6 bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl text-white group-hover:from-gray-800 group-hover:to-gray-700 transition-all duration-300">
+                  <span className="font-bold text-lg">💸 Total Cost:</span>
+                  <span className="font-bold text-2xl text-yellow-300 group-hover:text-yellow-200 transition-colors">
+                    {formatCurrency(task.totalCost)}
+                  </span>
+                </div>
+                {/* Animated shine effect */}
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+              </div>
+            </div>
+
+            {/* Client Details */}
+            <div className="border-t border-gray-100 pt-6 mb-6">
+              <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2 text-lg">
+                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                Client Details
+              </h4>
+              <div className="space-y-3">
+                <div className="flex justify-between items-start p-3 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl group-hover:from-red-100 group-hover:to-orange-100 transition-all duration-300">
+                  <span className="text-gray-600 font-medium">😤 Behavior:</span>
+                  <span className="font-medium text-gray-800 text-right max-w-[200px] leading-relaxed">
+                    {task.behavioralDetails}
+                  </span>
+                </div>
+                <div className="flex justify-between items-start p-3 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-xl group-hover:from-orange-100 group-hover:to-yellow-100 transition-all duration-300">
+                  <span className="text-gray-600 font-medium">🚨 Cause:</span>
+                  <span className="font-medium text-gray-800 text-right max-w-[200px] leading-relaxed">
+                    {task.cause}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Notes Section */}
+            {task.notes && (
+              <div className="border-t border-gray-100 pt-6 mb-6">
+                <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-lg">
+                  <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
+                  Notes
+                </h4>
+                <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl group-hover:from-purple-100 group-hover:to-pink-100 transition-all duration-300">
+                  <p className="text-gray-700 leading-relaxed">{task.notes}</p>
                 </div>
               </div>
             )}
 
-            {task.notes && (
-                <div className="border-t border-gray-100 pt-6 mb-6">
-                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                    Notes
-                  </h4>
-                  <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">{task.notes}</p>
+            {/* Footer with Actions */}
+            <div className="border-t border-gray-100 pt-6">
+              <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                <span className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  Created by {task.createdBy.username}
+                </span>
+                <span className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  {new Date(task.taskDate).toLocaleDateString()}
+                </span>
               </div>
-            )}
-
-              <div className="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-100">
-              <span>Created by {task.createdBy.username}</span>
-              <span>{new Date(task.taskDate).toLocaleDateString()}</span>
+              
+              {/* Action Buttons */}
+              <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <button className="flex-1 py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium transition-all duration-200 hover:scale-105 active:scale-95">
+                  <div className="flex items-center justify-center gap-2">
+                    <Edit size={16} />
+                    Edit
+                  </div>
+                </button>
+                <button className="flex-1 py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium transition-all duration-200 hover:scale-105 active:scale-95">
+                  <div className="flex items-center justify-center gap-2">
+                    <Trash2 size={16} />
+                    Delete
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
         ))}
       </div>
 
-      {filteredTasks.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-2xl shadow-lg border border-gray-100">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <ClipboardList className="h-12 w-12 text-gray-400" />
+        {filteredTasks.length === 0 && (
+          <div className="text-center py-20 bg-gradient-to-br from-gray-50 to-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden relative">
+            {/* Animated background elements */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute top-10 left-10 w-32 h-32 bg-blue-100 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute bottom-10 right-10 w-24 h-24 bg-purple-100 rounded-full blur-3xl animate-pulse delay-1000"></div>
             </div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">No tasks found</h3>
-            <p className="text-gray-500 mb-6">
-            {searchTerm ? 'Try adjusting your search terms.' : 'Get started by creating your first task.'}
-          </p>
-        </div>
-      )}
+            
+            <div className="relative z-10">
+              <div className="w-32 h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
+                <AlertCircle className="h-16 w-16 text-blue-500" />
+              </div>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                No clients found
+              </h3>
+              <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto leading-relaxed">
+                {searchTerm ? 'Try adjusting your search terms or filters.' : 'Get started by registering your first problematic client to keep track of difficult interactions.'}
+              </p>
+              
+              {!searchTerm && (
+                <button
+                  onClick={() => setShowClientForm(true)}
+                  className="group bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-95"
+                >
+                  <div className="flex items-center gap-3">
+                    <AlertCircle className="h-6 w-6 group-hover:rotate-12 transition-transform duration-300" />
+                    Register First Client
+                  </div>
+                </button>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Add Action Day Modal */}
         {showReminderForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
               <div className="text-center mb-8">
                 <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -564,17 +937,188 @@ export default function TasksPage() {
                   >
                     Cancel
                   </button>
-            <button
+                  <button
                     type="submit" 
                     className="py-3 px-6 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium transition-colors"
-            >
+                  >
                     Create Action Day
-            </button>
+                  </button>
                 </div>
               </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Enhanced Client Registration Modal */}
+        {showClientForm && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300">
+            <div className="bg-white rounded-3xl p-8 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom-4 duration-300">
+              {/* Modal Header */}
+              <div className="text-center mb-8 relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-red-50 to-orange-50 rounded-3xl -m-8 p-8 -z-10"></div>
+                <div className="w-20 h-20 bg-gradient-to-br from-red-100 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <AlertCircle className="h-10 w-10 text-red-600" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
+                  Register Problematic Client
+                </h2>
+                <p className="text-gray-600 text-lg">Track difficult clients to avoid future issues</p>
+              </div>
+              
+              <form onSubmit={createClientTask} className="space-y-6">
+                {/* Client Status */}
+                <div className="group">
+                  <label className="block text-sm font-bold text-gray-700 mb-3 text-lg">Client Status *</label>
+                  <div className="relative">
+                    <select
+                      className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 text-lg font-medium bg-gradient-to-r from-gray-50 to-white hover:from-gray-100 hover:to-white cursor-pointer"
+                      value={clientStatus}
+                      onChange={(e) => setClientStatus(e.target.value as any)}
+                      required
+                    >
+                      <option value="unsuccessful">❌ Unsuccessful - Client didn't complete transaction</option>
+                      <option value="annoying">😤 Annoying - Client was difficult to work with</option>
+                      <option value="blocked">🚫 Blocked - Client is banned from future interactions</option>
+                    </select>
+                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-red-500 transition-colors">
+                      <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Phone Number */}
+                <div className="group">
+                  <label className="block text-sm font-bold text-gray-700 mb-3 text-lg">📱 Phone Number *</label>
+                  <div className="relative">
+                    <input
+                      type="tel"
+                      className="w-full pl-12 pr-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 text-lg bg-gradient-to-r from-gray-50 to-white hover:from-gray-100 hover:to-white"
+                      value={clientPhone}
+                      onChange={(e) => setClientPhone(e.target.value)}
+                      placeholder="+1 (555) 123-4567"
+                      required
+                    />
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-red-500 transition-colors">
+                      📱
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Behavioral Details */}
+                <div className="group">
+                  <label className="block text-sm font-bold text-gray-700 mb-3 text-lg">😤 Behavioral Details *</label>
+                  <textarea
+                    className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 text-lg min-h-[120px] resize-none bg-gradient-to-r from-gray-50 to-white hover:from-gray-100 hover:to-white"
+                    value={behavioralDetails}
+                    onChange={(e) => setBehavioralDetails(e.target.value)}
+                    placeholder="Describe the client's behavior, attitude, or problematic actions in detail..."
+                    required
+                  />
+                </div>
+                
+                {/* Cause */}
+                <div className="group">
+                  <label className="block text-sm font-bold text-gray-700 mb-3 text-lg">🚨 Cause *</label>
+                  <textarea
+                    className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 text-lg min-h-[100px] resize-none bg-gradient-to-r from-gray-50 to-white hover:from-gray-100 hover:to-white"
+                    value={cause}
+                    onChange={(e) => setCause(e.target.value)}
+                    placeholder="What caused this situation? (e.g., payment issues, rude behavior, unreasonable demands, etc.)"
+                    required
+                  />
+                </div>
+                
+                {/* Preferred Shoe Type */}
+                <div className="group">
+                  <label className="block text-sm font-bold text-gray-700 mb-3 text-lg">👟 Preferred Shoe Type *</label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      className="w-full pl-12 pr-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 text-lg bg-gradient-to-r from-gray-50 to-white hover:from-gray-100 hover:to-white"
+                      value={preferredShoeType}
+                      onChange={(e) => setPreferredShoeType(e.target.value)}
+                      placeholder="e.g., Nike Air Max 270, Adidas Ultraboost 22, etc."
+                      required
+                    />
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-red-500 transition-colors">
+                      👟
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Cost Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="group">
+                    <label className="block text-sm font-bold text-gray-700 mb-3 text-lg">🚕 Taxi Cost</label>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        className="w-full pl-12 pr-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 text-lg bg-gradient-to-r from-gray-50 to-white hover:from-gray-100 hover:to-white"
+                        value={taxiCost}
+                        onChange={(e) => setTaxiCost(Number(e.target.value) || 0)}
+                        placeholder="0.00"
+                      />
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-red-500 transition-colors">
+                        💰
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="group">
+                    <label className="block text-sm font-bold text-gray-700 mb-3 text-lg">💰 Other Costs</label>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        className="w-full pl-12 pr-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 text-lg bg-gradient-to-r from-gray-50 to-white hover:from-gray-100 hover:to-white"
+                        value={otherCosts}
+                        onChange={(e) => setOtherCosts(Number(e.target.value) || 0)}
+                        placeholder="0.00"
+                      />
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-red-500 transition-colors">
+                        💸
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Additional Notes */}
+                <div className="group">
+                  <label className="block text-sm font-bold text-gray-700 mb-3 text-lg">📝 Additional Notes</label>
+                  <textarea
+                    className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 text-lg min-h-[100px] resize-none bg-gradient-to-r from-gray-50 to-white hover:from-gray-100 hover:to-white"
+                    value={clientNotes}
+                    onChange={(e) => setClientNotes(e.target.value)}
+                    placeholder="Any other relevant information about this client, future warnings, or special notes..."
+                  />
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="grid grid-cols-2 gap-4 pt-6">
+                  <button 
+                    type="button" 
+                    onClick={() => setShowClientForm(false)} 
+                    className="py-4 px-8 border-2 border-gray-200 text-gray-700 rounded-2xl font-bold text-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 hover:scale-105 active:scale-95"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit" 
+                    className="py-4 px-8 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-95"
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <AlertCircle className="h-5 w-5" />
+                      Register Client
+                    </div>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </PageLayout>
   )

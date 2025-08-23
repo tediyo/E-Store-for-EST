@@ -54,17 +54,14 @@ router.get('/:id', auth, async (req, res) => {
 
 // Create new task
 router.post('/', auth, [
-  body('shoeType').notEmpty().trim().escape(),
-  body('saleLocation').isIn(['store', 'out_of_store']),
-  body('basePrice').isFloat({ min: 0 }),
-  body('profitGained').isFloat({ min: 0 }),
-  body('taxiCost').isFloat({ min: 0 }),
-  body('otherCosts').isFloat({ min: 0 }),
-  body('supplier').notEmpty().trim().escape(),
-  body('clientDetails.phone').optional().trim(),
-  body('clientDetails.address').optional().trim(),
-  body('clientDetails.intentionalBehaviour').optional().trim(),
-  body('notes').optional().trim().escape()
+  body('clientStatus').isIn(['unsuccessful', 'annoying', 'blocked']),
+  body('clientPhone').notEmpty().trim(),
+  body('behavioralDetails').notEmpty().trim(),
+  body('cause').notEmpty().trim(),
+  body('preferredShoeType').notEmpty().trim(),
+  body('notes').optional().trim().escape(),
+  body('taxiCost').optional().isFloat({ min: 0 }),
+  body('otherCosts').optional().isFloat({ min: 0 })
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -73,27 +70,25 @@ router.post('/', auth, [
     }
 
     const {
-      shoeType,
-      saleLocation,
-      basePrice,
-      profitGained,
+      clientStatus,
+      clientPhone,
+      behavioralDetails,
+      cause,
+      preferredShoeType,
+      notes,
       taxiCost,
-      otherCosts,
-      supplier,
-      clientDetails,
-      notes
+      otherCosts
     } = req.body;
 
     const task = new Task({
-      shoeType,
-      saleLocation,
-      basePrice,
-      profitGained,
+      clientStatus,
+      clientPhone,
+      behavioralDetails,
+      cause,
+      preferredShoeType,
+      notes,
       taxiCost,
       otherCosts,
-      supplier,
-      clientDetails,
-      notes,
       createdBy: req.user._id
     });
 
@@ -101,7 +96,7 @@ router.post('/', auth, [
     await task.populate('createdBy', 'username');
 
     res.status(201).json({
-      message: 'Task created successfully',
+      message: 'Client registered successfully',
       task
     });
   } catch (error) {
@@ -111,17 +106,14 @@ router.post('/', auth, [
 
 // Update task
 router.put('/:id', auth, [
-  body('shoeType').optional().trim().escape(),
-  body('saleLocation').optional().isIn(['store', 'out_of_store']),
-  body('basePrice').optional().isFloat({ min: 0 }),
-  body('profitGained').optional().isFloat({ min: 0 }),
+  body('clientStatus').optional().isIn(['unsuccessful', 'annoying', 'blocked']),
+  body('clientPhone').optional().trim(),
+  body('behavioralDetails').optional().trim(),
+  body('cause').optional().trim(),
+  body('preferredShoeType').optional().trim(),
+  body('notes').optional().trim().escape(),
   body('taxiCost').optional().isFloat({ min: 0 }),
-  body('otherCosts').optional().isFloat({ min: 0 }),
-  body('supplier').optional().trim().escape(),
-  body('clientDetails.phone').optional().trim(),
-  body('clientDetails.address').optional().trim(),
-  body('clientDetails.intentionalBehaviour').optional().trim(),
-  body('notes').optional().trim().escape()
+  body('otherCosts').optional().isFloat({ min: 0 })
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
