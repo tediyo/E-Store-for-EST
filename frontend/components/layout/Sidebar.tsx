@@ -40,21 +40,31 @@ export default function Sidebar() {
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-2 rounded-md bg-white shadow-md"
+          className="p-3 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
         >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
+          {isOpen ? <X size={24} className="text-white" /> : <Menu size={24} className="text-white" />}
         </button>
       </div>
 
       {/* Sidebar */}
       <div className={`
-        fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out
+        fixed inset-y-0 left-0 z-40 w-64 bg-gradient-to-b from-blue-900 via-blue-800 to-indigo-900 shadow-2xl transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-center justify-center h-16 px-4 border-b border-gray-200">
-            <h1 className="text-xl font-bold text-gray-800">IMS</h1>
+          {/* Header with Logo */}
+          <div className="flex flex-col items-center justify-center h-24 px-4 border-b border-blue-700/50">
+            {/* Logo */}
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-400 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
+              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  IMS
+                </span>
+              </div>
+            </div>
+            {/* App Name */}
+            <h1 className="text-lg font-bold text-white">Inventory Management</h1>
+            <p className="text-xs text-blue-200">System</p>
           </div>
 
           {/* Navigation */}
@@ -66,10 +76,10 @@ export default function Sidebar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center px-4 py-3 rounded-lg transition-colors duration-200 ${
+                  className={`flex items-center px-4 py-3 rounded-xl transition-all duration-200 ${
                     isActive
-                      ? 'bg-primary-100 text-primary-700 border-r-2 border-primary-600'
-                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                      ? 'bg-white/20 text-white border-r-2 border-blue-300 shadow-lg backdrop-blur-sm'
+                      : 'text-blue-100 hover:bg-white/10 hover:text-white hover:shadow-md'
                   }`}
                   onClick={() => setIsOpen(false)}
                 >
@@ -81,22 +91,22 @@ export default function Sidebar() {
           </nav>
 
           {/* User section */}
-          <div className="px-4 py-4 border-t border-gray-200">
-            <div className="flex items-center mb-4">
-              <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">
+          <div className="px-4 py-4 border-t border-blue-700/50">
+            <div className="flex items-center mb-4 p-3 bg-white/10 rounded-xl backdrop-blur-sm">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-400 rounded-full flex items-center justify-center shadow-lg">
+                <span className="text-white text-sm font-bold">
                   {user?.username?.charAt(0).toUpperCase()}
                 </span>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">{user?.username}</p>
-                <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+                <p className="text-sm font-medium text-white">{user?.username}</p>
+                <p className="text-xs text-blue-200 capitalize">{user?.role}</p>
               </div>
             </div>
             
             <button
               onClick={handleLogout}
-              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
+              className="flex items-center w-full px-4 py-3 text-sm text-blue-100 rounded-xl hover:bg-white/10 hover:text-white transition-all duration-200 hover:shadow-md"
             >
               <LogOut size={18} className="mr-3" />
               Sign out
