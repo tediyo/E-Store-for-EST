@@ -174,6 +174,9 @@ export default function AnalyticsPage() {
 
   const generateAnalyticsReport = async () => {
     try {
+      console.log('Starting generateAnalyticsReport...')
+      console.log('analyticsData:', analyticsData)
+      
       toast.loading('Loading PDF library...', { id: 'pdf' })
       
       // Ensure jsPDF is loaded
@@ -182,9 +185,11 @@ export default function AnalyticsPage() {
         throw new Error('Failed to load PDF library. Please refresh the page and try again.')
       }
       
+      console.log('jsPDF loaded successfully, creating document...')
       toast.loading('Generating PDF report...', { id: 'pdf' })
       
       const doc = new jsPDF()
+      console.log('PDF document created')
       
       // Add header
       doc.setFontSize(24)
@@ -202,11 +207,14 @@ export default function AnalyticsPage() {
       doc.text('Summary Overview', 20, 80)
       
       if (analyticsData) {
+        console.log('Processing analytics data...')
         const totalRevenue = analyticsData.salesTrend.reduce((sum, trend) => sum + trend.revenue, 0)
         const totalProfit = analyticsData.salesTrend.reduce((sum, trend) => sum + trend.profit, 0) +
                            analyticsData.tasksTrend.reduce((sum, trend) => sum + trend.profit, 0)
         const totalTasks = analyticsData.tasksTrend.reduce((sum, trend) => sum + trend.tasks, 0)
         const totalCosts = analyticsData.tasksTrend.reduce((sum, trend) => sum + trend.costs, 0)
+        
+        console.log('Calculated totals:', { totalRevenue, totalProfit, totalTasks, totalCosts })
         
         doc.setFontSize(12)
         doc.setTextColor(107, 114, 128)
@@ -214,10 +222,16 @@ export default function AnalyticsPage() {
         doc.text(`Total Profit: ${formatCurrency(totalProfit)}`, 20, 110)
         doc.text(`Total Tasks: ${totalTasks}`, 20, 120)
         doc.text(`Total Costs: ${formatCurrency(totalCosts)}`, 20, 130)
+      } else {
+        console.warn('No analytics data available')
+        doc.setFontSize(12)
+        doc.setTextColor(107, 114, 128)
+        doc.text('No analytics data available', 20, 100)
       }
       
       // Add sales trend table
       if (analyticsData && analyticsData.salesTrend.length > 0) {
+        console.log('Adding sales trend table...')
         doc.setFontSize(16)
         doc.setTextColor(17, 24, 39)
         doc.text('Sales Trend', 20, 160)
@@ -229,17 +243,29 @@ export default function AnalyticsPage() {
           formatCurrency(trend.profit)
         ])
         
+        console.log('Sales data:', salesData)
+        
         // Check if autoTable is available
         if (autoTable && typeof (doc as any).autoTable === 'function') {
+          console.log('Using autoTable for sales data')
+          // Clean and validate data before passing to autoTable
+          const cleanSalesData = salesData.map(row => [
+            String(row[0] || 'N/A').substring(0, 20),
+            String(row[1] || '0').substring(0, 10),
+            String(row[2] || '$0').substring(0, 15),
+            String(row[3] || '$0').substring(0, 15)
+          ])
+          
           doc.autoTable({
             startY: 170,
             head: [['Period', 'Sales', 'Revenue', 'Profit']],
-            body: salesData,
+            body: cleanSalesData,
             theme: 'grid',
             headStyles: { fillColor: [59, 130, 246] },
             styles: { fontSize: 10 }
           })
         } else {
+          console.log('Using fallback table for sales data')
           // Fallback: simple table without autoTable
           let yPos = 170
           doc.setFontSize(10)
@@ -250,17 +276,29 @@ export default function AnalyticsPage() {
           yPos += 10
           
           salesData.forEach(row => {
-            doc.text(row[0], 20, yPos)
-            doc.text(row[1], 60, yPos)
-            doc.text(row[2], 90, yPos)
-            doc.text(row[3], 140, yPos)
+            // Sanitize data to ensure valid strings
+            const period = String(row[0] || 'N/A').substring(0, 20)
+            const sales = String(row[1] || '0').substring(0, 10)
+            const revenue = String(row[2] || '$0').substring(0, 15)
+            const profit = String(row[3] || '$0').substring(0, 15)
+            
+            doc.text(period, 20, yPos)
+            doc.text(sales, 60, yPos)
+            doc.text(revenue, 90, yPos)
+            doc.text(profit, 140, yPos)
             yPos += 8
           })
         }
+      } else {
+        console.log('No sales trend data available')
+        doc.setFontSize(12)
+        doc.setTextColor(107, 114, 128)
+        doc.text('No sales trend data available', 20, 160)
       }
       
       // Add tasks trend table
       if (analyticsData && analyticsData.tasksTrend.length > 0) {
+        console.log('Adding tasks trend table...')
         let finalY = 200
         if (autoTable && typeof (doc as any).lastAutoTable !== 'undefined') {
           finalY = (doc as any).lastAutoTable.finalY + 20
@@ -277,16 +315,28 @@ export default function AnalyticsPage() {
           formatCurrency(trend.costs)
         ])
         
+        console.log('Tasks data:', tasksData)
+        
         if (autoTable && typeof (doc as any).autoTable === 'function') {
+          console.log('Using autoTable for tasks data')
+          // Clean and validate data before passing to autoTable
+          const cleanTasksData = tasksData.map(row => [
+            String(row[0] || 'N/A').substring(0, 20),
+            String(row[1] || '0').substring(0, 10),
+            String(row[2] || '$0').substring(0, 15),
+            String(row[3] || '$0').substring(0, 15)
+          ])
+          
           doc.autoTable({
             startY: finalY + 10,
             head: [['Period', 'Tasks', 'Profit', 'Costs']],
-            body: tasksData,
+            body: cleanTasksData,
             theme: 'grid',
             headStyles: { fillColor: [245, 158, 11] }, // Orange color
             styles: { fontSize: 10 }
           })
         } else {
+          console.log('Using fallback table for tasks data')
           // Fallback: simple table without autoTable
           let yPos = finalY + 20
           doc.setFontSize(10)
@@ -297,22 +347,36 @@ export default function AnalyticsPage() {
           yPos += 10
           
           tasksData.forEach(row => {
-            doc.text(row[0], 20, yPos)
-            doc.text(row[1], 60, yPos)
-            doc.text(row[2], 90, yPos)
-            doc.text(row[3], 140, yPos)
+            // Sanitize data to ensure valid strings
+            const period = String(row[0] || 'N/A').substring(0, 20)
+            const tasks = String(row[1] || '0').substring(0, 10)
+            const profit = String(row[2] || '$0').substring(0, 15)
+            const costs = String(row[3] || '$0').substring(0, 15)
+            
+            doc.text(period, 20, yPos)
+            doc.text(tasks, 60, yPos)
+            doc.text(profit, 90, yPos)
+            doc.text(costs, 140, yPos)
             yPos += 8
           })
         }
+      } else {
+        console.log('No tasks trend data available')
+        doc.setFontSize(12)
+        doc.setTextColor(107, 114, 128)
+        doc.text('No tasks trend data available', 20, 200)
       }
       
+      console.log('Saving PDF...')
       // Save the PDF
       const fileName = `analytics-report-${period}-${new Date().toISOString().split('T')[0]}.pdf`
       doc.save(fileName)
       
+      console.log('PDF saved successfully:', fileName)
       toast.success('PDF report generated and downloaded!', { id: 'pdf' })
     } catch (error: any) {
       console.error('PDF generation error:', error)
+      console.error('Error stack:', error.stack)
       toast.error(`Failed to generate PDF: ${error.message}`, { id: 'pdf' })
     }
   }
