@@ -139,11 +139,15 @@ export default function Dashboard() {
     { name: 'Jun', revenue: 2390, profit: 3800, costs: 1410, sales: 42 },
   ]
 
-  const inventoryData = [
-    { name: 'In Stock', value: 65, color: '#10B981' },
-    { name: 'Low Stock', value: 20, color: '#F59E0B' },
-    { name: 'Out of Stock', value: 15, color: '#EF4444' },
-  ]
+  // Real inventory data from API
+  const getInventoryChartData = () => {
+    if (!data) return []
+    return [
+      { name: 'In Stock', value: data.inventory.inStockItems, color: '#10B981' },
+      { name: 'Low Stock', value: data.inventory.lowStockItems, color: '#F59E0B' },
+      { name: 'Out of Stock', value: data.inventory.outOfStockItems, color: '#EF4444' },
+    ]
+  }
 
   const salesComparisonData = [
     { name: 'Store Sales', value: 70, color: '#3B82F6' },
@@ -217,21 +221,21 @@ export default function Dashboard() {
         
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-            <div>
+        <div>
               <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                 Dashboard Analytics
               </h1>
               <p className="text-xl text-blue-100">Comprehensive overview of your business performance</p>
-            </div>
-            
+        </div>
+        
             {/* Enhanced Period Filter */}
             <div className="mt-6 sm:mt-0">
               <div className="flex gap-3">
                 <div className="relative group">
                   <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <select
-                    value={period}
-                    onChange={(e) => setPeriod(e.target.value)}
+          <select
+            value={period}
+            onChange={(e) => setPeriod(e.target.value)}
                     className="relative px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-white font-semibold focus:ring-4 focus:ring-white/20 focus:border-white/50 transition-all duration-300 cursor-pointer"
                   >
                     <option value="all">📊 All Time</option>
@@ -239,7 +243,7 @@ export default function Dashboard() {
                     <option value="week">📈 This Week</option>
                     <option value="month">🗓️ This Month</option>
                     <option value="year">📊 This Year</option>
-                  </select>
+          </select>
                 </div>
                 
                 {/* Refresh Button */}
@@ -408,7 +412,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Inventory Distribution Pie Chart */}
+        {/* Inventory Distribution Chart */}
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
@@ -417,45 +421,59 @@ export default function Dashboard() {
               </div>
               Inventory Distribution
             </h3>
-            <div className="text-sm text-gray-500">
-              Total: {data.inventory.totalItems} items
+            <div className="text-right">
+              <div className="text-sm text-gray-500">Total Items</div>
+              <div className="text-2xl font-bold text-green-600">{data.inventory.totalItems}</div>
             </div>
           </div>
           
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={inventoryData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={120}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {inventoryData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
+              <LineChart
+                data={getInventoryChartData()}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                <XAxis 
+                  dataKey="name" 
+                  stroke="#6B7280"
+                  tick={{ fontSize: 12 }}
+                />
+                <YAxis 
+                  stroke="#6B7280"
+                  tick={{ fontSize: 12 }}
+                />
                 <Tooltip 
                   contentStyle={{ 
                     backgroundColor: 'white', 
                     border: 'none', 
                     borderRadius: '12px', 
-                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
+                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+                    padding: '12px'
                   }}
+                  formatter={(value, name) => [
+                    `${value} items`,
+                    name
+                  ]}
                 />
-              </PieChart>
+                <Line 
+                  type="monotone" 
+                  dataKey="value" 
+                  stroke="#3B82F6" 
+                  strokeWidth={4}
+                  dot={{ fill: '#3B82F6', strokeWidth: 2, r: 6 }}
+                  activeDot={{ r: 8, stroke: '#3B82F6', strokeWidth: 2, fill: '#fff' }}
+                />
+              </LineChart>
             </ResponsiveContainer>
           </div>
           
-          {/* Legend */}
+          {/* Simple Legend */}
           <div className="flex justify-center gap-6 mt-4">
-            {inventoryData.map((item, index) => (
+            {getInventoryChartData().map((item, index) => (
               <div key={index} className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-                <span className="text-sm text-gray-600">{item.name}</span>
+                <div className="w-4 h-4 rounded-full shadow-sm" style={{ backgroundColor: item.color }}></div>
+                <span className="text-sm font-medium text-gray-700">{item.name}</span>
               </div>
             ))}
           </div>
@@ -475,9 +493,9 @@ export default function Dashboard() {
             </h3>
             <div className="text-2xl font-bold text-blue-600">
               {data.sales.totalSales}
-            </div>
-          </div>
-          
+        </div>
+      </div>
+
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl">
               <span className="text-gray-600 font-medium">Store Sales</span>
@@ -505,7 +523,7 @@ export default function Dashboard() {
               <span className="font-bold text-purple-600">{formatCurrency(data.sales.totalProfit)}</span>
             </div>
           </div>
-        </div>
+      </div>
 
         {/* Inventory Status */}
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300">
@@ -519,7 +537,7 @@ export default function Dashboard() {
             <div className="text-2xl font-bold text-green-600">
               {data.inventory.totalItems}
             </div>
-          </div>
+            </div>
           
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl">
@@ -527,7 +545,7 @@ export default function Dashboard() {
               <div className="flex items-center gap-2">
                 <span className="font-bold text-green-600">{data.inventory.inStockItems}</span>
                 <CheckCircle className="h-4 w-4 text-green-500" />
-              </div>
+            </div>
             </div>
             
             <div className="flex items-center justify-between p-4 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-2xl">
@@ -535,7 +553,7 @@ export default function Dashboard() {
               <div className="flex items-center gap-2">
                 <span className="font-bold text-orange-600">{data.inventory.lowStockItems}</span>
                 <AlertTriangle className="h-4 w-4 text-orange-500" />
-              </div>
+            </div>
             </div>
             
             <div className="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl">
@@ -543,15 +561,15 @@ export default function Dashboard() {
               <div className="flex items-center gap-2">
                 <span className="font-bold text-red-600">{data.inventory.outOfStockItems}</span>
                 <XCircle className="h-4 w-4 text-red-500" />
-              </div>
+            </div>
             </div>
             
             <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl">
               <span className="text-gray-600 font-medium">Total Value</span>
               <span className="font-bold text-blue-600">{formatCurrency(data.inventory.totalValue)}</span>
             </div>
-          </div>
-        </div>
+            </div>
+            </div>
 
         {/* Tasks Overview */}
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300">
@@ -734,16 +752,16 @@ export default function Dashboard() {
                 ) : (
                   <BarChart3 className="h-6 w-6 text-white" />
                 )}
-              </div>
+            </div>
               <div className="font-semibold text-gray-900">
                 {actionLoading === 'View Reports' ? 'Opening...' : 'View Reports'}
-              </div>
+            </div>
               <div className="text-sm text-gray-500">
                 {actionLoading === 'View Reports' ? 'Please wait...' : 'Detailed analytics'}
-              </div>
+            </div>
             </div>
           </button>
-        </div>
+            </div>
       </div>
     </div>
   )
