@@ -9,26 +9,15 @@ import PageLayout from '../../components/layout/PageLayout'
 
 interface Task {
   _id: string
-  shoeType: string
-  saleLocation: 'store' | 'out_of_store'
-  basePrice?: number
-  profitGained?: number
+  clientStatus: 'unsuccessful' | 'annoying' | 'blocked'
+  clientPhone: string
+  behavioralDetails: string
+  cause: string
+  preferredShoeType: string
+  notes?: string
   taxiCost?: number
   otherCosts?: number
-  supplier?: string
   totalCost?: number
-  netProfit?: number
-  clientDetails?: {
-    phone?: string
-    address?: string
-    intentionalBehaviour?: string
-  }
-  clientStatus?: 'successful' | 'unsuccessful' | 'annoying' | 'blocked'
-  clientPhone?: string
-  behavioralDetails?: string
-  cause?: string
-  preferredShoeType?: string
-  notes?: string
   createdBy: {
     username: string
   }
@@ -71,6 +60,8 @@ export default function TasksPage() {
   const [cause, setCause] = useState('')
   const [preferredShoeType, setPreferredShoeType] = useState('')
   const [clientNotes, setClientNotes] = useState('')
+  const [taxiCost, setTaxiCost] = useState(0)
+  const [otherCosts, setOtherCosts] = useState(0)
 
   useEffect(() => {
     fetchTasks()
@@ -163,25 +154,20 @@ export default function TasksPage() {
   const createClientTask = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      if (!clientPhone || !behavioralDetails || !cause) {
-        toast.error('Phone number, behavioral details, and cause are required')
+      if (!clientPhone || !behavioralDetails || !cause || !preferredShoeType) {
+        toast.error('Phone number, behavioral details, cause, and preferred shoe type are required')
         return
       }
 
       await axios.post('http://localhost:5000/api/tasks', {
-        shoeType: preferredShoeType || 'N/A',
-        saleLocation: 'store',
-        basePrice: 0,
-        profitGained: 0,
-        taxiCost: 0,
-        otherCosts: 0,
-        supplier: 'N/A',
         clientStatus,
         clientPhone,
         behavioralDetails,
         cause,
-        preferredShoeType: preferredShoeType || 'N/A',
-        notes: clientNotes || undefined
+        preferredShoeType,
+        notes: clientNotes || undefined,
+        taxiCost,
+        otherCosts
       })
 
       toast.success('Client registered successfully!')
@@ -191,6 +177,8 @@ export default function TasksPage() {
       setCause('')
       setPreferredShoeType('')
       setClientNotes('')
+      setTaxiCost(0)
+      setOtherCosts(0)
       setShowClientForm(false)
       fetchTasks()
     } catch (error: any) {
@@ -200,18 +188,18 @@ export default function TasksPage() {
 
   const filteredTasks = tasks.filter(task => {
     const matchesSearch = 
-      task.shoeType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (task.supplier && task.supplier.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      task.saleLocation.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (task.clientPhone && task.clientPhone.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (task.behavioralDetails && task.behavioralDetails.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (task.cause && task.cause.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (task.preferredShoeType && task.preferredShoeType.toLowerCase().includes(searchTerm.toLowerCase()))
+      task.clientPhone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.behavioralDetails.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.cause.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.preferredShoeType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (task.notes && task.notes.toLowerCase().includes(searchTerm.toLowerCase()))
 
-    if (taskFilter === 'client_issues') {
-      return matchesSearch && task.clientStatus && task.clientStatus !== 'successful'
-    } else if (taskFilter === 'sales') {
-      return matchesSearch && (!task.clientStatus || task.clientStatus === 'successful')
+    if (taskFilter === 'unsuccessful') {
+      return matchesSearch && task.clientStatus === 'unsuccessful'
+    } else if (taskFilter === 'annoying') {
+      return matchesSearch && task.clientStatus === 'annoying'
+    } else if (taskFilter === 'blocked') {
+      return matchesSearch && task.clientStatus === 'blocked'
     }
     
     return matchesSearch
@@ -267,7 +255,6 @@ export default function TasksPage() {
 
   const getClientStatusColor = (status: string) => {
     const colors = {
-      successful: 'text-green-600 bg-green-50',
       unsuccessful: 'text-orange-600 bg-orange-50',
       annoying: 'text-red-600 bg-red-50',
       blocked: 'text-gray-600 bg-gray-50'
@@ -276,10 +263,14 @@ export default function TasksPage() {
   }
 
   const getTaskIcon = (task: Task) => {
-    if (task.clientStatus && task.clientStatus !== 'successful') {
+    if (task.clientStatus === 'unsuccessful') {
+      return <AlertCircle className="h-8 w-8 text-orange-600" />
+    } else if (task.clientStatus === 'annoying') {
       return <AlertCircle className="h-8 w-8 text-red-600" />
+    } else if (task.clientStatus === 'blocked') {
+      return <XCircle className="h-8 w-8 text-gray-600" />
     }
-    return <ClipboardList className="h-8 w-8 text-blue-600" />
+    return <AlertCircle className="h-8 w-8 text-red-600" />
   }
 
   const getTaskBorderColor = (task: Task) => {
@@ -308,16 +299,16 @@ export default function TasksPage() {
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-4xl font-bold mb-2">Action Days & Tasks</h1>
-              <p className="text-blue-100 text-lg">Manage your scheduled actions and view existing tasks</p>
+              <h1 className="text-4xl font-bold mb-2">Client Registration System</h1>
+              <p className="text-blue-100 text-lg">Track and manage problematic clients</p>
               <div className="flex gap-4 mt-4">
                 <div className="bg-white/20 rounded-lg px-4 py-2">
                   <div className="text-2xl font-bold">{tasks.length}</div>
-                  <div className="text-sm text-blue-100">Total Tasks</div>
+                  <div className="text-sm text-blue-100">Total Clients</div>
                 </div>
                 <div className="bg-white/20 rounded-lg px-4 py-2">
-                  <div className="text-2xl font-bold">{tasks.filter(t => t.clientStatus && t.clientStatus !== 'successful').length}</div>
-                  <div className="text-sm text-blue-100">Client Issues</div>
+                  <div className="text-2xl font-bold">{tasks.filter(t => t.clientStatus === 'annoying').length}</div>
+                  <div className="text-sm text-blue-100">Annoying Clients</div>
                 </div>
               </div>
             </div>
@@ -456,7 +447,7 @@ export default function TasksPage() {
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
           <input
             type="text"
-            placeholder="Search tasks by shoe type, supplier, location, client phone, behavior, or cause..."
+            placeholder="Search by client phone, behavior, cause, shoe type, or notes..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
@@ -467,9 +458,10 @@ export default function TasksPage() {
           onChange={(e) => setTaskFilter(e.target.value as any)}
           className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
         >
-          <option value="all">All Tasks</option>
-          <option value="client_issues">Client Issues</option>
-          <option value="sales">Sales Tasks</option>
+          <option value="all">All Clients</option>
+          <option value="unsuccessful">Unsuccessful</option>
+          <option value="annoying">Annoying</option>
+          <option value="blocked">Blocked</option>
         </select>
         <button
           onClick={() => {
@@ -487,155 +479,101 @@ export default function TasksPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredTasks.map((task) => (
           <div key={task._id} className={`bg-white rounded-2xl shadow-lg border p-6 hover:shadow-xl transition-all duration-200 ${getTaskBorderColor(task)}`}>
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex items-center">
-                  <div className={`p-3 rounded-xl mr-4 ${
-                    task.clientStatus && task.clientStatus !== 'successful' 
-                      ? 'bg-red-100' 
-                      : 'bg-blue-100'
-                  }`}>
-                    {getTaskIcon(task)}
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">{task.shoeType}</h3>
-                    <p className="text-sm text-gray-500">Supplier: {task.supplier || 'N/A'}</p>
-                  </div>
+            <div className="flex items-start justify-between mb-6">
+              <div className="flex items-center">
+                <div className={`p-3 rounded-xl mr-4 ${
+                  task.clientStatus === 'unsuccessful' 
+                    ? 'bg-orange-100' 
+                    : task.clientStatus === 'annoying'
+                    ? 'bg-red-100'
+                    : 'bg-gray-100'
+                }`}>
+                  {getTaskIcon(task)}
                 </div>
-                <span className={`px-3 py-2 rounded-full text-xs font-medium ${getLocationColor(task.saleLocation)}`}>
-                  {task.saleLocation.replace('_', ' ')}
-                </span>
-              </div>
-
-              <div className="space-y-3 mb-6">
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Base Price:</span>
-                  <span className="font-semibold text-lg">{formatCurrency(task.basePrice)}</span>
-                </div>
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Profit Gained:</span>
-                  <span className="font-semibold text-lg text-emerald-600">{formatCurrency(task.profitGained)}</span>
-                </div>
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Taxi Cost:</span>
-                  <span className="font-semibold text-lg text-red-600">{formatCurrency(task.taxiCost)}</span>
-                </div>
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600">Other Costs:</span>
-                  <span className="font-semibold text-lg text-red-600">{formatCurrency(task.otherCosts)}</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-t border-gray-100 pt-3">
-                  <span className="text-gray-600">Total Cost:</span>
-                  <span className="font-bold text-xl text-red-600">{formatCurrency(task.totalCost)}</span>
-                </div>
-                <div className="flex justify-between items-center py-3 bg-gradient-to-r from-gray-50 to-white rounded-xl px-4">
-                  <span className="text-gray-600">Net Profit:</span>
-                  <span className={`font-bold text-2xl ${(task.netProfit || 0) >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                    {formatCurrency(task.netProfit)}
-                  </span>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">{task.preferredShoeType}</h3>
+                  <p className="text-sm text-gray-500">Client Status: {task.clientStatus}</p>
                 </div>
               </div>
+              <span className={`px-3 py-2 rounded-full text-xs font-medium ${getClientStatusColor(task.clientStatus)}`}>
+                {task.clientStatus === 'unsuccessful' ? '❌ Unsuccessful' :
+                 task.clientStatus === 'annoying' ? '😤 Annoying' :
+                 '🚫 Blocked'}
+              </span>
+            </div>
 
-              {/* Client Status Badge */}
-              {task.clientStatus && task.clientStatus !== 'successful' && (
-                <div className="mb-4">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getClientStatusColor(task.clientStatus)}`}>
-                    {task.clientStatus === 'unsuccessful' ? '❌ Unsuccessful' :
-                     task.clientStatus === 'annoying' ? '😤 Annoying' :
-                     '🚫 Blocked'}
-                  </span>
-                </div>
-              )}
-
-              {/* Client Details */}
-              {task.clientDetails && (
-                <div className="border-t border-gray-100 pt-6 mb-6">
-                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    Client Details
-                  </h4>
-                  <div className="space-y-2 text-sm">
-                    {task.clientDetails.phone && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Phone:</span>
-                        <span className="font-medium">{task.clientDetails.phone}</span>
-                      </div>
-                    )}
-                    {task.clientDetails.address && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Address:</span>
-                        <span className="font-medium">{task.clientDetails.address}</span>
-                      </div>
-                    )}
-                    {task.clientDetails.intentionalBehaviour && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Behavior:</span>
-                        <span className="font-medium">{task.clientDetails.intentionalBehaviour}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* New Client Tracking Fields */}
-              {task.clientPhone && (
-                <div className="border-t border-gray-100 pt-6 mb-6">
-                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    Client Registration
-                  </h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Phone:</span>
-                      <span className="font-medium">{task.clientPhone}</span>
-                    </div>
-                    {task.behavioralDetails && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Behavior:</span>
-                        <span className="font-medium">{task.behavioralDetails}</span>
-                      </div>
-                    )}
-                    {task.cause && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Cause:</span>
-                        <span className="font-medium">{task.cause}</span>
-                      </div>
-                    )}
-                    {task.preferredShoeType && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Shoe Type:</span>
-                        <span className="font-medium">{task.preferredShoeType}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {task.notes && (
-                <div className="border-t border-gray-100 pt-6 mb-6">
-                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                    Notes
-                  </h4>
-                  <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">{task.notes}</p>
-                </div>
-              )}
-
-              <div className="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-100">
-                <span>Created by {task.createdBy.username}</span>
-                <span>{new Date(task.taskDate).toLocaleDateString()}</span>
+            {/* Client Information */}
+            <div className="space-y-3 mb-6">
+              <div className="flex justify-between items-center py-2">
+                <span className="text-gray-600">Phone Number:</span>
+                <span className="font-semibold text-lg">{task.clientPhone}</span>
+              </div>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-gray-600">Preferred Shoe:</span>
+                <span className="font-semibold text-lg text-blue-600">{task.preferredShoeType}</span>
               </div>
             </div>
-          ))}
+
+            {/* Cost Information */}
+            <div className="space-y-3 mb-6">
+              <div className="flex justify-between items-center py-2">
+                <span className="text-gray-600">Taxi Cost:</span>
+                <span className="font-semibold text-lg text-red-600">{formatCurrency(task.taxiCost)}</span>
+              </div>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-gray-600">Other Costs:</span>
+                <span className="font-semibold text-lg text-red-600">{formatCurrency(task.otherCosts)}</span>
+              </div>
+              <div className="flex justify-between items-center py-3 bg-gradient-to-r from-gray-50 to-white rounded-xl px-4">
+                <span className="text-gray-900 font-bold text-lg">Total Cost:</span>
+                <span className="font-bold text-2xl text-red-600">{formatCurrency(task.totalCost)}</span>
+              </div>
+            </div>
+
+            {/* Client Details */}
+            <div className="border-t border-gray-100 pt-6 mb-6">
+              <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                Client Details
+              </h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Behavior:</span>
+                  <span className="font-medium">{task.behavioralDetails}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Cause:</span>
+                  <span className="font-medium">{task.cause}</span>
+                </div>
+              </div>
+            </div>
+
+            {task.notes && (
+              <div className="border-t border-gray-100 pt-6 mb-6">
+                <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  Notes
+                </h4>
+                <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">{task.notes}</p>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-100">
+              <span>Created by {task.createdBy.username}</span>
+              <span>{new Date(task.taskDate).toLocaleDateString()}</span>
+            </div>
+          </div>
+        ))}
         </div>
 
         {filteredTasks.length === 0 && (
           <div className="text-center py-16 bg-white rounded-2xl shadow-lg border border-gray-100">
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <ClipboardList className="h-12 w-12 text-gray-400" />
+              <AlertCircle className="h-12 w-12 text-gray-400" />
             </div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">No tasks found</h3>
+            <h3 className="text-xl font-medium text-gray-900 mb-2">No clients found</h3>
             <p className="text-gray-500 mb-6">
-              {searchTerm ? 'Try adjusting your search terms.' : 'Get started by creating your first task.'}
+              {searchTerm ? 'Try adjusting your search terms.' : 'Get started by registering your first problematic client.'}
             </p>
           </div>
         )}
@@ -836,6 +774,34 @@ export default function TasksPage() {
                     onChange={(e) => setClientNotes(e.target.value)}
                     placeholder="Any other relevant information about this client..."
                   />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Taxi Cost</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
+                      value={taxiCost}
+                      onChange={(e) => setTaxiCost(Number(e.target.value) || 0)}
+                      placeholder="0.00"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Other Costs</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
+                      value={otherCosts}
+                      onChange={(e) => setOtherCosts(Number(e.target.value) || 0)}
+                      placeholder="0.00"
+                    />
+                  </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4 pt-4">
