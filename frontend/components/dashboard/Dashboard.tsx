@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
 import { 
   Package, 
@@ -81,6 +82,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [period, setPeriod] = useState('all')
   const [selectedMetric, setSelectedMetric] = useState('revenue')
+  const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     fetchDashboardData()
@@ -96,6 +99,26 @@ export default function Dashboard() {
       console.error('Dashboard error:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleQuickAction = async (action: string, route: string) => {
+    try {
+      setActionLoading(action)
+      
+      // Simulate a brief loading state for better UX
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      // Show success toast
+      toast.success(`${action} page opened successfully!`)
+      
+      // Navigate to the route
+      router.push(route)
+    } catch (error) {
+      toast.error(`Failed to open ${action} page`)
+      console.error('Navigation error:', error)
+    } finally {
+      setActionLoading(null)
     }
   }
 
@@ -203,19 +226,41 @@ export default function Dashboard() {
             
             {/* Enhanced Period Filter */}
             <div className="mt-6 sm:mt-0">
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <select
-                  value={period}
-                  onChange={(e) => setPeriod(e.target.value)}
-                  className="relative px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-white font-semibold focus:ring-4 focus:ring-white/20 focus:border-white/50 transition-all duration-300 cursor-pointer"
+              <div className="flex gap-3">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <select
+                    value={period}
+                    onChange={(e) => setPeriod(e.target.value)}
+                    className="relative px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-white font-semibold focus:ring-4 focus:ring-white/20 focus:border-white/50 transition-all duration-300 cursor-pointer"
+                  >
+                    <option value="all">📊 All Time</option>
+                    <option value="today">📅 Today</option>
+                    <option value="week">📈 This Week</option>
+                    <option value="month">🗓️ This Month</option>
+                    <option value="year">📊 This Year</option>
+                  </select>
+                </div>
+                
+                {/* Refresh Button */}
+                <button
+                  onClick={fetchDashboardData}
+                  disabled={loading}
+                  className="relative group px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-white font-semibold hover:bg-white/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <option value="all">📊 All Time</option>
-                  <option value="today">📅 Today</option>
-                  <option value="week">📈 This Week</option>
-                  <option value="month">🗓️ This Month</option>
-                  <option value="year">📊 This Year</option>
-                </select>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`}>
+                      {loading ? (
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+                      ) : (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                      )}
+                    </div>
+                    {loading ? 'Refreshing...' : 'Refresh'}
+                  </div>
+                </button>
               </div>
             </div>
           </div>
@@ -321,6 +366,14 @@ export default function Dashboard() {
                     <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
                     <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
                   </linearGradient>
+                  <linearGradient id="colorCosts" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#EF4444" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#EF4444" stopOpacity={0.1}/>
+                  </linearGradient>
+                  <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#F59E0B" stopOpacity={0.1}/>
+                  </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
                 <XAxis dataKey="name" stroke="#6B7280" />
@@ -330,15 +383,25 @@ export default function Dashboard() {
                     backgroundColor: 'white', 
                     border: 'none', 
                     borderRadius: '12px', 
-                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
+                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+                    padding: '12px'
                   }}
+                  labelStyle={{ fontWeight: 'bold', color: '#374151' }}
+                  formatter={(value, name) => [
+                    name === 'revenue' ? `$${value.toLocaleString()}` : 
+                    name === 'profit' ? `$${value.toLocaleString()}` : 
+                    name === 'costs' ? `$${value.toLocaleString()}` : 
+                    `${value} units`,
+                    name.charAt(0).toUpperCase() + name.slice(1)
+                  ]}
                 />
                 <Area 
                   type="monotone" 
                   dataKey={selectedMetric} 
                   stroke={selectedMetric === 'revenue' ? '#3B82F6' : selectedMetric === 'profit' ? '#10B981' : selectedMetric === 'costs' ? '#EF4444' : '#F59E0B'} 
-                  fill={selectedMetric === 'revenue' ? 'url(#colorRevenue)' : selectedMetric === 'profit' ? 'url(#colorProfit)' : 'currentColor'}
+                  fill={selectedMetric === 'revenue' ? 'url(#colorRevenue)' : selectedMetric === 'profit' ? 'url(#colorProfit)' : selectedMetric === 'costs' ? 'url(#colorCosts)' : 'url(#colorSales)'}
                   strokeWidth={3}
+                  activeDot={{ r: 8, strokeWidth: 2, stroke: '#fff' }}
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -585,43 +648,99 @@ export default function Dashboard() {
         </h3>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <button className="group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
+          <button 
+            onClick={() => handleQuickAction('New Sale', '/sales')} 
+            className={`group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100 ${
+              actionLoading === 'New Sale' ? 'opacity-50 cursor-not-allowed scale-95' : ''
+            }`}
+            disabled={actionLoading === 'New Sale'}
+          >
             <div className="text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                <ShoppingCart className="h-6 w-6 text-white" />
+                {actionLoading === 'New Sale' ? (
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <ShoppingCart className="h-6 w-6 text-white" />
+                )}
               </div>
-              <div className="font-semibold text-gray-900">New Sale</div>
-              <div className="text-sm text-gray-500">Record transaction</div>
+              <div className="font-semibold text-gray-900">
+                {actionLoading === 'New Sale' ? 'Opening...' : 'New Sale'}
+              </div>
+              <div className="text-sm text-gray-500">
+                {actionLoading === 'New Sale' ? 'Please wait...' : 'Record transaction'}
+              </div>
             </div>
           </button>
           
-          <button className="group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
+          <button 
+            onClick={() => handleQuickAction('Add Item', '/inventory')} 
+            className={`group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100 ${
+              actionLoading === 'Add Item' ? 'opacity-50 cursor-not-allowed scale-95' : ''
+            }`}
+            disabled={actionLoading === 'Add Item'}
+          >
             <div className="text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                <Package className="h-6 w-6 text-white" />
+                {actionLoading === 'Add Item' ? (
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <Package className="h-6 w-6 text-white" />
+                )}
               </div>
-              <div className="font-semibold text-gray-900">Add Item</div>
-              <div className="text-sm text-gray-500">Update inventory</div>
+              <div className="font-semibold text-gray-900">
+                {actionLoading === 'Add Item' ? 'Opening...' : 'Add Item'}
+              </div>
+              <div className="text-sm text-gray-500">
+                {actionLoading === 'Add Item' ? 'Please wait...' : 'Update inventory'}
+              </div>
             </div>
           </button>
           
-          <button className="group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
+          <button 
+            onClick={() => handleQuickAction('New Task', '/tasks')} 
+            className={`group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100 ${
+              actionLoading === 'New Task' ? 'opacity-50 cursor-not-allowed scale-95' : ''
+            }`}
+            disabled={actionLoading === 'New Task'}
+          >
             <div className="text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                <ClipboardList className="h-6 w-6 text-white" />
+                {actionLoading === 'New Task' ? (
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <ClipboardList className="h-6 w-6 text-white" />
+                )}
               </div>
-              <div className="font-semibold text-gray-900">New Task</div>
-              <div className="text-sm text-gray-500">Create task</div>
+              <div className="font-semibold text-gray-900">
+                {actionLoading === 'New Task' ? 'Opening...' : 'New Task'}
+              </div>
+              <div className="text-sm text-gray-500">
+                {actionLoading === 'New Task' ? 'Please wait...' : 'Create task'}
+              </div>
             </div>
           </button>
           
-          <button className="group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
+          <button 
+            onClick={() => handleQuickAction('View Reports', '/analytics')} 
+            className={`group p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100 ${
+              actionLoading === 'View Reports' ? 'opacity-50 cursor-not-allowed scale-95' : ''
+            }`}
+            disabled={actionLoading === 'View Reports'}
+          >
             <div className="text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                <BarChart3 className="h-6 w-6 text-white" />
+                {actionLoading === 'View Reports' ? (
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <BarChart3 className="h-6 w-6 text-white" />
+                )}
               </div>
-              <div className="font-semibold text-gray-900">View Reports</div>
-              <div className="text-sm text-gray-500">Detailed analytics</div>
+              <div className="font-semibold text-gray-900">
+                {actionLoading === 'View Reports' ? 'Opening...' : 'View Reports'}
+              </div>
+              <div className="text-sm text-gray-500">
+                {actionLoading === 'View Reports' ? 'Please wait...' : 'Detailed analytics'}
+              </div>
             </div>
           </button>
         </div>
