@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '../../hooks/useAuth'
+import ThemeToggle from './ThemeToggle'
 import {
   Home,
   Package,
@@ -11,6 +12,7 @@ import {
   ClipboardList,
   BarChart3,
   Settings,
+  Palette,
   LogOut,
   Menu,
   X
@@ -27,6 +29,7 @@ export default function Sidebar() {
     { name: 'Sales', href: '/sales', icon: ShoppingCart },
     { name: 'Tasks', href: '/tasks', icon: ClipboardList },
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+    { name: 'Theme Demo', href: '/theme-demo', icon: Palette },
     { name: 'Settings', href: '/settings', icon: Settings },
   ]
 
@@ -89,6 +92,11 @@ export default function Sidebar() {
               )
             })}
           </nav>
+
+          {/* Theme Toggle */}
+          <div className="px-4 py-3 border-t border-blue-700/50">
+            <ThemeToggle />
+          </div>
 
           {/* User section */}
           <div className="px-4 py-4 border-t border-blue-700/50">
