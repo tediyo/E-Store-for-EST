@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: function() {
-      return !this.socialLogin; // Username required only if not social login
+      return !this.socialLogin || this.socialLogin.provider === 'local';
     },
     unique: true,
     trim: true
@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: function() {
-      return !this.socialLogin; // Password required only if not social login
+      return !this.socialLogin || this.socialLogin.provider === 'local';
     },
     minlength: 6
   },
