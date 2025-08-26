@@ -12,7 +12,6 @@ import {
   ClipboardList,
   BarChart3,
   Settings,
-  Palette,
   LogOut,
   Menu,
   X
@@ -29,7 +28,6 @@ export default function Sidebar() {
     { name: 'Sales', href: '/sales', icon: ShoppingCart },
     { name: 'Tasks', href: '/tasks', icon: ClipboardList },
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
-    { name: 'Theme Demo', href: '/theme-demo', icon: Palette },
     { name: 'Settings', href: '/settings', icon: Settings },
   ]
 

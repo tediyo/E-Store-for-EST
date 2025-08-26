@@ -29,6 +29,7 @@ import {
   Monitor
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
+import { useTheme } from '../../hooks/useTheme'
 import toast from 'react-hot-toast'
 import PageLayout from '../../components/layout/PageLayout'
 
@@ -56,6 +57,7 @@ interface AppearanceSettings {
 
 export default function SettingsPage() {
   const { user, logout } = useAuth()
+  const { theme, setTheme, resolvedTheme } = useTheme()
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
@@ -82,7 +84,7 @@ export default function SettingsPage() {
   })
   
   const [appearance, setAppearance] = useState<AppearanceSettings>({
-    theme: 'auto',
+    theme: theme,
     language: 'English',
     timezone: 'UTC',
     dateFormat: 'MM/DD/YYYY'
@@ -123,6 +125,9 @@ export default function SettingsPage() {
   }
 
   const handleAppearanceChange = (key: keyof AppearanceSettings, value: string) => {
+    if (key === 'theme') {
+      setTheme(value as 'light' | 'dark' | 'auto')
+    }
     setAppearance(prev => ({
       ...prev,
       [key]: value
