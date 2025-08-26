@@ -29,6 +29,7 @@ import {
   Monitor
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
+import { useTheme } from '../../hooks/useTheme'
 import toast from 'react-hot-toast'
 import PageLayout from '../../components/layout/PageLayout'
 
@@ -56,6 +57,7 @@ interface AppearanceSettings {
 
 export default function SettingsPage() {
   const { user, logout } = useAuth()
+  const { theme, setTheme, resolvedTheme } = useTheme()
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
@@ -82,7 +84,7 @@ export default function SettingsPage() {
   })
   
   const [appearance, setAppearance] = useState<AppearanceSettings>({
-    theme: 'auto',
+    theme: theme,
     language: 'English',
     timezone: 'UTC',
     dateFormat: 'MM/DD/YYYY'
@@ -123,6 +125,9 @@ export default function SettingsPage() {
   }
 
   const handleAppearanceChange = (key: keyof AppearanceSettings, value: string) => {
+    if (key === 'theme') {
+      setTheme(value as 'light' | 'dark' | 'auto')
+    }
     setAppearance(prev => ({
       ...prev,
       [key]: value
@@ -555,6 +560,52 @@ export default function SettingsPage() {
                       <option value="DD/MM/YYYY">DD/MM/YYYY</option>
                       <option value="YYYY-MM-DD">YYYY-MM-DD</option>
                     </select>
+                  </div>
+                </div>
+
+                {/* Social Accounts Section */}
+                <div className="mt-8 p-6 bg-gray-50 rounded-2xl">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Social Accounts</h3>
+                  <p className="text-gray-600 mb-4">Connect your social media accounts for easy login</p>
+                  
+                  <div className="space-y-3">
+                    {/* Google Account */}
+                    <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center mr-3">
+                          <span className="text-white text-sm font-bold">G</span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">Google</p>
+                          <p className="text-sm text-gray-500">Sign in with Google account</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => window.location.href = 'http://localhost:5000/api/auth/google'}
+                        className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                      >
+                        Connect
+                      </button>
+                    </div>
+
+                    {/* GitHub Account */}
+                    <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center mr-3">
+                          <span className="text-white text-sm font-bold">G</span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">GitHub</p>
+                          <p className="text-sm text-gray-500">Sign in with GitHub account</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => window.location.href = 'http://localhost:5000/api/auth/github'}
+                        className="px-4 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-900 transition-colors duration-200"
+                      >
+                        Connect
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

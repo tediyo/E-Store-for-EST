@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
+import SocialLogin from './SocialLogin'
 
 interface LoginFormData {
   email: string
@@ -89,6 +90,9 @@ export default function LoginForm() {
           {isLoading ? 'Signing in...' : 'Sign in'}
         </button>
       </div>
+
+      {/* Social Login */}
+      <SocialLogin />
     </form>
   )
 }

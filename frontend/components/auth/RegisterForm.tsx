@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
+import SocialLogin from './SocialLogin'
 
 interface RegisterFormData {
   username: string
@@ -155,6 +156,9 @@ export default function RegisterForm() {
           {isLoading ? 'Creating account...' : 'Create account'}
         </button>
       </div>
+
+      {/* Social Login */}
+      <SocialLogin />
     </form>
   )
 }

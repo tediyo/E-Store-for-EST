@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '../../hooks/useAuth'
+import ThemeToggle from './ThemeToggle'
 import {
   Home,
   Package,
@@ -89,6 +90,11 @@ export default function Sidebar() {
               )
             })}
           </nav>
+
+          {/* Theme Toggle */}
+          <div className="px-4 py-3 border-t border-blue-700/50">
+            <ThemeToggle />
+          </div>
 
           {/* User section */}
           <div className="px-4 py-4 border-t border-blue-700/50">

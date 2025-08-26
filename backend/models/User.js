@@ -4,7 +4,9 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true,
+    required: function() {
+      return !this.socialLogin || this.socialLogin.provider === 'local';
+    },
     unique: true,
     trim: true
   },
@@ -17,7 +19,9 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: function() {
+      return !this.socialLogin || this.socialLogin.provider === 'local';
+    },
     minlength: 6
   },
   role: {
@@ -28,6 +32,21 @@ const userSchema = new mongoose.Schema({
   isActive: {
     type: Boolean,
     default: true
+  },
+  socialLogin: {
+    provider: {
+      type: String,
+      enum: ['google', 'github', 'local'],
+      default: 'local'
+    },
+    socialId: String,
+    avatar: String
+  },
+  profile: {
+    firstName: String,
+    lastName: String,
+    phone: String,
+    address: String
   }
 }, {
   timestamps: true

@@ -1,5 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
 const { auth } = require('../middleware/auth');
@@ -146,6 +147,120 @@ router.put('/profile', auth, [
     res.json({
       message: 'Profile updated successfully',
       user
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Social Login Routes
+
+// Google OAuth
+router.get('/google', passport.authenticate('google', { 
+  scope: ['profile', 'email'] 
+}));
+
+router.get('/google/callback', 
+  passport.authenticate('google', { session: false }),
+  (req, res) => {
+    try {
+      const user = req.user;
+      const token = jwt.sign(
+        { userId: user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
+      // Redirect to frontend with token
+      res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}&provider=google`);
+    } catch (error) {
+      res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=Authentication failed`);
+    }
+  }
+);
+
+// GitHub OAuth
+router.get('/github', passport.authenticate('github', { 
+  scope: ['user:email'] 
+}));
+
+router.get('/github/callback', 
+  passport.authenticate('github', { session: false }),
+  (req, res) => {
+    try {
+      const user = req.user;
+      const token = jwt.sign(
+        { userId: user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
+      // Redirect to frontend with token
+      res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}&provider=github`);
+    } catch (error) {
+      res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=Authentication failed`);
+    }
+  }
+);
+
+// Link social account to existing user
+router.post('/link-social', auth, async (req, res) => {
+  try {
+    const { provider, socialId, avatar } = req.body;
+    
+    const user = await User.findById(req.user._id);
+    user.socialLogin = {
+      provider,
+      socialId,
+      avatar
+    };
+    
+    await user.save();
+    
+    res.json({
+      message: 'Social account linked successfully',
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        socialLogin: user.socialLogin
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Unlink social account
+router.delete('/unlink-social', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    
+    // Only allow unlink if user has a password
+    if (user.socialLogin.provider !== 'local' && !user.password) {
+      return res.status(400).json({ 
+        message: 'Cannot unlink social account. Please set a password first.' 
+      });
+    }
+    
+    user.socialLogin = {
+      provider: 'local',
+      socialId: null,
+      avatar: null
+    };
+    
+    await user.save();
+    
+    res.json({
+      message: 'Social account unlinked successfully',
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        socialLogin: user.socialLogin
+      }
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
