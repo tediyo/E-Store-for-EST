@@ -125,7 +125,7 @@ export default function Sidebar() {
           </div>
 
           {/* Navigation Section */}
-          <nav className="flex-1 px-6 py-2 space-y-1">
+          <nav className="px-6 py-2 space-y-1">
             {navigation.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
@@ -171,55 +171,23 @@ export default function Sidebar() {
                 </Link>
               )
             })}
+
+            {/* Logout Button Below Navigation */}
+            <div className="pt-4">
+              <button
+                onClick={handleLogout}
+                className="group w-full flex items-center justify-center px-4 py-3 text-sm text-gray-300 rounded-2xl hover:bg-gradient-to-r hover:from-red-600/20 hover:to-pink-600/20 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 border border-gray-600/30 hover:border-red-500/30"
+              >
+                <LogOut size={18} className="mr-3 group-hover:scale-110 transition-transform duration-300" />
+                Sign out
+              </button>
+            </div>
           </nav>
 
 
 
           {/* Enhanced User Section */}
-          <div className="px-6 py-6 border-t border-gray-700/50">
-            {/* User Profile Card */}
-            <div className="bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-2xl p-4 backdrop-blur-sm border border-gray-600/30 mb-4">
-              <div className="flex items-center mb-4">
-                <div className="relative">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg">
-                    <span className="text-white text-lg font-bold">
-                      {user?.username?.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                  {/* Online Status */}
-                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-gray-800 rounded-full"></div>
-                </div>
-                <div className="ml-4 flex-1">
-                  <p className="text-sm font-semibold text-white">{user?.username}</p>
-                  <div className="flex items-center space-x-2 mt-1">
-                    <Shield className="w-3 h-3 text-blue-400" />
-                    <p className="text-xs text-gray-300 capitalize">{user?.role}</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Quick Stats */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-gray-700/30 rounded-xl p-2 text-center">
-                  <div className="text-xs text-gray-400">Tasks</div>
-                  <div className="text-sm font-semibold text-white">12</div>
-                </div>
-                <div className="bg-gray-700/30 rounded-xl p-2 text-center">
-                  <div className="text-xs text-gray-400">Sales</div>
-                  <div className="text-sm font-semibold text-white">8</div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Enhanced Logout Button */}
-            <button
-              onClick={handleLogout}
-              className="group w-full flex items-center justify-center px-4 py-3 text-sm text-gray-300 rounded-2xl hover:bg-gradient-to-r hover:from-red-600/20 hover:to-pink-600/20 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 border border-gray-600/30 hover:border-red-500/30"
-            >
-              <LogOut size={18} className="mr-3 group-hover:scale-110 transition-transform duration-300" />
-              Sign out
-            </button>
-          </div>
+          
         </div>
         
         {/* Decorative Background Elements */}
