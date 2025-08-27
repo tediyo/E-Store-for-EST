@@ -18,7 +18,7 @@ export default function PageLayout({
   title, 
   subtitle, 
   actions,
-  showHeader = true,
+  showHeader = false,
   showSidebar = true
 }: PageLayoutProps) {
   return (
@@ -27,7 +27,6 @@ export default function PageLayout({
       <div className="fixed inset-0 bg-pattern-dots opacity-5 pointer-events-none"></div>
       
       {/* Decorative Elements */}
-      <div className="fixed top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-full blur-3xl pointer-events-none"></div>
       <div className="fixed bottom-0 right-1/4 w-80 h-80 bg-gradient-to-br from-indigo-500/5 to-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
       
       {showHeader && <Header />}
@@ -35,42 +34,6 @@ export default function PageLayout({
       
       <main className={`transition-all duration-300 ${showSidebar ? 'lg:ml-72' : ''} ${showHeader ? 'pt-20' : 'pt-0'}`}>
         <div className="min-h-screen">
-          {/* Enhanced Page Header */}
-          {(title || subtitle || actions) && (
-            <div className="relative px-6 py-8 mb-8 overflow-hidden">
-              {/* Background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-white/80 to-blue-50/80 dark:from-gray-800/80 dark:to-blue-900/20 backdrop-blur-sm rounded-3xl border border-white/50 dark:border-gray-700/50"></div>
-              
-              {/* Content */}
-              <div className="relative z-10">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                  <div className="flex-1">
-                    {title && (
-                      <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent mb-3">
-                        {title}
-                      </h1>
-                    )}
-                    {subtitle && (
-                      <p className="text-xl text-gray-600 dark:text-gray-400 font-medium max-w-3xl">
-                        {subtitle}
-                      </p>
-                    )}
-                  </div>
-                  
-                  {actions && (
-                    <div className="flex flex-wrap gap-3">
-                      {actions}
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              {/* Decorative Elements */}
-              <div className="absolute top-4 right-4 w-16 h-16 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-lg"></div>
-              <div className="absolute bottom-4 left-4 w-12 h-12 bg-gradient-to-br from-indigo-400/20 to-blue-400/20 rounded-full blur-lg"></div>
-            </div>
-          )}
-          
           {/* Main Content */}
           <div className="px-6 pb-8">
             <div className="animate-fade-in-up">
@@ -80,12 +43,7 @@ export default function PageLayout({
         </div>
       </main>
       
-      {/* Enhanced Scroll Indicator */}
-      <div className="fixed bottom-6 right-6 z-40">
-        <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-2xl shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300 hover:scale-110 cursor-pointer group">
-          <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
-        </div>
-      </div>
+
     </div>
   )
 }
