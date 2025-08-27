@@ -73,25 +73,24 @@ export default function Sidebar() {
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="flex flex-col h-full relative">
-          {/* Enhanced Navigation */}
-          <nav className="flex-1 px-6 py-6 space-y-3">
-            {/* Logo Section Above Navigation */}
-            <div className="relative flex flex-col items-center justify-center h-48 px-6 mb-6 overflow-hidden bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 rounded-2xl border border-gray-700/50">
+          {/* Logo Section at Top */}
+          <div className="flex-shrink-0 px-6 pt-8 pb-6">
+            <div className="relative flex flex-col items-center justify-center h-36 overflow-hidden bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 rounded-2xl border border-gray-700/50">
               {/* Background Pattern */}
               <div className="absolute inset-0 bg-pattern-dots opacity-5"></div>
               
               {/* Main Logo Container */}
               <div className="relative z-10 text-center">
                 {/* Primary Logo */}
-                <div className="relative mb-4">
-                  <div className="w-28 h-28 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/25 mx-auto border-4 border-yellow-400">
+                <div className="relative mb-2">
+                  <div className="w-20 h-20 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/25 mx-auto border-2 border-yellow-400">
                     {/* Logo Image */}
                     <img 
                       src="/esho.jpg"
                       alt="E Store Logo" 
-                      className="w-24 h-24 object-contain rounded-2xl"
+                      className="w-16 h-16 object-contain rounded-xl"
                       style={{ 
-                        border: '2px solid #ffffff',
+                        border: '1px solid #ffffff',
                         backgroundColor: 'rgba(255, 255, 255, 0.1)'
                       }}
                       onError={(e) => {
@@ -104,45 +103,30 @@ export default function Sidebar() {
                     />
                     
                     {/* Fallback Text Logo */}
-                    <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center shadow-lg hidden">
-                      <span className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                    <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-lg hidden">
+                      <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
                         ES
                       </span>
                     </div>
                   </div>
                   
                   {/* Glow Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl blur-xl opacity-30 animate-pulse"></div>
-                  
-                  {/* Floating Elements */}
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full animate-bounce"></div>
-                  <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full animate-bounce delay-1000"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-2xl blur-lg opacity-20 animate-pulse"></div>
                 </div>
                 
                 {/* Company Name */}
-                <h1 className="text-2xl font-bold text-white mb-2">
+                <h1 className="text-lg font-bold text-white mb-1">
                   E Store
                 </h1>
-                <p className="text-sm text-gray-300 font-medium mb-3">
+                <p className="text-xs text-gray-300 font-medium">
                   Business Management System
                 </p>
-                
-                {/* Status Indicator */}
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-xs text-green-400 font-medium">System Active</span>
-                </div>
               </div>
-              
-              {/* Decorative Elements */}
-              <div className="absolute top-6 right-6 w-8 h-8 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-sm"></div>
-              <div className="absolute bottom-6 left-6 w-6 h-6 bg-gradient-to-br from-indigo-400/20 to-blue-400/20 rounded-full blur-sm"></div>
-              <div className="absolute top-1/2 left-2 w-4 h-4 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-sm animate-pulse"></div>
             </div>
+          </div>
 
-            {/* Free Space Above Dashboard Button */}
-            <div className="h-8"></div>
-            
+          {/* Navigation Section */}
+          <nav className="flex-1 px-6 py-2 space-y-1">
             {navigation.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
@@ -150,25 +134,25 @@ export default function Sidebar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`group relative flex items-center px-4 py-4 rounded-2xl transition-all duration-300 ease-out ${
+                  className={`group relative flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-out ${
                     isActive
-                      ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border border-blue-500/30 shadow-xl shadow-blue-500/20 backdrop-blur-sm'
-                      : 'text-gray-300 hover:bg-white/10 hover:text-white hover:shadow-lg hover:shadow-gray-500/10'
+                      ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border border-blue-500/30 shadow-lg shadow-blue-500/20 backdrop-blur-sm'
+                      : 'text-gray-300 hover:bg-white/10 hover:text-white hover:shadow-md hover:shadow-gray-500/10'
                   }`}
                   onClick={() => setIsOpen(false)}
                 >
                   {/* Active Indicator */}
                   {isActive && (
-                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-blue-400 to-purple-400 rounded-r-full"></div>
+                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-gradient-to-b from-blue-400 to-purple-400 rounded-r-full"></div>
                   )}
                   
                   {/* Icon */}
-                  <div className={`p-2.5 rounded-xl mr-4 transition-all duration-300 ${
+                  <div className={`p-2 rounded-lg mr-3 transition-all duration-300 ${
                     isActive 
                       ? 'bg-gradient-to-br from-blue-500 to-purple-500 shadow-lg' 
                       : 'bg-gray-700/50 group-hover:bg-gray-600/50'
                   }`}>
-                    <Icon size={20} className={isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'} />
+                    <Icon size={18} className={isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'} />
                   </div>
                   
                   {/* Text Content */}
@@ -182,7 +166,7 @@ export default function Sidebar() {
                   </div>
                   
                   {/* Hover Effect */}
-                  <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-600/0 to-purple-600/0 transition-all duration-300 ${
+                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-blue-600/0 to-purple-600/0 transition-all duration-300 ${
                     isActive ? 'from-blue-600/10 to-purple-600/10' : 'group-hover:from-blue-600/5 group-hover:to-purple-600/5'
                   }`}></div>
                 </Link>
