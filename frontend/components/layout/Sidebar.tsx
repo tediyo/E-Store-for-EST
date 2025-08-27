@@ -67,21 +67,46 @@ export default function Sidebar() {
       `}>
         <div className="flex flex-col h-full relative">
           {/* Enhanced Logo Section at Top */}
-          <div className="relative flex flex-col items-center justify-center h-40 px-6 border-b border-gray-700/50 overflow-hidden">
+          <div className="relative flex flex-col items-center justify-center h-40 px-6 border-b border-gray-700/50 overflow-hidden" style={{backgroundColor: 'rgba(239, 68, 68, 0.3)'}}>
             {/* Background Pattern */}
             <div className="absolute inset-0 bg-pattern-dots opacity-5"></div>
             
             {/* Main Logo Container */}
             <div className="relative z-10 text-center">
-              {/* Primary Logo - INSERT YOUR LOGO HERE */}
+              {/* Primary Logo */}
               <div className="relative mb-4">
-                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/25 mx-auto">
-                  {/* Your Logo Image */}
+                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/25 mx-auto" style={{border: '4px solid #fbbf24'}}>
+                  {/* Logo Image with Debug Info */}
                   <img 
-                    src="/images/esho.png" 
+                    src={`/esho.jpg?v=${Date.now()}`}
                     alt="E Store Logo" 
                     className="w-20 h-20 object-contain rounded-2xl"
+                    onLoad={() => {
+                      console.log('✅ Logo loaded successfully!');
+                      console.log('Image source:', `/esho.jpg?v=${Date.now()}`);
+                    }}
+                    onError={(e) => {
+                      console.error('❌ Logo failed to load!');
+                      const target = e.target as HTMLImageElement;
+                      console.error('Failed image source:', target.src);
+                      console.error('Error details:', e);
+                      // Show fallback text
+                      target.style.display = 'none';
+                      const fallback = target.nextElementSibling as HTMLElement;
+                      if (fallback) fallback.style.display = 'flex';
+                    }}
+                    style={{ 
+                      border: '3px solid #ef4444',
+                      backgroundColor: 'rgba(34, 197, 94, 0.2)'
+                    }}
                   />
+                  
+                  {/* Fallback Text Logo (hidden by default) */}
+                  <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-lg" style={{display: 'none'}}>
+                    <span className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                      IMS
+                    </span>
+                  </div>
                 </div>
                 
                 {/* Glow Effect */}
