@@ -1,23 +1,247 @@
 'use client'
 
 import { ReactNode } from 'react'
-import Sidebar from './Sidebar'
 import Header from './Header'
+import Sidebar from './Sidebar'
 
 interface PageLayoutProps {
   children: ReactNode
+  title?: string
+  subtitle?: string
+  actions?: ReactNode
+  showHeader?: boolean
+  showSidebar?: boolean
 }
 
-export default function PageLayout({ children }: PageLayoutProps) {
+export default function PageLayout({ 
+  children, 
+  title, 
+  subtitle, 
+  actions,
+  showHeader = true,
+  showSidebar = true
+}: PageLayoutProps) {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar />
-      <div className="ml-64">
-        <Header />
-        <main className="p-8">
-          {children}
-        </main>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:via-blue-900/20 dark:to-purple-900/20">
+      {/* Background Pattern */}
+      <div className="fixed inset-0 bg-pattern-dots opacity-5 pointer-events-none"></div>
+      
+      {/* Decorative Elements */}
+      <div className="fixed top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="fixed bottom-0 right-1/4 w-80 h-80 bg-gradient-to-br from-indigo-500/5 to-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
+      
+      {showHeader && <Header />}
+      {showSidebar && <Sidebar />}
+      
+      <main className={`transition-all duration-300 ${showSidebar ? 'lg:ml-72' : ''} ${showHeader ? 'pt-20' : 'pt-0'}`}>
+        <div className="min-h-screen">
+          {/* Enhanced Page Header */}
+          {(title || subtitle || actions) && (
+            <div className="relative px-6 py-8 mb-8 overflow-hidden">
+              {/* Background */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/80 to-blue-50/80 dark:from-gray-800/80 dark:to-blue-900/20 backdrop-blur-sm rounded-3xl border border-white/50 dark:border-gray-700/50"></div>
+              
+              {/* Content */}
+              <div className="relative z-10">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                  <div className="flex-1">
+                    {title && (
+                      <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent mb-3">
+                        {title}
+                      </h1>
+                    )}
+                    {subtitle && (
+                      <p className="text-xl text-gray-600 dark:text-gray-400 font-medium max-w-3xl">
+                        {subtitle}
+                      </p>
+                    )}
+                  </div>
+                  
+                  {actions && (
+                    <div className="flex flex-wrap gap-3">
+                      {actions}
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Decorative Elements */}
+              <div className="absolute top-4 right-4 w-16 h-16 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-lg"></div>
+              <div className="absolute bottom-4 left-4 w-12 h-12 bg-gradient-to-br from-indigo-400/20 to-blue-400/20 rounded-full blur-lg"></div>
+            </div>
+          )}
+          
+          {/* Main Content */}
+          <div className="px-6 pb-8">
+            <div className="animate-fade-in-up">
+              {children}
+            </div>
+          </div>
+        </div>
+      </main>
+      
+      {/* Enhanced Scroll Indicator */}
+      <div className="fixed bottom-6 right-6 z-40">
+        <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-2xl shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300 hover:scale-110 cursor-pointer group">
+          <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
+        </div>
       </div>
+    </div>
+  )
+}
+
+// Enhanced Section Components
+export function PageSection({ 
+  children, 
+  className = '', 
+  title,
+  subtitle,
+  actions,
+  variant = 'default'
+}: {
+  children: ReactNode
+  className?: string
+  title?: string
+  subtitle?: string
+  actions?: ReactNode
+  variant?: 'default' | 'glass' | 'gradient'
+}) {
+  const variantClasses = {
+    default: "bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700",
+    glass: "bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20",
+    gradient: "bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-3xl shadow-xl border border-gray-200/50 dark:border-gray-700/50"
+  }
+  
+  return (
+    <section className={`${variantClasses[variant]} p-8 mb-8 transition-all duration-300 hover:shadow-2xl ${className}`}>
+      {/* Section Header */}
+      {(title || subtitle || actions) && (
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+          <div className="flex-1">
+            {title && (
+              <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                {title}
+              </h2>
+            )}
+            {subtitle && (
+              <p className="text-gray-600 dark:text-gray-400 font-medium">
+                {subtitle}
+              </p>
+            )}
+          </div>
+          
+          {actions && (
+            <div className="flex flex-wrap gap-3">
+              {actions}
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* Section Content */}
+      <div className="animate-fade-in-up">
+        {children}
+      </div>
+    </section>
+  )
+}
+
+export function ContentGrid({ 
+  children, 
+  className = '', 
+  cols = 1,
+  gap = 'default'
+}: {
+  children: ReactNode
+  className?: string
+  cols?: 1 | 2 | 3 | 4
+  gap?: 'small' | 'default' | 'large'
+}) {
+  const gridCols = {
+    1: 'grid-cols-1',
+    2: 'grid-cols-1 lg:grid-cols-2',
+    3: 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3',
+    4: 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4'
+  }
+  
+  const gapClasses = {
+    small: 'gap-4',
+    default: 'gap-6',
+    large: 'gap-8'
+  }
+  
+  return (
+    <div className={`grid ${gridCols[cols]} ${gapClasses[gap]} ${className}`}>
+      {children}
+    </div>
+  )
+}
+
+export function LoadingState({ 
+  message = 'Loading...',
+  className = ''
+}: {
+  message?: string
+  className?: string
+}) {
+  return (
+    <div className={`flex flex-col items-center justify-center py-20 ${className}`}>
+      <div className="relative">
+        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center shadow-2xl shadow-blue-500/25">
+          <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+        </div>
+        {/* Glow effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full blur-xl opacity-20 animate-pulse"></div>
+      </div>
+      
+      <div className="mt-6 text-center">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          {message}
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400">
+          Please wait while we load your data...
+        </p>
+      </div>
+    </div>
+  )
+}
+
+export function EmptyState({ 
+  icon: Icon,
+  title,
+  description,
+  action,
+  className = ''
+}: {
+  icon: any
+  title: string
+  description: string
+  action?: ReactNode
+  className?: string
+}) {
+  return (
+    <div className={`text-center py-20 ${className}`}>
+      <div className="relative inline-block mb-8">
+        <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-full flex items-center justify-center shadow-lg">
+          <Icon className="h-12 w-12 text-gray-400 dark:text-gray-500" />
+        </div>
+        {/* Subtle glow */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-full blur-xl opacity-50"></div>
+      </div>
+      
+      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+        {title}
+      </h3>
+      
+      <p className="text-lg text-gray-600 dark:text-gray-400 max-w-md mx-auto mb-8">
+        {description}
+      </p>
+      
+      {action && (
+        <div className="animate-bounce-in">
+          {action}
+        </div>
+      )}
     </div>
   )
 }

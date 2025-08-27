@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { X, ShoppingCart, User, MapPin, Phone, Info } from 'lucide-react'
+import { X, ShoppingCart, User, MapPin, Phone, Info, DollarSign, Package, TrendingUp, AlertTriangle } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface Item {
@@ -181,128 +181,206 @@ export default function SalesForm({ isOpen, onClose, onSuccess }: SalesFormProps
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <div className="flex items-center">
-            <ShoppingCart className="h-8 w-8 text-primary-600 mr-3" />
+    <div className="modal-overlay">
+      <div className="modal-content animate-scale-in">
+        {/* Enhanced Header */}
+        <div className="relative flex items-center justify-between p-8 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900/20 rounded-t-3xl">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 bg-pattern-dots opacity-5 rounded-t-3xl"></div>
+          
+          <div className="relative z-10 flex items-center">
+            <div className="relative">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg mr-4">
+                <ShoppingCart className="h-7 w-7 text-white" />
+              </div>
+              {/* Glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl blur-lg opacity-20"></div>
+            </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Record New Sale</h2>
-              <p className="text-gray-600">Add a new sale transaction</p>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent">
+                Record New Sale
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">Add a new sale transaction to your system</p>
             </div>
           </div>
+          
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="relative z-10 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             <X size={24} />
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Sale Type Selection - Move to top */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+        {/* Enhanced Form */}
+        <form onSubmit={handleSubmit} className="p-8 space-y-8">
+          {/* Sale Type Selection - Enhanced */}
+          <div className="space-y-4">
+            <label className="block text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-3">
+                <Package className="h-4 w-4 text-white" />
+              </div>
               Sale Type *
             </label>
-            <select
-              value={formData.saleType}
-              onChange={(e) => setFormData(prev => ({ 
-                ...prev, 
-                saleType: e.target.value as 'store' | 'out_of_store',
-                itemId: '', // Reset item selection when changing sale type
-                fromWhom: '', // Reset from whom when changing sale type
-                shoeType: '', // Reset shoe type when changing sale type
-                basePrice: 0 // Reset base price when changing sale type
-              }))}
-              className="input w-full"
-              required
-            >
-              <option value="store">Store Sale</option>
-              <option value="out_of_store">Out of Store Sale</option>
-            </select>
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ 
+                  ...prev, 
+                  saleType: 'store',
+                  itemId: '',
+                  fromWhom: '',
+                  shoeType: '',
+                  basePrice: 0
+                }))}
+                className={`p-4 rounded-2xl border-2 transition-all duration-300 text-left ${
+                  formData.saleType === 'store'
+                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-lg shadow-blue-500/20'
+                    : 'border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-600'
+                }`}
+              >
+                <div className="flex items-center mb-2">
+                  <div className={`w-6 h-6 rounded-full border-2 mr-3 ${
+                    formData.saleType === 'store' ? 'border-blue-500 bg-blue-500' : 'border-gray-300'
+                  }`}>
+                    {formData.saleType === 'store' && (
+                      <div className="w-2 h-2 bg-white rounded-full m-auto"></div>
+                    )}
+                  </div>
+                  <span className="font-semibold text-gray-900 dark:text-white">Store Sale</span>
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Sell items from your inventory</p>
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ 
+                  ...prev, 
+                  saleType: 'out_of_store',
+                  itemId: '',
+                  fromWhom: '',
+                  shoeType: '',
+                  basePrice: 0
+                }))}
+                className={`p-4 rounded-2xl border-2 transition-all duration-300 text-left ${
+                  formData.saleType === 'out_of_store'
+                    ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20 shadow-lg shadow-purple-500/20'
+                    : 'border-gray-200 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-600'
+                }`}
+              >
+                <div className="flex items-center mb-2">
+                  <div className={`w-6 h-6 rounded-full border-2 mr-3 ${
+                    formData.saleType === 'out_of_store' ? 'border-purple-500 bg-purple-500' : 'border-gray-300'
+                  }`}>
+                    {formData.saleType === 'out_of_store' && (
+                      <div className="w-2 h-2 bg-white rounded-full m-auto"></div>
+                    )}
+                  </div>
+                  <span className="font-semibold text-gray-900 dark:text-white">Out of Store</span>
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Sell items not in inventory</p>
+              </button>
+            </div>
           </div>
 
           {/* Conditional Fields Based on Sale Type */}
           {formData.saleType === 'store' ? (
-            /* Store Sale - Item Selection */
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
+            /* Store Sale - Enhanced Item Selection */
+            <div className="space-y-4">
+              <label className="block text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mr-3">
+                  <Package className="h-4 w-4 text-white" />
+                </div>
                 Select Item from Inventory *
               </label>
-              <select
-                value={formData.itemId}
-                onChange={(e) => handleItemChange(e.target.value)}
-                className="input w-full"
-                required
-              >
-                <option value="">Choose an item from your inventory...</option>
-                {items.map((item) => (
-                  <option key={item._id} value={item._id}>
-                    {item.name} - {item.shoeType} (Stock: {item.quantity})
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={formData.itemId}
+                  onChange={(e) => handleItemChange(e.target.value)}
+                  className="input w-full text-lg py-4"
+                  required
+                >
+                  <option value="">Choose an item from your inventory...</option>
+                  {items.map((item) => (
+                    <option key={item._id} value={item._id}>
+                      {item.name} - {item.shoeType} (Stock: {item.quantity})
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                  <Package className="h-5 w-5 text-gray-400" />
+                </div>
+              </div>
             </div>
           ) : (
-            /* Out of Store Sale - Item Details + From Whom */
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
+            /* Out of Store Sale - Enhanced Item Details */
+            <div className="space-y-6">
+              <label className="block text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mr-3">
+                  <TrendingUp className="h-4 w-4 text-white" />
+                </div>
+                Item Details *
+              </label>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                     Item Name *
                   </label>
                   <input
                     type="text"
                     value={formData.itemId}
                     onChange={(e) => setFormData(prev => ({ ...prev, itemId: e.target.value }))}
-                    className="input w-full"
+                    className="input"
                     placeholder="Enter item name"
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                     Item Type *
                   </label>
                   <input
                     type="text"
                     value={formData.shoeType || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, shoeType: e.target.value }))}
-                    className="input w-full"
+                    className="input"
                     placeholder="e.g., Sneakers, Boots, etc."
                     required
                   />
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                     Base Price *
                   </label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={formData.basePrice}
-                    onChange={(e) => setFormData(prev => ({ ...prev, basePrice: parseFloat(e.target.value) || 0 }))}
-                    className="input w-full"
-                    placeholder="Cost from supplier"
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={formData.basePrice}
+                      onChange={(e) => setFormData(prev => ({ ...prev, basePrice: parseFloat(e.target.value) || 0 }))}
+                      className="input pr-12"
+                      placeholder="Cost from supplier"
+                      required
+                    />
+                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                      <DollarSign className="h-5 w-5 text-gray-400" />
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                     From Whom *
                   </label>
                   <input
                     type="text"
                     value={formData.fromWhom}
                     onChange={(e) => setFormData(prev => ({ ...prev, fromWhom: e.target.value }))}
-                    className="input w-full"
+                    className="input"
                     placeholder="Who did you get this item from?"
                     required
                   />
@@ -311,30 +389,35 @@ export default function SalesForm({ isOpen, onClose, onSuccess }: SalesFormProps
             </div>
           )}
 
-          {/* Item Details - Only for Store Sales */}
+          {/* Enhanced Item Details - Only for Store Sales */}
           {formData.saleType === 'store' && selectedItem && (
-            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-              <h4 className="font-medium text-gray-900">Item Details</h4>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-gray-600">Base Price:</span>
-                  <span className="ml-2 font-medium">${selectedItem.basePrice}</span>
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-6 border border-blue-200/50 dark:border-blue-700/30">
+              <h4 className="font-semibold text-blue-900 dark:text-blue-200 mb-4 flex items-center">
+                <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center mr-3">
+                  <Info className="h-3 w-3 text-white" />
                 </div>
-                <div>
-                  <span className="text-gray-600">Available Stock:</span>
-                  <span className={`ml-2 font-medium ${
-                    selectedItem.status === 'low_stock' ? 'text-warning-600' :
-                    selectedItem.status === 'out_of_stock' ? 'text-danger-600' : 'text-success-600'
+                Item Details
+              </h4>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="flex items-center justify-between p-3 bg-white/50 dark:bg-blue-800/30 rounded-xl">
+                  <span className="text-blue-700 dark:text-blue-300 font-medium">Base Price:</span>
+                  <span className="font-bold text-blue-900 dark:text-blue-100">${selectedItem.basePrice}</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-white/50 dark:bg-blue-800/30 rounded-xl">
+                  <span className="text-blue-700 dark:text-blue-300 font-medium">Available Stock:</span>
+                  <span className={`font-bold ${
+                    selectedItem.status === 'low_stock' ? 'text-yellow-600 dark:text-yellow-400' :
+                    selectedItem.status === 'out_of_stock' ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'
                   }`}>
                     {selectedItem.quantity}
                   </span>
                 </div>
-                <div>
-                  <span className="text-gray-600">Status:</span>
-                  <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${
-                    selectedItem.status === 'low_stock' ? 'bg-warning-100 text-warning-800' :
-                    selectedItem.status === 'out_of_stock' ? 'bg-danger-100 text-danger-800' :
-                    'bg-success-100 text-success-800'
+                <div className="flex items-center justify-between p-3 bg-white/50 dark:bg-blue-800/30 rounded-xl col-span-2">
+                  <span className="text-blue-700 dark:text-blue-300 font-medium">Status:</span>
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    selectedItem.status === 'low_stock' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                    selectedItem.status === 'out_of_stock' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
+                    'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                   }`}>
                     {selectedItem.status.replace('_', ' ')}
                   </span>
@@ -343,78 +426,99 @@ export default function SalesForm({ isOpen, onClose, onSuccess }: SalesFormProps
             </div>
           )}
 
-          {/* Sale Details */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Quantity *
-              </label>
-              <input
-                type="number"
-                min="1"
-                max={formData.saleType === 'store' ? (selectedItem?.quantity || 999) : 999}
-                value={formData.quantity}
-                onChange={(e) => setFormData(prev => ({ ...prev, quantity: parseInt(e.target.value) || 1 }))}
-                className="input"
-                required
-              />
-            </div>
+          {/* Enhanced Sale Details */}
+          <div className="space-y-4">
+            <label className="block text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-3">
+                <DollarSign className="h-4 w-4 text-white" />
+              </div>
+              Sale Details *
+            </label>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  Quantity *
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max={formData.saleType === 'store' ? (selectedItem?.quantity || 999) : 999}
+                  value={formData.quantity}
+                  onChange={(e) => setFormData(prev => ({ ...prev, quantity: parseInt(e.target.value) || 1 }))}
+                  className="input"
+                  required
+                />
+              </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Selling Price *
-              </label>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={formData.sellingPrice}
-                onChange={(e) => setFormData(prev => ({ ...prev, sellingPrice: parseFloat(e.target.value) || 0 }))}
-                className="input"
-                required
-              />
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  Selling Price *
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={formData.sellingPrice}
+                    onChange={(e) => setFormData(prev => ({ ...prev, sellingPrice: parseFloat(e.target.value) || 0 }))}
+                    className="input pr-12"
+                    required
+                  />
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                    <DollarSign className="h-5 w-5 text-gray-400" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Calculations */}
+          {/* Enhanced Calculations */}
           {formData.quantity > 0 && formData.sellingPrice > 0 && (
-            <div className="bg-primary-50 rounded-lg p-4 space-y-3">
-              <h4 className="font-medium text-primary-900">Sale Summary</h4>
-              <div className="grid grid-cols-3 gap-4 text-sm">
-                <div>
-                  <span className="text-primary-600">Total Amount:</span>
-                  <span className="ml-2 font-bold text-primary-900">${calculateTotal()}</span>
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 border border-green-200/50 dark:border-green-700/30">
+              <h4 className="font-semibold text-green-900 dark:text-green-200 mb-4 flex items-center">
+                <div className="w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mr-3">
+                  <TrendingUp className="h-3 w-3 text-white" />
                 </div>
-                <div>
-                  <span className="text-primary-600">Profit:</span>
-                  <span className={`ml-2 font-bold ${
-                    calculateProfit() >= 0 ? 'text-success-600' : 'text-danger-600'
+                Sale Summary
+              </h4>
+              <div className="grid grid-cols-3 gap-4 text-sm">
+                <div className="bg-white/50 dark:bg-green-800/30 rounded-xl p-3 text-center">
+                  <div className="text-green-700 dark:text-green-300 font-medium mb-1">Total Amount</div>
+                  <div className="text-2xl font-bold text-green-900 dark:text-green-100">${calculateTotal()}</div>
+                </div>
+                <div className="bg-white/50 dark:bg-green-800/30 rounded-xl p-3 text-center">
+                  <div className="text-green-700 dark:text-green-300 font-medium mb-1">Profit</div>
+                  <div className={`text-2xl font-bold ${
+                    calculateProfit() >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                   }`}>
                     ${calculateProfit()}
-                  </span>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-primary-600">Profit Margin:</span>
-                  <span className={`ml-2 font-bold ${
-                    calculateProfit() >= 0 ? 'text-success-600' : 'text-danger-600'
+                <div className="bg-white/50 dark:bg-green-800/30 rounded-xl p-3 text-center">
+                  <div className="text-green-700 dark:text-green-300 font-medium mb-1">Profit Margin</div>
+                  <div className={`text-2xl font-bold ${
+                    calculateProfit() >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                   }`}>
                     {((calculateProfit() / calculateTotal()) * 100).toFixed(1)}%
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Client Details */}
-          <div className="space-y-4">
-            <h4 className="font-medium text-gray-900 flex items-center">
-              <User className="h-5 w-5 mr-2 text-primary-600" />
+          {/* Enhanced Client Details */}
+          <div className="space-y-6">
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center mr-3">
+                <User className="h-4 w-4 text-white" />
+              </div>
               Client Details (Optional)
             </h4>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 flex items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
                   <Phone className="h-4 w-4 mr-2 text-gray-500" />
                   Phone
                 </label>
@@ -430,8 +534,8 @@ export default function SalesForm({ isOpen, onClose, onSuccess }: SalesFormProps
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 flex items-center">
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
                   <MapPin className="h-4 w-4 mr-2 text-gray-500" />
                   Address
                 </label>
@@ -448,8 +552,8 @@ export default function SalesForm({ isOpen, onClose, onSuccess }: SalesFormProps
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700 flex items-center">
+            <div className="space-y-3">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
                 <Info className="h-4 w-4 mr-2 text-gray-500" />
                 Intentional Behaviour
               </label>
@@ -466,22 +570,33 @@ export default function SalesForm({ isOpen, onClose, onSuccess }: SalesFormProps
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-3 pt-4 border-t border-gray-200">
+          {/* Enhanced Actions */}
+          <div className="flex gap-4 pt-6 border-t border-gray-200 dark:border-gray-600">
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-secondary flex-1"
+              className="btn btn-secondary flex-1 group"
               disabled={loading}
             >
+              <X size={18} className="mr-2 group-hover:scale-110 transition-transform duration-200" />
               Cancel
             </button>
             <button
               type="submit"
-              className="btn btn-primary flex-1"
+              className="btn btn-primary flex-1 group"
               disabled={loading}
             >
-              {loading ? 'Recording Sale...' : 'Record Sale'}
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  Recording Sale...
+                </>
+              ) : (
+                <>
+                  <ShoppingCart size={18} className="mr-2 group-hover:scale-110 transition-transform duration-200" />
+                  Record Sale
+                </>
+              )}
             </button>
           </div>
         </form>

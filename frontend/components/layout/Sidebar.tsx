@@ -14,7 +14,10 @@ import {
   Settings,
   LogOut,
   Menu,
-  X
+  X,
+  TrendingUp,
+  Users,
+  Shield
 } from 'lucide-react'
 
 export default function Sidebar() {
@@ -23,12 +26,12 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   const navigation = [
-    { name: 'Dashboard', href: '/', icon: Home },
-    { name: 'Inventory', href: '/inventory', icon: Package },
-    { name: 'Sales', href: '/sales', icon: ShoppingCart },
-    { name: 'Tasks', href: '/tasks', icon: ClipboardList },
-    { name: 'Analytics', href: '/analytics', icon: BarChart3 },
-    { name: 'Settings', href: '/settings', icon: Settings },
+    { name: 'Dashboard', href: '/', icon: Home, description: 'Overview & analytics' },
+    { name: 'Inventory', href: '/inventory', icon: Package, description: 'Manage stock items' },
+    { name: 'Sales', href: '/sales', icon: ShoppingCart, description: 'Track transactions' },
+    { name: 'Tasks', href: '/tasks', icon: ClipboardList, description: 'Manage activities' },
+    { name: 'Analytics', href: '/analytics', icon: BarChart3, description: 'Detailed reports' },
+    { name: 'Settings', href: '/settings', icon: Settings, description: 'System configuration' },
   ]
 
   const handleLogout = () => {
@@ -37,39 +40,106 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile menu button */}
+      {/* Enhanced Mobile Menu Button */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-3 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+          className="group relative p-3 rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-blue-500/30"
         >
-          {isOpen ? <X size={24} className="text-white" /> : <Menu size={24} className="text-white" />}
+          {/* Animated background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
+          
+          {isOpen ? (
+            <X size={24} className="relative text-white" />
+          ) : (
+            <Menu size={24} className="relative text-white" />
+          )}
+          
+          {/* Pulse effect */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 opacity-75 animate-ping"></div>
         </button>
       </div>
 
-      {/* Sidebar */}
+      {/* Enhanced Sidebar */}
       <div className={`
-        fixed inset-y-0 left-0 z-40 w-64 bg-gradient-to-b from-blue-900 via-blue-800 to-indigo-900 shadow-2xl transform transition-transform duration-300 ease-in-out
+        fixed inset-y-0 left-0 z-40 w-72 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 shadow-2xl transform transition-transform duration-500 ease-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        <div className="flex flex-col h-full">
-          {/* Header with Logo */}
-          <div className="flex flex-col items-center justify-center h-24 px-4 border-b border-blue-700/50">
-            {/* Logo */}
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-400 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
-              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  IMS
-                </span>
+        <div className="flex flex-col h-full relative">
+          {/* Enhanced Logo Section at Top */}
+          <div className="relative flex flex-col items-center justify-center h-40 px-6 border-b border-gray-700/50 overflow-hidden" style={{backgroundColor: 'rgba(239, 68, 68, 0.3)'}}>
+            {/* Background Pattern */}
+            <div className="absolute inset-0 bg-pattern-dots opacity-5"></div>
+            
+            {/* Main Logo Container */}
+            <div className="relative z-10 text-center">
+              {/* Primary Logo */}
+              <div className="relative mb-4">
+                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/25 mx-auto" style={{border: '4px solid #fbbf24'}}>
+                  {/* Logo Image with Debug Info */}
+                  <img 
+                    src={`/esho.jpg?v=${Date.now()}`}
+                    alt="E Store Logo" 
+                    className="w-20 h-20 object-contain rounded-2xl"
+                    onLoad={() => {
+                      console.log('✅ Logo loaded successfully!');
+                      console.log('Image source:', `/esho.jpg?v=${Date.now()}`);
+                    }}
+                    onError={(e) => {
+                      console.error('❌ Logo failed to load!');
+                      const target = e.target as HTMLImageElement;
+                      console.error('Failed image source:', target.src);
+                      console.error('Error details:', e);
+                      // Show fallback text
+                      target.style.display = 'none';
+                      const fallback = target.nextElementSibling as HTMLElement;
+                      if (fallback) fallback.style.display = 'flex';
+                    }}
+                    style={{ 
+                      border: '3px solid #ef4444',
+                      backgroundColor: 'rgba(34, 197, 94, 0.2)'
+                    }}
+                  />
+                  
+                  {/* Fallback Text Logo (hidden by default) */}
+                  <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-lg" style={{display: 'none'}}>
+                    <span className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                      IMS
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Glow Effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl blur-xl opacity-30 animate-pulse"></div>
+                
+                {/* Floating Elements */}
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full animate-bounce"></div>
+                <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full animate-bounce delay-1000"></div>
+              </div>
+              
+              {/* Company Name */}
+              <h1 className="text-2xl font-bold text-white mb-2">
+                Inventory Management
+              </h1>
+              <p className="text-sm text-gray-300 font-medium mb-3">
+                System Dashboard
+              </p>
+              
+              {/* Status Indicator */}
+              <div className="flex items-center justify-center space-x-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-xs text-green-400 font-medium">System Active</span>
               </div>
             </div>
-            {/* App Name */}
-            <h1 className="text-lg font-bold text-white">Inventory Management</h1>
-            <p className="text-xs text-blue-200">System</p>
+            
+            {/* Decorative Elements */}
+            <div className="absolute top-6 right-6 w-8 h-8 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-sm"></div>
+            <div className="absolute bottom-6 left-6 w-6 h-6 bg-gradient-to-br from-indigo-400/20 to-blue-400/20 rounded-full blur-sm"></div>
+            <div className="absolute top-1/2 left-2 w-4 h-4 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-sm animate-pulse"></div>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2">
+          {/* Enhanced Navigation */}
+          <nav className="flex-1 px-6 py-6 space-y-3">
             {navigation.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
@@ -77,54 +147,110 @@ export default function Sidebar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center px-4 py-3 rounded-xl transition-all duration-200 ${
+                  className={`group relative flex items-center px-4 py-4 rounded-2xl transition-all duration-300 ease-out ${
                     isActive
-                      ? 'bg-white/20 text-white border-r-2 border-blue-300 shadow-lg backdrop-blur-sm'
-                      : 'text-blue-100 hover:bg-white/10 hover:text-white hover:shadow-md'
+                      ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border border-blue-500/30 shadow-xl shadow-blue-500/20 backdrop-blur-sm'
+                      : 'text-gray-300 hover:bg-white/10 hover:text-white hover:shadow-lg hover:shadow-gray-500/10'
                   }`}
                   onClick={() => setIsOpen(false)}
                 >
-                  <Icon size={20} className="mr-3" />
-                  {item.name}
+                  {/* Active Indicator */}
+                  {isActive && (
+                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-blue-400 to-purple-400 rounded-r-full"></div>
+                  )}
+                  
+                  {/* Icon */}
+                  <div className={`p-2.5 rounded-xl mr-4 transition-all duration-300 ${
+                    isActive 
+                      ? 'bg-gradient-to-br from-blue-500 to-purple-500 shadow-lg' 
+                      : 'bg-gray-700/50 group-hover:bg-gray-600/50'
+                  }`}>
+                    <Icon size={20} className={isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'} />
+                  </div>
+                  
+                  {/* Text Content */}
+                  <div className="flex-1">
+                    <div className="font-semibold text-sm">{item.name}</div>
+                    <div className={`text-xs transition-all duration-300 ${
+                      isActive ? 'text-blue-200' : 'text-gray-500 group-hover:text-gray-300'
+                    }`}>
+                      {item.description}
+                    </div>
+                  </div>
+                  
+                  {/* Hover Effect */}
+                  <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-600/0 to-purple-600/0 transition-all duration-300 ${
+                    isActive ? 'from-blue-600/10 to-purple-600/10' : 'group-hover:from-blue-600/5 group-hover:to-purple-600/5'
+                  }`}></div>
                 </Link>
               )
             })}
           </nav>
 
-          {/* Theme Toggle */}
-          <div className="px-4 py-3 border-t border-blue-700/50">
-            <ThemeToggle />
+          {/* Enhanced Theme Toggle */}
+          <div className="px-6 py-4 border-t border-gray-700/50">
+            <div className="bg-gray-800/50 rounded-2xl p-3 backdrop-blur-sm">
+              <ThemeToggle />
+            </div>
           </div>
 
-          {/* User section */}
-          <div className="px-4 py-4 border-t border-blue-700/50">
-            <div className="flex items-center mb-4 p-3 bg-white/10 rounded-xl backdrop-blur-sm">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-400 rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-white text-sm font-bold">
-                  {user?.username?.charAt(0).toUpperCase()}
-                </span>
+          {/* Enhanced User Section */}
+          <div className="px-6 py-6 border-t border-gray-700/50">
+            {/* User Profile Card */}
+            <div className="bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-2xl p-4 backdrop-blur-sm border border-gray-600/30 mb-4">
+              <div className="flex items-center mb-4">
+                <div className="relative">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span className="text-white text-lg font-bold">
+                      {user?.username?.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  {/* Online Status */}
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-gray-800 rounded-full"></div>
+                </div>
+                <div className="ml-4 flex-1">
+                  <p className="text-sm font-semibold text-white">{user?.username}</p>
+                  <div className="flex items-center space-x-2 mt-1">
+                    <Shield className="w-3 h-3 text-blue-400" />
+                    <p className="text-xs text-gray-300 capitalize">{user?.role}</p>
+                  </div>
+                </div>
               </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-white">{user?.username}</p>
-                <p className="text-xs text-blue-200 capitalize">{user?.role}</p>
+              
+              {/* Quick Stats */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-gray-700/30 rounded-xl p-2 text-center">
+                  <div className="text-xs text-gray-400">Tasks</div>
+                  <div className="text-sm font-semibold text-white">12</div>
+                </div>
+                <div className="bg-gray-700/30 rounded-xl p-2 text-center">
+                  <div className="text-xs text-gray-400">Sales</div>
+                  <div className="text-sm font-semibold text-white">8</div>
+                </div>
               </div>
             </div>
             
+            {/* Enhanced Logout Button */}
             <button
               onClick={handleLogout}
-              className="flex items-center w-full px-4 py-3 text-sm text-blue-100 rounded-xl hover:bg-white/10 hover:text-white transition-all duration-200 hover:shadow-md"
+              className="group w-full flex items-center justify-center px-4 py-3 text-sm text-gray-300 rounded-2xl hover:bg-gradient-to-r hover:from-red-600/20 hover:to-pink-600/20 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 border border-gray-600/30 hover:border-red-500/30"
             >
-              <LogOut size={18} className="mr-3" />
+              <LogOut size={18} className="mr-3 group-hover:scale-110 transition-transform duration-300" />
               Sign out
             </button>
           </div>
         </div>
+        
+        {/* Decorative Background Elements */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-purple-600/5 to-indigo-600/5 pointer-events-none"></div>
+        <div className="absolute top-1/4 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-0 w-24 h-24 bg-gradient-to-br from-indigo-500/10 to-blue-500/10 rounded-full blur-2xl"></div>
       </div>
 
-      {/* Overlay for mobile */}
+      {/* Enhanced Overlay for Mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black bg-opacity-50 lg:hidden"
+          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden transition-opacity duration-300"
           onClick={() => setIsOpen(false)}
         />
       )}
