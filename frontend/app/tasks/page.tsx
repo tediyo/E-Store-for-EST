@@ -288,21 +288,7 @@ export default function TasksPage() {
     return (
       <PageLayout>
         <div className="space-y-8">
-          {/* Header Skeleton */}
-          <div className="bg-gradient-to-br from-red-500 via-orange-500 to-red-600 rounded-3xl p-8 text-white overflow-hidden">
-            <div className="animate-pulse">
-              <div className="h-12 bg-white/20 rounded-2xl mb-4 w-1/3"></div>
-              <div className="h-6 bg-white/20 rounded-xl mb-6 w-1/2"></div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="bg-white/20 rounded-2xl p-4">
-                    <div className="h-8 bg-white/20 rounded mb-2"></div>
-                    <div className="h-4 bg-white/20 rounded"></div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+
           
           {/* Search Skeleton */}
           <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
