@@ -137,6 +137,12 @@ export default function Dashboard() {
     { name: 'Apr', revenue: 2780, profit: 3908, costs: 1128, sales: 28 },
     { name: 'May', revenue: 1890, profit: 4800, costs: 6900, sales: 35 },
     { name: 'Jun', revenue: 2390, profit: 3800, costs: 1410, sales: 42 },
+    { name: 'Jul', revenue: 3490, profit: 4300, costs: 2100, sales: 38 },
+    { name: 'Aug', revenue: 4200, profit: 5200, costs: 1800, sales: 45 },
+    { name: 'Sep', revenue: 3800, profit: 4100, costs: 2200, sales: 41 },
+    { name: 'Oct', revenue: 4500, profit: 5800, costs: 1900, sales: 48 },
+    { name: 'Nov', revenue: 5200, profit: 6500, costs: 2100, sales: 52 },
+    { name: 'Dec', revenue: 6100, profit: 7200, costs: 2400, sales: 58 },
   ]
 
   // Real inventory data from API
