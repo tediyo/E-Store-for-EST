@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '../../hooks/useAuth'
-import ThemeToggle from './ThemeToggle'
 import {
   Home,
   Package,
@@ -174,12 +173,7 @@ export default function Sidebar() {
             })}
           </nav>
 
-          {/* Enhanced Theme Toggle */}
-          <div className="px-6 py-4 border-t border-gray-700/50">
-            <div className="bg-gray-800/50 rounded-2xl p-3 backdrop-blur-sm">
-              <ThemeToggle />
-            </div>
-          </div>
+
 
           {/* Enhanced User Section */}
           <div className="px-6 py-6 border-t border-gray-700/50">

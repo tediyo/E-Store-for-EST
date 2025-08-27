@@ -3,6 +3,7 @@
 import { ReactNode } from 'react'
 import Header from './Header'
 import Sidebar from './Sidebar'
+import ThemeToggle from './ThemeToggle'
 
 interface PageLayoutProps {
   children: ReactNode
@@ -31,6 +32,13 @@ export default function PageLayout({
       
       {showHeader && <Header />}
       {showSidebar && <Sidebar />}
+      
+      {/* Theme Selector - Top Right Corner */}
+      <div className="fixed top-4 right-4 z-50">
+        <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 rounded-xl shadow-lg shadow-gray-500/10 p-0 w-fit">
+          <ThemeToggle />
+        </div>
+      </div>
       
       <main className={`transition-all duration-300 ${showSidebar ? 'lg:ml-72' : ''} ${showHeader ? 'pt-20' : 'pt-0'}`}>
         <div className="min-h-screen">
