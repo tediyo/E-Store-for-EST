@@ -194,23 +194,19 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Enhanced Header with Gradient Background */}
-      <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 rounded-3xl p-8 text-white overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/2 left-1/4 w-20 h-20 bg-white/5 rounded-full blur-lg animate-bounce delay-500"></div>
-        </div>
+      {/* Professional Dashboard Header */}
+      <div className="relative bg-gradient-to-br from-slate-800 via-blue-900 to-indigo-900 rounded-2xl p-8 text-white overflow-hidden border border-slate-700/50">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 bg-pattern-dots opacity-5"></div>
         
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-        <div>
-              <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                Dashboard Analytics
+            <div>
+              <h1 className="text-4xl font-bold mb-3 text-white">
+                Business Dashboard
               </h1>
-              <p className="text-xl text-blue-100">Comprehensive overview of your business performance</p>
-        </div>
+              <p className="text-lg text-slate-300">Comprehensive overview of your business performance</p>
+            </div>
         
             {/* Enhanced Period Filter */}
             <div className="mt-6 sm:mt-0">
@@ -253,9 +249,9 @@ export default function Dashboard() {
             </div>
           </div>
           
-          {/* Enhanced Summary Cards */}
+          {/* Professional Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105 group">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-blue-500/30 rounded-xl">
                   <BarChart3 className="h-6 w-6 text-white" />
@@ -263,13 +259,13 @@ export default function Dashboard() {
                 <ArrowUpRight className="h-5 w-5 text-green-300 group-hover:scale-110 transition-transform duration-300" />
               </div>
               <div className="text-3xl font-bold text-white mb-1">{data.summary.totalTransactions}</div>
-              <div className="text-sm text-blue-100">Total Transactions</div>
+              <div className="text-sm text-slate-300">Total Transactions</div>
               <div className="w-full bg-white/20 rounded-full h-1 mt-3">
                 <div className="bg-green-300 rounded-full h-1" style={{ width: '75%' }}></div>
               </div>
             </div>
             
-            <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105 group">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-green-500/30 rounded-xl">
                   <DollarSign className="h-6 w-6 text-white" />
@@ -277,13 +273,13 @@ export default function Dashboard() {
                 <ArrowUpRight className="h-5 w-5 text-green-300 group-hover:scale-110 transition-transform duration-300" />
               </div>
               <div className="text-3xl font-bold text-white mb-1">{formatCurrency(data.summary.totalRevenue)}</div>
-              <div className="text-sm text-blue-100">Total Revenue</div>
+              <div className="text-sm text-slate-300">Total Revenue</div>
               <div className="w-full bg-white/20 rounded-full h-1 mt-3">
                 <div className="bg-green-300 rounded-full h-1" style={{ width: '85%' }}></div>
               </div>
             </div>
             
-            <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105 group">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-emerald-500/30 rounded-xl">
                   <TrendingUp className="h-6 w-6 text-white" />
@@ -291,13 +287,13 @@ export default function Dashboard() {
                 <ArrowUpRight className="h-5 w-5 text-green-300 group-hover:scale-110 transition-transform duration-300" />
               </div>
               <div className="text-3xl font-bold text-white mb-1">{formatCurrency(data.summary.totalProfit)}</div>
-              <div className="text-sm text-blue-100">Total Profit</div>
+              <div className="text-sm text-slate-300">Total Profit</div>
               <div className="w-full bg-white/20 rounded-full h-1 mt-3">
                 <div className="bg-green-300 rounded-full h-1" style={{ width: '92%' }}></div>
               </div>
             </div>
             
-            <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105 group">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-red-500/30 rounded-xl">
                   <Activity className="h-6 w-6 text-white" />
@@ -305,7 +301,7 @@ export default function Dashboard() {
                 <ArrowDownRight className="h-5 w-5 text-red-300 group-hover:scale-110 transition-transform duration-300" />
               </div>
               <div className="text-3xl font-bold text-white mb-1">{formatCurrency(data.summary.totalCosts)}</div>
-              <div className="text-sm text-blue-100">Total Costs</div>
+              <div className="text-sm text-slate-300">Total Costs</div>
               <div className="w-full bg-white/20 rounded-full h-1 mt-3">
                 <div className="bg-red-300 rounded-full h-1" style={{ width: '45%' }}></div>
               </div>

@@ -35,7 +35,7 @@ export default function PageLayout({
       <main className={`transition-all duration-300 ${showSidebar ? 'lg:ml-72' : ''} ${showHeader ? 'pt-20' : 'pt-0'}`}>
         <div className="min-h-screen">
           {/* Main Content */}
-          <div className="px-6 pb-8">
+          <div className="px-8 py-8">
             <div className="animate-fade-in-up">
               {children}
             </div>

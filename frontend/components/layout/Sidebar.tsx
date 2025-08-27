@@ -26,12 +26,19 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   const navigation = [
-    { name: 'Dashboard', href: '/', icon: Home, description: 'Overview & analytics' },
-    { name: 'Inventory', href: '/inventory', icon: Package, description: 'Manage stock items' },
-    { name: 'Sales', href: '/sales', icon: ShoppingCart, description: 'Track transactions' },
-    { name: 'Tasks', href: '/tasks', icon: ClipboardList, description: 'Manage activities' },
-    { name: 'Analytics', href: '/analytics', icon: BarChart3, description: 'Detailed reports' },
-    { name: 'Settings', href: '/settings', icon: Settings, description: 'System configuration' },
+    // Main Dashboard
+    { name: 'Dashboard', href: '/', icon: Home, description: 'Overview & analytics', category: 'main' },
+    
+    // Core Business Operations
+    { name: 'Inventory', href: '/inventory', icon: Package, description: 'Manage stock items', category: 'operations' },
+    { name: 'Sales', href: '/sales', icon: ShoppingCart, description: 'Track transactions', category: 'operations' },
+    { name: 'Tasks', href: '/tasks', icon: ClipboardList, description: 'Manage activities', category: 'operations' },
+    
+    // Insights & Reports
+    { name: 'Analytics', href: '/analytics', icon: BarChart3, description: 'Detailed reports', category: 'insights' },
+    
+    // System & Configuration
+    { name: 'Settings', href: '/settings', icon: Settings, description: 'System configuration', category: 'system' },
   ]
 
   const handleLogout = () => {
@@ -66,80 +73,76 @@ export default function Sidebar() {
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="flex flex-col h-full relative">
-          {/* Enhanced Logo Section at Top */}
-          <div className="relative flex flex-col items-center justify-center h-40 px-6 border-b border-gray-700/50 overflow-hidden" style={{backgroundColor: 'rgba(239, 68, 68, 0.3)'}}>
-            {/* Background Pattern */}
-            <div className="absolute inset-0 bg-pattern-dots opacity-5"></div>
-            
-            {/* Main Logo Container */}
-            <div className="relative z-10 text-center">
-              {/* Primary Logo */}
-              <div className="relative mb-4">
-                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/25 mx-auto" style={{border: '4px solid #fbbf24'}}>
-                  {/* Logo Image with Debug Info */}
-                  <img 
-                    src={`/esho.jpg?v=${Date.now()}`}
-                    alt="E Store Logo" 
-                    className="w-20 h-20 object-contain rounded-2xl"
-                    onLoad={() => {
-                      console.log('✅ Logo loaded successfully!');
-                      console.log('Image source:', `/esho.jpg?v=${Date.now()}`);
-                    }}
-                    onError={(e) => {
-                      console.error('❌ Logo failed to load!');
-                      const target = e.target as HTMLImageElement;
-                      console.error('Failed image source:', target.src);
-                      console.error('Error details:', e);
-                      // Show fallback text
-                      target.style.display = 'none';
-                      const fallback = target.nextElementSibling as HTMLElement;
-                      if (fallback) fallback.style.display = 'flex';
-                    }}
-                    style={{ 
-                      border: '3px solid #ef4444',
-                      backgroundColor: 'rgba(34, 197, 94, 0.2)'
-                    }}
-                  />
-                  
-                  {/* Fallback Text Logo (hidden by default) */}
-                  <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-lg" style={{display: 'none'}}>
-                    <span className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                      IMS
-                    </span>
-                  </div>
-                </div>
-                
-                {/* Glow Effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl blur-xl opacity-30 animate-pulse"></div>
-                
-                {/* Floating Elements */}
-                <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full animate-bounce"></div>
-                <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full animate-bounce delay-1000"></div>
-              </div>
-              
-              {/* Company Name */}
-              <h1 className="text-2xl font-bold text-white mb-2">
-                Inventory Management
-              </h1>
-              <p className="text-sm text-gray-300 font-medium mb-3">
-                System Dashboard
-              </p>
-              
-              {/* Status Indicator */}
-              <div className="flex items-center justify-center space-x-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-xs text-green-400 font-medium">System Active</span>
-              </div>
-            </div>
-            
-            {/* Decorative Elements */}
-            <div className="absolute top-6 right-6 w-8 h-8 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-sm"></div>
-            <div className="absolute bottom-6 left-6 w-6 h-6 bg-gradient-to-br from-indigo-400/20 to-blue-400/20 rounded-full blur-sm"></div>
-            <div className="absolute top-1/2 left-2 w-4 h-4 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-sm animate-pulse"></div>
-          </div>
-
           {/* Enhanced Navigation */}
           <nav className="flex-1 px-6 py-6 space-y-3">
+            {/* Logo Section Above Navigation */}
+            <div className="relative flex flex-col items-center justify-center h-48 px-6 mb-6 overflow-hidden bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 rounded-2xl border border-gray-700/50">
+              {/* Background Pattern */}
+              <div className="absolute inset-0 bg-pattern-dots opacity-5"></div>
+              
+              {/* Main Logo Container */}
+              <div className="relative z-10 text-center">
+                {/* Primary Logo */}
+                <div className="relative mb-4">
+                  <div className="w-28 h-28 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/25 mx-auto border-4 border-yellow-400">
+                    {/* Logo Image */}
+                    <img 
+                      src="/esho.jpg"
+                      alt="E Store Logo" 
+                      className="w-24 h-24 object-contain rounded-2xl"
+                      style={{ 
+                        border: '2px solid #ffffff',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                      }}
+                      onError={(e) => {
+                        console.error('Logo failed to load:', e);
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const fallback = target.nextElementSibling as HTMLElement;
+                        if (fallback) fallback.style.display = 'flex';
+                      }}
+                    />
+                    
+                    {/* Fallback Text Logo */}
+                    <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center shadow-lg hidden">
+                      <span className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                        ES
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Glow Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl blur-xl opacity-30 animate-pulse"></div>
+                  
+                  {/* Floating Elements */}
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full animate-bounce"></div>
+                  <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full animate-bounce delay-1000"></div>
+                </div>
+                
+                {/* Company Name */}
+                <h1 className="text-2xl font-bold text-white mb-2">
+                  E Store
+                </h1>
+                <p className="text-sm text-gray-300 font-medium mb-3">
+                  Business Management System
+                </p>
+                
+                {/* Status Indicator */}
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-xs text-green-400 font-medium">System Active</span>
+                </div>
+              </div>
+              
+              {/* Decorative Elements */}
+              <div className="absolute top-6 right-6 w-8 h-8 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-sm"></div>
+              <div className="absolute bottom-6 left-6 w-6 h-6 bg-gradient-to-br from-indigo-400/20 to-blue-400/20 rounded-full blur-sm"></div>
+              <div className="absolute top-1/2 left-2 w-4 h-4 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-sm animate-pulse"></div>
+            </div>
+
+            {/* Free Space Above Dashboard Button */}
+            <div className="h-8"></div>
+            
             {navigation.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
