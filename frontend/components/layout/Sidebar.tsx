@@ -68,13 +68,13 @@ export default function Sidebar() {
 
       {/* Enhanced Sidebar */}
       <div className={`
-        fixed inset-y-0 left-0 z-40 w-72 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 shadow-2xl transform transition-transform duration-500 ease-out
+        fixed inset-y-0 left-0 z-40 w-72 shadow-2xl transform transition-transform duration-500 ease-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      `}>
+      `} style={{backgroundColor: '#000000'}}>
         <div className="flex flex-col h-full relative">
           {/* Logo Section at Top */}
           <div className="flex-shrink-0 px-6 pt-8 pb-6">
-            <div className="relative flex flex-col items-center justify-center h-36 overflow-hidden bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 rounded-2xl border border-gray-700/50">
+            <div className="relative flex flex-col items-center justify-center h-36 overflow-hidden rounded-2xl border border-gray-700/50" style={{backgroundColor: '#000000'}}>
               {/* Background Pattern */}
               <div className="absolute inset-0 bg-pattern-dots opacity-5"></div>
               
