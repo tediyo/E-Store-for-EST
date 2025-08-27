@@ -73,14 +73,15 @@ export default function Sidebar() {
             
             {/* Main Logo Container */}
             <div className="relative z-10 text-center">
-              {/* Primary Logo */}
+              {/* Primary Logo - INSERT YOUR LOGO HERE */}
               <div className="relative mb-4">
                 <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/25 mx-auto">
-                  <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-lg">
-                    <span className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                      IMS
-                    </span>
-                  </div>
+                  {/* Your Logo Image */}
+                  <img 
+                    src="/images/esho.png" 
+                    alt="E Store Logo" 
+                    className="w-20 h-20 object-contain rounded-2xl"
+                  />
                 </div>
                 
                 {/* Glow Effect */}
