@@ -66,39 +66,54 @@ export default function Sidebar() {
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="flex flex-col h-full relative">
-          {/* Enhanced Header with Logo */}
-          <div className="relative flex flex-col items-center justify-center h-32 px-6 border-b border-gray-700/50 overflow-hidden">
+          {/* Enhanced Logo Section at Top */}
+          <div className="relative flex flex-col items-center justify-center h-40 px-6 border-b border-gray-700/50 overflow-hidden">
             {/* Background Pattern */}
             <div className="absolute inset-0 bg-pattern-dots opacity-5"></div>
             
-            {/* Logo Container */}
-            <div className="relative z-10">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl flex items-center justify-center mb-4 shadow-2xl shadow-blue-500/25">
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg">
-                  <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                    IMS
-                  </span>
+            {/* Main Logo Container */}
+            <div className="relative z-10 text-center">
+              {/* Primary Logo */}
+              <div className="relative mb-4">
+                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/25 mx-auto">
+                  <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-lg">
+                    <span className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                      IMS
+                    </span>
+                  </div>
                 </div>
+                
+                {/* Glow Effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-3xl blur-xl opacity-30 animate-pulse"></div>
+                
+                {/* Floating Elements */}
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full animate-bounce"></div>
+                <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full animate-bounce delay-1000"></div>
               </div>
               
-              {/* App Name */}
-              <h1 className="text-xl font-bold text-white text-center mb-1">Inventory Management</h1>
-              <p className="text-sm text-gray-300 text-center font-medium">System Dashboard</p>
+              {/* Company Name */}
+              <h1 className="text-2xl font-bold text-white mb-2">
+                Inventory Management
+              </h1>
+              <p className="text-sm text-gray-300 font-medium mb-3">
+                System Dashboard
+              </p>
               
               {/* Status Indicator */}
-              <div className="flex items-center justify-center mt-3 space-x-2">
+              <div className="flex items-center justify-center space-x-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-xs text-green-400 font-medium">System Active</span>
               </div>
             </div>
             
             {/* Decorative Elements */}
-            <div className="absolute top-4 right-4 w-8 h-8 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-sm"></div>
-            <div className="absolute bottom-4 left-4 w-6 h-6 bg-gradient-to-br from-indigo-400/20 to-blue-400/20 rounded-full blur-sm"></div>
+            <div className="absolute top-6 right-6 w-8 h-8 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-sm"></div>
+            <div className="absolute bottom-6 left-6 w-6 h-6 bg-gradient-to-br from-indigo-400/20 to-blue-400/20 rounded-full blur-sm"></div>
+            <div className="absolute top-1/2 left-2 w-4 h-4 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-sm animate-pulse"></div>
           </div>
 
           {/* Enhanced Navigation */}
-          <nav className="flex-1 px-6 py-8 space-y-3">
+          <nav className="flex-1 px-6 py-6 space-y-3">
             {navigation.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
