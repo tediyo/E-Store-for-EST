@@ -27,13 +27,7 @@ export default function ThemeToggle() {
   }
 
   return (
-    <div className="relative group">
-      {/* Tooltip */}
-      <div className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-        {currentTheme?.label} (Click to cycle)
-        <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
-      </div>
-      
+    <div className="relative">
       <button
         onClick={handleThemeClick}
         className="relative w-10 h-10 rounded-xl bg-gradient-to-r from-white/20 to-white/10 hover:from-white/30 hover:to-white/20 transition-all duration-300 backdrop-blur-md border border-white/30 hover:border-white/50 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent"
