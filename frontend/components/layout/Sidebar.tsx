@@ -151,7 +151,7 @@ export default function Sidebar() {
           <div className="flex-shrink-0 px-6 pb-6 border-t border-blue-800/50 pt-4">
             <button
               onClick={handleLogout}
-              className="group w-full flex items-center justify-center px-4 py-3 text-sm text-blue-100 rounded-2xl hover:bg-gradient-to-r hover:from-red-600/20 hover:to-pink-600/20 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 border border-blue-700/30 hover:border-red-500/30"
+              className="group w-full flex items-center justify-center px-4 py-3 text-sm text-white rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 border border-red-500/30 hover:border-red-400/50"
             >
               <LogOut size={18} className="mr-3 group-hover:scale-110 transition-transform duration-300" />
               Sign out
