@@ -33,7 +33,7 @@ export default function ThemeToggle() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="group relative flex items-center gap-3 px-4 py-2.5 rounded-xl bg-gradient-to-r from-white/20 to-white/10 hover:from-white/30 hover:to-white/20 text-white transition-all duration-300 backdrop-blur-md border border-white/30 hover:border-white/50 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent"
+        className="group relative flex items-center gap-3 px-4 py-2.5 rounded-xl bg-gradient-to-r from-white/20 to-white/10 hover:from-white/30 hover:to-white/20 text-white dark:text-gray-900 transition-all duration-300 backdrop-blur-md border border-white/30 hover:border-white/50 dark:border-gray-200/30 dark:hover:border-gray-200/50 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-white/30 dark:focus:ring-gray-700/30 focus:ring-offset-2 focus:ring-offset-transparent"
         aria-label="Toggle theme"
       >
         {/* Animated background */}
@@ -55,7 +55,7 @@ export default function ThemeToggle() {
           <span className="hidden sm:block text-sm font-semibold">
             {currentTheme?.label}
           </span>
-          <span className="hidden lg:block text-xs text-white/70">
+          <span className="hidden lg:block text-xs text-white/70 dark:text-gray-600">
             {currentTheme?.description}
           </span>
         </div>

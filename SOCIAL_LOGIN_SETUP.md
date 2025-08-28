@@ -1,41 +1,26 @@
 # Social Login Setup Guide
 
-This guide explains how to set up social login (Google OAuth and GitHub OAuth) for your E Store application.
+This guide will help you set up Google and GitHub OAuth authentication for your E Store application.
 
-## 🚀 Features Added
+## Prerequisites
 
-- **Google OAuth 2.0** - Sign in with Google account
-- **GitHub OAuth** - Sign in with GitHub account
-- **Account Linking** - Link social accounts to existing users
-- **Automatic User Creation** - Creates new users from social login
-- **Profile Sync** - Syncs basic profile information from social accounts
+- Node.js and npm installed
+- MongoDB running locally or remotely
+- Google Developer Console access
+- GitHub Developer Settings access
 
-## 📋 Prerequisites
+## Backend Configuration
 
-1. **Google Developer Account** - For Google OAuth
-2. **GitHub Developer Account** - For GitHub OAuth
-3. **MongoDB** - Database for user storage
-4. **Node.js & npm** - Backend runtime
+### 1. Environment Variables
 
-## 🔧 Backend Setup
-
-### 1. Install Dependencies
-
-```bash
-cd backend
-npm install passport passport-google-oauth20 passport-github2 passport-jwt passport-local
-```
-
-### 2. Environment Variables
-
-Create a `.env` file in the backend directory:
+Update your `backend/config.env` file with the following variables:
 
 ```env
 # Database
 MONGODB_URI=mongodb://localhost:27017/inventory_system
 
 # JWT Secret
-JWT_SECRET=your_super_secret_jwt_key_here
+JWT_SECRET=your_secure_jwt_secret_here
 
 # Frontend URL for OAuth callbacks
 FRONTEND_URL=http://localhost:3000
@@ -49,91 +34,59 @@ GITHUB_CLIENT_ID=your_github_client_id_here
 GITHUB_CLIENT_SECRET=your_github_client_secret_here
 ```
 
-### 3. Google OAuth Setup
+### 2. Google OAuth Setup
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select existing one
-3. Enable Google+ API
+1. Go to [Google Developer Console](https://console.developers.google.com/)
+2. Create a new project or select an existing one
+3. Enable the Google+ API
 4. Go to "Credentials" → "Create Credentials" → "OAuth 2.0 Client IDs"
-5. Set application type to "Web application"
-6. Add authorized redirect URIs:
-   - `http://localhost:5000/api/auth/google/callback` (for development)
-   - `https://yourdomain.com/api/auth/google/callback` (for production)
+5. Choose "Web application"
+6. Set the following:
+   - **Authorized JavaScript origins**: `http://localhost:3000`
+   - **Authorized redirect URIs**: `http://localhost:5000/api/auth/google/callback`
 7. Copy the Client ID and Client Secret to your `.env` file
 
-### 4. GitHub OAuth Setup
+### 3. GitHub OAuth Setup
 
 1. Go to [GitHub Developer Settings](https://github.com/settings/developers)
 2. Click "New OAuth App"
-3. Fill in the application details:
+3. Fill in the following:
    - **Application name**: E Store
    - **Homepage URL**: `http://localhost:3000`
    - **Authorization callback URL**: `http://localhost:5000/api/auth/github/callback`
-4. Copy the Client ID and Client Secret to your `.env` file
+4. Click "Register application"
+5. Copy the Client ID and Client Secret to your `.env` file
 
-## 🎨 Frontend Setup
+## Frontend Configuration
 
-### 1. Install Icon Package
+### 1. Install Dependencies
+
+Make sure you have the required packages installed:
 
 ```bash
 cd frontend
-npm install react-icons
+npm install react-hot-toast
 ```
 
-### 2. Components Added
+### 2. Update Auth Context
 
-- **`SocialLogin.tsx`** - Social login buttons component
-- **`AuthCallback.tsx`** - Handles OAuth redirects
-- **Updated Login/Register forms** - Include social login options
-- **Settings page** - Social account management
+Ensure your `useAuth` hook properly handles social login tokens.
 
-## 🔐 How It Works
+## Testing the Setup
 
-### 1. User Flow
-
-1. User clicks "Sign in with Google" or "Sign in with GitHub"
-2. Redirected to OAuth provider (Google/GitHub)
-3. User authorizes the application
-4. OAuth provider redirects back to your callback URL
-5. Backend creates/updates user and generates JWT token
-6. User is redirected to frontend with token
-7. Frontend stores token and logs user in
-
-### 2. Account Linking
-
-- If a user signs in with social login and their email already exists, the accounts are linked
-- Users can have multiple social accounts linked to one email
-- Social accounts can be unlinked from settings (if they have a password set)
-
-### 3. User Creation
-
-- New users are automatically created from social login
-- Username is generated from social profile data
-- Basic profile information is synced (name, email, avatar)
-
-## 🛠️ API Endpoints
-
-### Social Login Routes
-
-```
-GET /api/auth/google          - Initiate Google OAuth
-GET /api/auth/google/callback - Google OAuth callback
-GET /api/auth/github          - Initiate GitHub OAuth
-GET /api/auth/github/callback - GitHub OAuth callback
-POST /api/auth/link-social    - Link social account to existing user
-DELETE /api/auth/unlink-social - Unlink social account
-```
-
-## 🧪 Testing
-
-### 1. Start Backend
+### 1. Start the Backend
 
 ```bash
 cd backend
 npm run dev
 ```
 
-### 2. Start Frontend
+You should see these messages in the console:
+- "Connected to MongoDB"
+- "Google OAuth strategy initialized successfully" (if configured)
+- "GitHub OAuth strategy initialized successfully" (if configured)
+
+### 2. Start the Frontend
 
 ```bash
 cd frontend
@@ -142,87 +95,79 @@ npm run dev
 
 ### 3. Test Social Login
 
-1. Go to login/register page
-2. Click "Sign in with Google" or "Sign in with GitHub"
-3. Complete OAuth flow
-4. Verify user is logged in and redirected to dashboard
+1. Go to the login page
+2. Click on Google or GitHub login button
+3. You should be redirected to the respective OAuth provider
+4. After authentication, you'll be redirected back to the callback page
+5. The callback page should redirect you to the dashboard
 
-## 🔒 Security Considerations
-
-1. **HTTPS Required** - OAuth providers require HTTPS in production
-2. **State Parameter** - Consider adding state parameter for CSRF protection
-3. **Token Storage** - JWT tokens are stored in localStorage (consider httpOnly cookies for production)
-4. **Scope Limitation** - Only request necessary scopes from OAuth providers
-
-## 🚨 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
-1. **"Invalid redirect URI"**
-   - Check that callback URLs match exactly in OAuth app settings
-   - Ensure no trailing slashes or typos
+1. **"OAuth is not configured" error**
+   - Check that your environment variables are set correctly
+   - Ensure the backend has been restarted after updating `.env`
 
-2. **"Client ID not found"**
-   - Verify environment variables are loaded correctly
-   - Check that .env file is in the right location
+2. **"Invalid redirect URI" error**
+   - Verify the callback URLs match exactly in both Google/GitHub settings and your backend
+   - Check that `FRONTEND_URL` is set correctly
 
-3. **"CORS errors"**
-   - Ensure backend CORS settings include frontend URL
-   - Check that frontend URL in .env matches actual frontend URL
+3. **"Authentication failed" error**
+   - Check the backend console for detailed error messages
+   - Verify MongoDB connection
+   - Check JWT_SECRET is set
 
-4. **"User not created"**
-   - Check MongoDB connection
-   - Verify User model schema changes are applied
-   - Check server logs for errors
+4. **CORS errors**
+   - Ensure the backend CORS configuration includes your frontend URL
+   - Check that credentials are being sent with requests
 
-### Debug Steps
+### Debug Mode
 
-1. Check browser console for frontend errors
-2. Check backend server logs
-3. Verify environment variables are loaded
-4. Test OAuth endpoints directly
-5. Check MongoDB for user creation
+To enable debug logging, add this to your backend:
 
-## 📱 Production Deployment
-
-### 1. Update Environment Variables
-
-```env
-FRONTEND_URL=https://yourdomain.com
-GOOGLE_CLIENT_ID=your_production_google_client_id
-GOOGLE_CLIENT_SECRET=your_production_google_client_secret
-GITHUB_CLIENT_ID=your_production_github_client_id
-GITHUB_CLIENT_SECRET=your_production_github_client_secret
+```javascript
+// In server.js
+if (process.env.NODE_ENV === 'development') {
+  app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`);
+    next();
+  });
+}
 ```
 
-### 2. Update OAuth App Settings
+## Security Considerations
 
-- Update callback URLs to production domain
-- Ensure HTTPS is enabled
-- Update application homepage URL
+1. **Never commit your `.env` file** to version control
+2. **Use strong JWT secrets** in production
+3. **Set appropriate OAuth scopes** (only request what you need)
+4. **Implement rate limiting** for OAuth endpoints
+5. **Use HTTPS** in production
 
-### 3. Security Headers
+## Production Deployment
 
-Add security headers to your production server:
-- HSTS
-- CSP (Content Security Policy)
-- X-Frame-Options
+1. Update `FRONTEND_URL` to your production domain
+2. Update OAuth callback URLs in Google/GitHub settings
+3. Set `NODE_ENV=production`
+4. Use environment-specific MongoDB URIs
+5. Implement proper error logging and monitoring
 
-## 🎯 Next Steps
+## Support
 
-1. **Add More Providers** - Facebook, Twitter, LinkedIn
-2. **Enhanced Profile Sync** - Sync more profile data
-3. **Account Merging** - Better handling of duplicate accounts
-4. **Two-Factor Authentication** - Add 2FA for linked accounts
-5. **Social Sharing** - Allow users to share content to social media
+If you encounter issues:
 
-## 📚 Resources
+1. Check the browser console for frontend errors
+2. Check the backend console for server errors
+3. Verify all environment variables are set
+4. Ensure OAuth apps are properly configured
+5. Check MongoDB connection and user model
 
-- [Google OAuth 2.0 Documentation](https://developers.google.com/identity/protocols/oauth2)
-- [GitHub OAuth Documentation](https://docs.github.com/en/developers/apps/building-oauth-apps)
-- [Passport.js Documentation](http://www.passportjs.org/)
-- [JWT Best Practices](https://auth0.com/blog/a-look-at-the-latest-draft-for-jwt-bcp/)
+## Next Steps
 
----
+After successful setup:
 
-**Note**: This implementation is for development purposes. For production use, ensure proper security measures, HTTPS, and environment variable management.
+1. Customize the user profile fields
+2. Add avatar handling
+3. Implement account linking/unlinking
+4. Add social login to user settings
+5. Implement proper error handling and user feedback

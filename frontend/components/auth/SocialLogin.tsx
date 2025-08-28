@@ -2,6 +2,8 @@
 
 import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
+import { useState } from 'react'
+import toast from 'react-hot-toast'
 
 interface SocialLoginProps {
   onSuccess?: (provider: string) => void
@@ -9,12 +11,28 @@ interface SocialLoginProps {
 }
 
 export default function SocialLogin({ onSuccess, onError }: SocialLoginProps) {
+  const [isLoading, setIsLoading] = useState<string | null>(null)
+
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:5000/api/auth/google'
+    setIsLoading('google')
+    try {
+      window.location.href = 'http://localhost:5000/api/auth/google'
+    } catch (error) {
+      toast.error('Unable to connect to authentication service')
+      onError?.('Unable to connect to authentication service')
+      setIsLoading(null)
+    }
   }
 
   const handleGitHubLogin = () => {
-    window.location.href = 'http://localhost:5000/api/auth/github'
+    setIsLoading('github')
+    try {
+      window.location.href = 'http://localhost:5000/api/auth/github'
+    } catch (error) {
+      toast.error('Unable to connect to authentication service')
+      onError?.('Unable to connect to authentication service')
+      setIsLoading(null)
+    }
   }
 
   return (
@@ -36,19 +54,37 @@ export default function SocialLogin({ onSuccess, onError }: SocialLoginProps) {
         {/* Google Login */}
         <button
           onClick={handleGoogleLogin}
-          className="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+          disabled={isLoading === 'google'}
+          className={`flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 ${
+            isLoading === 'google' ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         >
-          <FcGoogle className="h-5 w-5 mr-2" />
-          <span className="text-sm font-medium">Google</span>
+          {isLoading === 'google' ? (
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-600 mr-2"></div>
+          ) : (
+            <FcGoogle className="h-5 w-5 mr-2" />
+          )}
+          <span className="text-sm font-medium">
+            {isLoading === 'google' ? 'Connecting...' : 'Google'}
+          </span>
         </button>
 
         {/* GitHub Login */}
         <button
           onClick={handleGitHubLogin}
-          className="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+          disabled={isLoading === 'github'}
+          className={`flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 ${
+            isLoading === 'github' ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         >
-          <FaGithub className="h-5 w-5 mr-2" />
-          <span className="text-sm font-medium">GitHub</span>
+          {isLoading === 'github' ? (
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-600 mr-2"></div>
+          ) : (
+            <FaGithub className="h-5 w-5 mr-2" />
+          )}
+          <span className="text-sm font-medium">
+            {isLoading === 'github' ? 'Connecting...' : 'GitHub'}
+          </span>
         </button>
       </div>
 
