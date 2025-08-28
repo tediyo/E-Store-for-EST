@@ -74,53 +74,30 @@ export default function Sidebar() {
         <div className="flex flex-col h-full relative">
           {/* Logo Section at Top */}
           <div className="flex-shrink-0 px-6 pt-8 pb-6">
-            <div className="relative flex flex-col items-center justify-center h-36 overflow-hidden rounded-2xl border border-gray-700/50" style={{backgroundColor: '#000000'}}>
-              {/* Background Pattern */}
-              <div className="absolute inset-0 bg-pattern-dots opacity-5"></div>
+            <div className="flex flex-col items-center justify-center">
+              {/* Logo Image */}
+              <img 
+                src="/esho.jpg"
+                alt="E Store Logo" 
+                className="w-32 h-32 object-contain rounded-2xl shadow-xl"
+                style={{ 
+                  border: '2px solid #ffffff',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                }}
+                onError={(e) => {
+                  console.error('Logo failed to load:', e);
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                }}
+              />
               
-              {/* Main Logo Container */}
-              <div className="relative z-10 text-center">
-                {/* Primary Logo */}
-                <div className="relative mb-2">
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/25 mx-auto border-2 border-yellow-400">
-                    {/* Logo Image */}
-                    <img 
-                      src="/esho.jpg"
-                      alt="E Store Logo" 
-                      className="w-16 h-16 object-contain rounded-xl"
-                      style={{ 
-                        border: '1px solid #ffffff',
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)'
-                      }}
-                      onError={(e) => {
-                        console.error('Logo failed to load:', e);
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                        const fallback = target.nextElementSibling as HTMLElement;
-                        if (fallback) fallback.style.display = 'flex';
-                      }}
-                    />
-                    
-                    {/* Fallback Text Logo */}
-                    <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-lg hidden">
-                      <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                        ES
-                      </span>
-                    </div>
-                  </div>
-                  
-                  {/* Glow Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 rounded-2xl blur-lg opacity-20 animate-pulse"></div>
-                </div>
-                
-                {/* Company Name */}
-                <h1 className="text-lg font-bold text-white mb-1">
-                  E Store
-                </h1>
-                <p className="text-xs text-gray-300 font-medium">
-                  Business Management System
-                </p>
-              </div>
+              {/* Company Name */}
+              <h1 className="text-xl font-bold text-white mt-4 mb-2">
+                E Store
+              </h1>
+              <p className="text-sm text-gray-300 font-medium">
+                Business Management System
+              </p>
             </div>
           </div>
 
