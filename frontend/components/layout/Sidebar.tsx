@@ -87,7 +87,7 @@ export default function Sidebar() {
                     <img 
                       src="/esho.jpg"
                       alt="E Store Logo" 
-                      className="w-28 h-28 object-contain rounded-2xl"
+                      className="w-36 h-36 object-contain rounded-2xl"
                       style={{ 
                         border: '1px solid #ffffff',
                         backgroundColor: 'rgba(255, 255, 255, 0.1)'
