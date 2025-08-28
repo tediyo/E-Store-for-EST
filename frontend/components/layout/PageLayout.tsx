@@ -35,7 +35,7 @@ export default function PageLayout({
       
       {/* Theme Selector - Top Right Corner */}
       <div className="fixed top-4 right-4 z-50">
-        <div className="bg-gray-900/95 dark:bg-white/95 backdrop-blur-xl border border-gray-700/50 dark:border-gray-200/50 rounded-xl shadow-lg shadow-gray-500/10 p-0 w-fit">
+        <div className="bg-gray-900/95 dark:bg-white/95 backdrop-blur-xl border border-gray-700/50 dark:border-gray-200/50 rounded-xl shadow-lg shadow-gray-500/10 p-1">
           <ThemeToggle />
         </div>
       </div>
