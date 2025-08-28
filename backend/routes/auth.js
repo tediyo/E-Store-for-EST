@@ -7,19 +7,6 @@ const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Test endpoint to check if backend is reachable
-router.get('/test', (req, res) => {
-  res.json({ 
-    message: 'Backend is working!',
-    timestamp: new Date().toISOString(),
-    oauth: {
-      google: !!process.env.GOOGLE_CLIENT_ID,
-      github: !!process.env.GITHUB_CLIENT_ID
-    },
-    environment: process.env.NODE_ENV || 'development'
-  });
-});
-
 // Register new user
 router.post('/register', [
   body('username').isLength({ min: 3 }).trim().escape(),

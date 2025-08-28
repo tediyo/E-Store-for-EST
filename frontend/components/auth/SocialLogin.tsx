@@ -13,84 +13,24 @@ interface SocialLoginProps {
 export default function SocialLogin({ onSuccess, onError }: SocialLoginProps) {
   const [isLoading, setIsLoading] = useState<string | null>(null)
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = () => {
+    setIsLoading('google')
     try {
-      setIsLoading('google')
-      
-      console.log('Attempting to connect to Google OAuth...')
-      
-      // First, test if backend is reachable
-      const testResponse = await fetch('http://localhost:5000/api/auth/test', {
-        method: 'GET',
-        mode: 'cors'
-      })
-      
-      if (!testResponse.ok) {
-        throw new Error(`Backend test failed: ${testResponse.status} ${testResponse.statusText}`)
-      }
-      
-      console.log('Backend is reachable, proceeding with Google OAuth...')
-      
-      // If backend is reachable, redirect to OAuth
       window.location.href = 'http://localhost:5000/api/auth/google'
-      
     } catch (error) {
-      console.error('Google login error:', error)
-      
-      if (error instanceof Error) {
-        if (error.message.includes('Failed to fetch')) {
-          toast.error('Cannot connect to backend server. Please check if the backend is running.')
-          onError?.('Backend server not reachable')
-        } else {
-          toast.error(`Connection error: ${error.message}`)
-          onError?.(error.message)
-        }
-      } else {
-        toast.error('Unable to connect to authentication service')
-        onError?.('Unable to connect to authentication service')
-      }
-    } finally {
+      toast.error('Unable to connect to authentication service')
+      onError?.('Unable to connect to authentication service')
       setIsLoading(null)
     }
   }
 
-  const handleGitHubLogin = async () => {
+  const handleGitHubLogin = () => {
+    setIsLoading('github')
     try {
-      setIsLoading('github')
-      
-      console.log('Attempting to connect to GitHub OAuth...')
-      
-      // First, test if backend is reachable
-      const testResponse = await fetch('http://localhost:5000/api/auth/test', {
-        method: 'GET',
-        mode: 'cors'
-      })
-      
-      if (!testResponse.ok) {
-        throw new Error(`Backend test failed: ${testResponse.status} ${testResponse.statusText}`)
-      }
-      
-      console.log('Backend is reachable, proceeding with GitHub OAuth...')
-      
-      // If backend is reachable, redirect to OAuth
       window.location.href = 'http://localhost:5000/api/auth/github'
-      
     } catch (error) {
-      console.error('GitHub login error:', error)
-      
-      if (error instanceof Error) {
-        if (error.message.includes('Failed to fetch')) {
-          toast.error('Cannot connect to backend server. Please check if the backend is running.')
-          onError?.('Backend server not reachable')
-        } else {
-          toast.error(`Connection error: ${error.message}`)
-          onError?.(error.message)
-        }
-      } else {
-        toast.error('Unable to connect to authentication service')
-        onError?.('Unable to connect to authentication service')
-      }
-    } finally {
+      toast.error('Unable to connect to authentication service')
+      onError?.('Unable to connect to authentication service')
       setIsLoading(null)
     }
   }
@@ -152,12 +92,6 @@ export default function SocialLogin({ onSuccess, onError }: SocialLoginProps) {
       <p className="text-xs text-center text-gray-500 dark:text-gray-400">
         By continuing, you agree to our Terms of Service and Privacy Policy
       </p>
-      
-      {/* Setup Instructions */}
-      <div className="text-xs text-center text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
-        <p className="font-medium mb-1">Social login not working?</p>
-        <p>OAuth credentials need to be configured in the backend environment variables.</p>
-      </div>
     </div>
   )
 }

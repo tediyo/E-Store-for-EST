@@ -5,18 +5,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 const User = require('../models/User');
 
-// Debug logging for OAuth configuration
-console.log('=== PASSPORT CONFIGURATION DEBUG ===');
-console.log('JWT_SECRET exists:', !!process.env.JWT_SECRET);
-console.log('GOOGLE_CLIENT_ID exists:', !!process.env.GOOGLE_CLIENT_ID);
-console.log('GOOGLE_CLIENT_SECRET exists:', !!process.env.GOOGLE_CLIENT_SECRET);
-console.log('GITHUB_CLIENT_ID exists:', !!process.env.GITHUB_CLIENT_ID);
-console.log('GITHUB_CLIENT_SECRET exists:', !!process.env.GITHUB_CLIENT_SECRET);
-console.log('GOOGLE_CLIENT_ID value:', process.env.GOOGLE_CLIENT_ID);
-console.log('GOOGLE_CLIENT_SECRET length:', process.env.GOOGLE_CLIENT_SECRET ? process.env.GOOGLE_CLIENT_SECRET.length : 'undefined');
-console.log('=====================================');
-
-// JWT Strategy - only initialize if JWT_SECRET is available
+// JWT Strategy
 if (process.env.JWT_SECRET) {
   passport.use(new JwtStrategy({
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -32,13 +21,10 @@ if (process.env.JWT_SECRET) {
       return done(error, false);
     }
   }));
-} else {
-  console.warn('JWT_SECRET not found. JWT authentication will not work.');
 }
 
 // Google OAuth Strategy
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.env.GOOGLE_CLIENT_ID !== 'your_google_client_id_here') {
-  console.log('Initializing Google OAuth strategy...');
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   passport.use('google', new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -85,20 +71,13 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.
 
       return done(null, user);
     } catch (error) {
-      console.error('Google OAuth error:', error);
       return done(error, null);
     }
   }));
-  console.log('Google OAuth strategy initialized successfully');
-} else {
-  console.warn('Google OAuth credentials not configured. Google login will not work.');
-  console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
-  console.log('GOOGLE_CLIENT_SECRET length:', process.env.GOOGLE_CLIENT_SECRET ? process.env.GOOGLE_CLIENT_SECRET.length : 'undefined');
 }
 
 // GitHub OAuth Strategy
-if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET && process.env.GITHUB_CLIENT_ID !== 'your_github_client_id_here') {
-  console.log('Initializing GitHub OAuth strategy...');
+if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
   passport.use('github', new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
@@ -145,13 +124,9 @@ if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET && process.
 
       return done(null, user);
     } catch (error) {
-      console.error('GitHub OAuth error:', error);
       return done(error, null);
     }
   }));
-  console.log('GitHub OAuth strategy initialized successfully');
-} else {
-  console.warn('GitHub OAuth credentials not configured. GitHub login will not work.');
 }
 
 // Serialize user for the session

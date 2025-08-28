@@ -73,7 +73,7 @@ export default function Sidebar() {
         bg-blue-900
       `}>
         <div className="flex flex-col h-full relative overflow-hidden">
-          {/* Logo Section at Top */}
+          {/* Logo Section - Fixed at Top */}
           <div className="flex-shrink-0 px-6 pt-8 pb-6">
             <div className="flex flex-col items-center justify-center">
               {/* Logo Image */}
@@ -98,7 +98,7 @@ export default function Sidebar() {
             </div>
           </div>
 
-          {/* Navigation Section */}
+          {/* Navigation Section - Takes remaining space */}
           <nav className="flex-1 px-6 py-2 space-y-1 overflow-y-auto">
             {navigation.map((item) => {
               const Icon = item.icon
@@ -145,11 +145,10 @@ export default function Sidebar() {
                 </Link>
               )
             })}
-
           </nav>
 
-          {/* Logout Button - Always Visible at Bottom */}
-          <div className="flex-shrink-0 px-6 pb-6">
+          {/* Logout Button - Fixed at Bottom */}
+          <div className="flex-shrink-0 px-6 pb-6 border-t border-blue-800/50 pt-4">
             <button
               onClick={handleLogout}
               className="group w-full flex items-center justify-center px-4 py-3 text-sm text-blue-100 rounded-2xl hover:bg-gradient-to-r hover:from-red-600/20 hover:to-pink-600/20 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 border border-blue-700/30 hover:border-red-500/30"
@@ -158,14 +157,7 @@ export default function Sidebar() {
               Sign out
             </button>
           </div>
-
-
-
-          {/* Enhanced User Section */}
-          
         </div>
-        
-
       </div>
 
       {/* Enhanced Overlay for Mobile */}
