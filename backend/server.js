@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
-const passport = require('./config/passport');
 
-// Load environment variables
+// Load environment variables FIRST
 dotenv.config({ path: './config.env' });
+
+// THEN import passport after environment variables are loaded
+const passport = require('./config/passport');
 
 const app = express();
 

@@ -72,7 +72,7 @@ export default function Sidebar() {
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         bg-blue-900
       `}>
-        <div className="flex flex-col h-full relative">
+        <div className="flex flex-col h-full relative overflow-hidden">
           {/* Logo Section at Top */}
           <div className="flex-shrink-0 px-6 pt-8 pb-6">
             <div className="flex flex-col items-center justify-center">
@@ -99,7 +99,7 @@ export default function Sidebar() {
           </div>
 
           {/* Navigation Section */}
-          <nav className="px-6 py-2 space-y-1">
+          <nav className="flex-1 px-6 py-2 space-y-1 overflow-y-auto">
             {navigation.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
@@ -146,17 +146,18 @@ export default function Sidebar() {
               )
             })}
 
-            {/* Logout Button Below Navigation */}
-            <div className="pt-4">
-              <button
-                onClick={handleLogout}
-                className="group w-full flex items-center justify-center px-4 py-3 text-sm text-blue-100 rounded-2xl hover:bg-gradient-to-r hover:from-red-600/20 hover:to-pink-600/20 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 border border-blue-700/30 hover:border-red-500/30"
-              >
-                <LogOut size={18} className="mr-3 group-hover:scale-110 transition-transform duration-300" />
-                Sign out
-              </button>
-            </div>
           </nav>
+
+          {/* Logout Button - Always Visible at Bottom */}
+          <div className="flex-shrink-0 px-6 pb-6">
+            <button
+              onClick={handleLogout}
+              className="group w-full flex items-center justify-center px-4 py-3 text-sm text-blue-100 rounded-2xl hover:bg-gradient-to-r hover:from-red-600/20 hover:to-pink-600/20 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 border border-blue-700/30 hover:border-red-500/30"
+            >
+              <LogOut size={18} className="mr-3 group-hover:scale-110 transition-transform duration-300" />
+              Sign out
+            </button>
+          </div>
 
 
 
