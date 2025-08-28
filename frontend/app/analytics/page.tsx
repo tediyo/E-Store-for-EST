@@ -114,10 +114,15 @@ export default function AnalyticsPage() {
   const fetchAnalytics = async () => {
     try {
       setLoading(true)
+      console.log('Fetching analytics data for period:', period)
       const response = await axios.get(`http://localhost:5000/api/dashboard/analytics?period=${period}`)
+      console.log('Analytics data received:', response.data)
       setAnalyticsData(response.data)
-    } catch (error) {
-      toast.error('Failed to fetch analytics data')
+      toast.success('Analytics data updated successfully!')
+    } catch (error: any) {
+      console.error('Failed to fetch analytics data:', error)
+      toast.error(`Failed to fetch analytics data: ${error.response?.data?.message || error.message}`)
+      setAnalyticsData(null)
     } finally {
       setLoading(false)
     }
@@ -130,20 +135,49 @@ export default function AnalyticsPage() {
     }).format(amount)
   }
 
-  // Mock data for enhanced charts (replace with real data when available)
-  const enhancedChartData = [
-    { name: 'Week 1', sales: 45, revenue: 4500, profit: 1800, tasks: 12, costs: 800 },
-    { name: 'Week 2', sales: 52, revenue: 5200, profit: 2080, tasks: 15, costs: 950 },
-    { name: 'Week 3', sales: 38, revenue: 3800, profit: 1520, tasks: 8, costs: 600 },
-    { name: 'Week 4', sales: 61, revenue: 6100, profit: 2440, tasks: 20, costs: 1200 },
-  ]
+  // Real data from backend API for enhanced charts
+  const enhancedChartData = analyticsData ? [
+    ...analyticsData.salesTrend.map((trend, index) => ({
+      name: trend._id,
+      sales: trend.sales,
+      revenue: trend.revenue,
+      profit: trend.profit,
+      tasks: analyticsData.tasksTrend[index]?.tasks || 0,
+      costs: analyticsData.tasksTrend[index]?.costs || 0
+    }))
+  ] : []
 
-  const performanceData = [
-    { metric: 'Sales Growth', value: 85, target: 100, color: '#10B981' },
-    { metric: 'Revenue Growth', value: 78, target: 100, color: '#3B82F6' },
-    { metric: 'Profit Margin', value: 92, target: 100, color: '#F59E0B' },
-    { metric: 'Task Efficiency', value: 88, target: 100, color: '#8B5CF6' },
-  ]
+  // Calculate performance metrics from real data
+  const performanceData = analyticsData ? [
+    {
+      metric: 'Sales Growth',
+      value: analyticsData.salesTrend.length > 1 ? 
+        Math.round(((analyticsData.salesTrend[analyticsData.salesTrend.length - 1].sales - analyticsData.salesTrend[0].sales) / analyticsData.salesTrend[0].sales) * 100) : 0,
+      target: 100,
+      color: '#10B981'
+    },
+    {
+      metric: 'Revenue Growth',
+      value: analyticsData.salesTrend.length > 1 ? 
+        Math.round(((analyticsData.salesTrend[analyticsData.salesTrend.length - 1].revenue - analyticsData.salesTrend[0].revenue) / analyticsData.salesTrend[0].revenue) * 100) : 0,
+      target: 100,
+      color: '#3B82F6'
+    },
+    {
+      metric: 'Profit Margin',
+      value: analyticsData.salesTrend.length > 0 ? 
+        Math.round((analyticsData.salesTrend.reduce((sum, trend) => sum + trend.profit, 0) / analyticsData.salesTrend.reduce((sum, trend) => sum + trend.revenue, 1)) * 100) : 0,
+      target: 100,
+      color: '#F59E0B'
+    },
+    {
+      metric: 'Task Efficiency',
+      value: analyticsData.tasksTrend.length > 0 ? 
+        Math.round((analyticsData.tasksTrend.reduce((sum, trend) => sum + trend.profit, 0) / Math.max(analyticsData.tasksTrend.reduce((sum, trend) => sum + trend.costs, 1), 1)) * 100) : 0,
+      target: 100,
+      color: '#8B5CF6'
+    }
+  ] : []
 
   const handleQuickAction = async (action: string) => {
     try {
@@ -687,9 +721,10 @@ export default function AnalyticsPage() {
                   <button
                     onClick={fetchAnalytics}
                     disabled={loading}
-                    className="px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-white font-semibold hover:bg-white/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-white font-semibold hover:bg-white/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                    {loading ? 'Loading...' : 'Refresh'}
                   </button>
                 </div>
                 
@@ -790,7 +825,7 @@ export default function AnalyticsPage() {
           </div>
         </div>
 
-        {analyticsData ? (
+        {analyticsData && analyticsData.salesTrend && analyticsData.salesTrend.length > 0 ? (
           <>
             {/* Interactive Charts Section - Only show in Overview mode */}
             {viewMode === 'overview' && (
@@ -822,69 +857,79 @@ export default function AnalyticsPage() {
                   </div>
                   
                   <div className="h-80">
-                    <ResponsiveContainer width="100%" height="100%">
-                      {selectedChart === 'line' ? (
-                        <RechartsLineChart data={enhancedChartData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                          <XAxis dataKey="name" stroke="#6B7280" />
-                          <YAxis stroke="#6B7280" />
-                          <Tooltip 
-                            contentStyle={{ 
-                              backgroundColor: 'white', 
-                              border: 'none', 
-                              borderRadius: '12px', 
-                              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
-                            }}
-                          />
-                          <Line type="monotone" dataKey="sales" stroke="#3B82F6" strokeWidth={3} />
-                          <Line type="monotone" dataKey="revenue" stroke="#10B981" strokeWidth={3} />
-                          <Line type="monotone" dataKey="profit" stroke="#F59E0B" strokeWidth={3} />
-                        </RechartsLineChart>
-                      ) : selectedChart === 'area' ? (
-                        <AreaChart data={enhancedChartData}>
-                          <defs>
-                            <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
-                              <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1}/>
-                            </linearGradient>
-                            <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
-                              <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
-                            </linearGradient>
-                          </defs>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                          <XAxis dataKey="name" stroke="#6B7280" />
-                          <YAxis stroke="#6B7280" />
-                          <Tooltip 
-                            contentStyle={{ 
-                              backgroundColor: 'white', 
-                              border: 'none', 
-                              borderRadius: '12px', 
-                              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
-                            }}
-                          />
-                          <Area type="monotone" dataKey="sales" stroke="#3B82F6" fill="url(#colorSales)" />
-                          <Area type="monotone" dataKey="revenue" stroke="#10B981" fill="url(#colorRevenue)" />
-                        </AreaChart>
-                      ) : (
-                        <RechartsBarChart data={enhancedChartData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                          <XAxis dataKey="name" stroke="#6B7280" />
-                          <YAxis stroke="#6B7280" />
-                          <Tooltip 
-                            contentStyle={{ 
-                              backgroundColor: 'white', 
-                              border: 'none', 
-                              borderRadius: '12px', 
-                              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
-                            }}
-                          />
-                          <Bar dataKey="sales" fill="#3B82F6" radius={[4, 4, 0, 0]} />
-                          <Bar dataKey="revenue" fill="#10B981" radius={[4, 4, 0, 0]} />
-                          <Bar dataKey="profit" fill="#F59E0B" radius={[4, 4, 0, 0]} />
-                        </RechartsBarChart>
-                      )}
-                    </ResponsiveContainer>
+                    {enhancedChartData.length > 0 ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        {selectedChart === 'line' ? (
+                          <RechartsLineChart data={enhancedChartData}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                            <XAxis dataKey="name" stroke="#6B7280" />
+                            <YAxis stroke="#6B7280" />
+                            <Tooltip 
+                              contentStyle={{ 
+                                backgroundColor: 'white', 
+                                border: 'none', 
+                                borderRadius: '12px', 
+                                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
+                              }}
+                            />
+                            <Line type="monotone" dataKey="sales" stroke="#3B82F6" strokeWidth={3} />
+                            <Line type="monotone" dataKey="revenue" stroke="#10B981" strokeWidth={3} />
+                            <Line type="monotone" dataKey="profit" stroke="#F59E0B" strokeWidth={3} />
+                          </RechartsLineChart>
+                        ) : selectedChart === 'area' ? (
+                          <AreaChart data={enhancedChartData}>
+                            <defs>
+                              <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                                <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1}/>
+                              </linearGradient>
+                              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
+                                <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
+                              </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                            <XAxis dataKey="name" stroke="#6B7280" />
+                            <YAxis stroke="#6B7280" />
+                            <Tooltip 
+                              contentStyle={{ 
+                                backgroundColor: 'white', 
+                                border: 'none', 
+                                borderRadius: '12px', 
+                                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
+                              }}
+                            />
+                            <Area type="monotone" dataKey="sales" stroke="#3B82F6" fill="url(#colorSales)" />
+                            <Area type="monotone" dataKey="revenue" stroke="#10B981" fill="url(#colorRevenue)" />
+                          </AreaChart>
+                        ) : (
+                          <RechartsBarChart data={enhancedChartData}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                            <XAxis dataKey="name" stroke="#6B7280" />
+                            <YAxis stroke="#6B7280" />
+                            <Tooltip 
+                              contentStyle={{ 
+                                backgroundColor: 'white', 
+                                border: 'none', 
+                                borderRadius: '12px', 
+                                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
+                              }}
+                            />
+                            <Bar dataKey="sales" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                            <Bar dataKey="revenue" fill="#10B981" radius={[4, 4, 0, 0]} />
+                            <Bar dataKey="profit" fill="#F59E0B" radius={[4, 4, 0, 0]} />
+                          </RechartsBarChart>
+                        )}
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        <div className="text-center">
+                          <BarChart3 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                          <p className="text-gray-500">No chart data available</p>
+                          <p className="text-sm text-gray-400">Try selecting a different time period</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -897,40 +942,55 @@ export default function AnalyticsPage() {
                       </div>
                       Performance Metrics
                     </h3>
-                    <div className="text-sm text-gray-500">
-                      Overall Score: <span className="font-bold text-indigo-600">85.8%</span>
-                    </div>
+                                    <div className="text-sm text-gray-500">
+                  Overall Score: <span className="font-bold text-indigo-600">
+                    {performanceData.length > 0 ? 
+                      Math.round(performanceData.reduce((sum, metric) => sum + metric.value, 0) / performanceData.length) + '%' 
+                      : 'N/A'
+                    }
+                  </span>
+                </div>
                   </div>
                   
                   <div className="h-80">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <ComposedChart data={performanceData} layout="horizontal">
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                        <XAxis type="number" domain={[0, 100]} stroke="#6B7280" />
-                        <YAxis dataKey="metric" type="category" stroke="#6B7280" />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: 'white', 
-                            border: 'none', 
-                            borderRadius: '12px', 
-                            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
-                          }}
-                        />
-                        <Bar 
-                          dataKey="value" 
-                          fill={(entry) => entry.color}
-                          radius={[0, 4, 4, 0]}
-                        />
-                        <Line 
-                          type="monotone" 
-                          dataKey="target" 
-                          stroke="#EF4444" 
-                          strokeWidth={2}
-                          strokeDasharray="5 5"
-                          dot={false}
-                        />
-                      </ComposedChart>
-                    </ResponsiveContainer>
+                    {performanceData.length > 0 ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <ComposedChart data={performanceData} layout="horizontal">
+                          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                          <XAxis type="number" domain={[0, 100]} stroke="#6B7280" />
+                          <YAxis dataKey="metric" type="category" stroke="#6B7280" />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'white', 
+                              border: 'none', 
+                              borderRadius: '12px', 
+                              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' 
+                            }}
+                          />
+                          <Bar 
+                            dataKey="value" 
+                            fill={(entry) => entry.color}
+                            radius={[0, 4, 4, 0]}
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="target" 
+                            stroke="#EF4444" 
+                            strokeWidth={2}
+                            strokeDasharray="5 5"
+                            dot={false}
+                          />
+                        </ComposedChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        <div className="text-center">
+                          <Target className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                          <p className="text-gray-500">No performance data available</p>
+                          <p className="text-sm text-gray-400">Try selecting a different time period</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1186,7 +1246,44 @@ export default function AnalyticsPage() {
               <BarChart3 className="h-16 w-16 text-blue-500" />
             </div>
             <h3 className="text-3xl font-bold text-gray-900 mb-4">No Analytics Data Available</h3>
-            <p className="text-lg text-gray-600">Try selecting a different time period or check back later.</p>
+            <p className="text-lg text-gray-600 mb-6">Try selecting a different time period or check back later.</p>
+            
+            {/* Helpful Actions */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={fetchAnalytics}
+                disabled={loading}
+                className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50"
+              >
+                {loading ? 'Loading...' : 'Refresh Data'}
+              </button>
+              <button
+                onClick={() => setPeriod('month')}
+                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors"
+              >
+                Try Monthly View
+              </button>
+            </div>
+            
+            {/* Data Status */}
+            <div className="mt-8 p-4 bg-blue-50 rounded-xl max-w-md mx-auto">
+              <p className="text-sm text-blue-700">
+                <strong>Current Period:</strong> {period.charAt(0).toUpperCase() + period.slice(1)}
+              </p>
+              <p className="text-sm text-blue-600 mt-1">
+                {analyticsData ? 'Data structure received but no trend data found' : 'No data received from server'}
+              </p>
+              
+              {/* Debug Info - Only show in development */}
+              {process.env.NODE_ENV === 'development' && analyticsData && (
+                <details className="mt-3">
+                  <summary className="text-xs text-blue-600 cursor-pointer">Debug Info</summary>
+                  <pre className="text-xs text-blue-700 mt-2 bg-blue-100 p-2 rounded overflow-auto">
+                    {JSON.stringify(analyticsData, null, 2)}
+                  </pre>
+                </details>
+              )}
+            </div>
           </div>
         )}
       </div>
