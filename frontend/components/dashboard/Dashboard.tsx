@@ -77,8 +77,35 @@ interface DashboardData {
   }
 }
 
+interface ChartData {
+  name: string
+  revenue: number
+  profit: number
+  costs: number
+  sales: number
+}
+
+interface AnalyticsData {
+  period: string
+  dateRange: any
+  salesTrend: Array<{
+    _id: string
+    sales: number
+    revenue: number
+    profit: number
+  }>
+  tasksTrend: Array<{
+    _id: string
+    tasks: number
+    profit: number
+    costs: number
+  }>
+}
+
 export default function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null)
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
+  const [chartData, setChartData] = useState<ChartData[]>([])
   const [loading, setLoading] = useState(true)
   const [period, setPeriod] = useState('all')
   const [selectedMetric, setSelectedMetric] = useState('revenue')
@@ -92,14 +119,60 @@ export default function Dashboard() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:5000/api/dashboard/overview?period=${period}`)
-      setData(response.data)
+      const [overviewResponse, analyticsResponse] = await Promise.all([
+        axios.get(`http://localhost:5000/api/dashboard/overview?period=${period}`),
+        axios.get(`http://localhost:5000/api/dashboard/analytics?period=${period}`)
+      ])
+      
+      setData(overviewResponse.data)
+      setAnalyticsData(analyticsResponse.data)
+      
+      // Process chart data from analytics
+      const salesTrend = analyticsResponse.data.salesTrend || []
+      const tasksTrend = analyticsResponse.data.tasksTrend || []
+      
+      // Combine sales and tasks data for charts
+      const processedChartData = salesTrend.map((item: any) => ({
+        name: formatDateForChart(item._id, period),
+        revenue: item.revenue || 0,
+        profit: item.profit || 0,
+        costs: 0, // Will be filled from tasks data
+        sales: item.sales || 0
+      }))
+      
+      // Add costs from tasks data
+      tasksTrend.forEach((taskItem: any) => {
+        const existingItem = processedChartData.find(item => item.name === formatDateForChart(taskItem._id, period))
+        if (existingItem) {
+          existingItem.costs = taskItem.costs || 0
+        } else {
+          processedChartData.push({
+            name: formatDateForChart(taskItem._id, period),
+            revenue: 0,
+            profit: 0,
+            costs: taskItem.costs || 0,
+            sales: 0
+          })
+        }
+      })
+      
+      setChartData(processedChartData.sort((a, b) => a.name.localeCompare(b.name)))
     } catch (error) {
       toast.error('Failed to fetch dashboard data')
       console.error('Dashboard error:', error)
     } finally {
       setLoading(false)
     }
+  }
+
+  const formatDateForChart = (dateString: string, period: string) => {
+    const date = new Date(dateString)
+    if (period === 'week' || period === 'month') {
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    } else if (period === 'year') {
+      return date.toLocaleDateString('en-US', { month: 'short' })
+    }
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 
   const handleQuickAction = async (action: string, route: string) => {
@@ -129,21 +202,6 @@ export default function Dashboard() {
     }).format(amount)
   }
 
-  // Mock data for charts (replace with real data from API)
-  const chartData = [
-    { name: 'Jan', revenue: 4000, profit: 2400, costs: 1600, sales: 24 },
-    { name: 'Feb', revenue: 3000, profit: 1398, costs: 1602, sales: 18 },
-    { name: 'Mar', revenue: 2000, profit: 9800, costs: 10200, sales: 32 },
-    { name: 'Apr', revenue: 2780, profit: 3908, costs: 1128, sales: 28 },
-    { name: 'May', revenue: 1890, profit: 4800, costs: 6900, sales: 35 },
-    { name: 'Jun', revenue: 2390, profit: 3800, costs: 1410, sales: 42 },
-    { name: 'Jul', revenue: 3490, profit: 4300, costs: 2100, sales: 38 },
-    { name: 'Aug', revenue: 4200, profit: 5200, costs: 1800, sales: 45 },
-    { name: 'Sep', revenue: 3800, profit: 4100, costs: 2200, sales: 41 },
-    { name: 'Oct', revenue: 4500, profit: 5800, costs: 1900, sales: 48 },
-    { name: 'Nov', revenue: 5200, profit: 6500, costs: 2100, sales: 52 },
-    { name: 'Dec', revenue: 6100, profit: 7200, costs: 2400, sales: 58 },
-  ]
 
   // Real inventory data from API
   const getInventoryChartData = () => {
@@ -201,17 +259,17 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       {/* Professional Dashboard Header */}
-      <div className="relative bg-gradient-to-br from-slate-800 via-blue-900 to-indigo-900 rounded-2xl p-8 text-white overflow-hidden border border-slate-700/50">
+      <div className="relative bg-gradient-to-br from-slate-800 via-blue-900 to-indigo-900 rounded-2xl p-6 text-white overflow-hidden border border-slate-700/50">
         {/* Subtle background pattern */}
         <div className="absolute inset-0 bg-pattern-dots opacity-5"></div>
         
         <div className="relative z-10">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
             <div>
-              <h1 className="text-4xl font-bold mb-3 text-white">
+              <h1 className="text-3xl font-bold mb-2 text-white">
                 Business Dashboard
               </h1>
-              <p className="text-lg text-slate-300">Comprehensive overview of your business performance</p>
+              <p className="text-sm text-slate-300">Performance overview</p>
             </div>
         
             {/* Enhanced Period Filter */}
@@ -256,59 +314,59 @@ export default function Dashboard() {
           </div>
           
           {/* Professional Summary Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-blue-500/30 rounded-xl">
-                  <BarChart3 className="h-6 w-6 text-white" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 bg-blue-500/30 rounded-lg">
+                  <BarChart3 className="h-5 w-5 text-white" />
                 </div>
-                <ArrowUpRight className="h-5 w-5 text-green-300 group-hover:scale-110 transition-transform duration-300" />
+                <ArrowUpRight className="h-4 w-4 text-green-300 group-hover:scale-110 transition-transform duration-300" />
               </div>
-              <div className="text-3xl font-bold text-white mb-1">{data.summary.totalTransactions}</div>
-              <div className="text-sm text-slate-300">Total Transactions</div>
-              <div className="w-full bg-white/20 rounded-full h-1 mt-3">
+              <div className="text-2xl font-bold text-white mb-1">{data.summary.totalTransactions}</div>
+              <div className="text-xs text-slate-300">Total Transactions</div>
+              <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                 <div className="bg-green-300 rounded-full h-1" style={{ width: '75%' }}></div>
               </div>
             </div>
             
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-green-500/30 rounded-xl">
-                  <DollarSign className="h-6 w-6 text-white" />
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 bg-green-500/30 rounded-lg">
+                  <DollarSign className="h-5 w-5 text-white" />
                 </div>
-                <ArrowUpRight className="h-5 w-5 text-green-300 group-hover:scale-110 transition-transform duration-300" />
+                <ArrowUpRight className="h-4 w-4 text-green-300 group-hover:scale-110 transition-transform duration-300" />
               </div>
-              <div className="text-3xl font-bold text-white mb-1">{formatCurrency(data.summary.totalRevenue)}</div>
-              <div className="text-sm text-slate-300">Total Revenue</div>
-              <div className="w-full bg-white/20 rounded-full h-1 mt-3">
+              <div className="text-2xl font-bold text-white mb-1">{formatCurrency(data.summary.totalRevenue)}</div>
+              <div className="text-xs text-slate-300">Total Revenue</div>
+              <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                 <div className="bg-green-300 rounded-full h-1" style={{ width: '85%' }}></div>
               </div>
             </div>
             
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-emerald-500/30 rounded-xl">
-                  <TrendingUp className="h-6 w-6 text-white" />
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 bg-emerald-500/30 rounded-lg">
+                  <TrendingUp className="h-5 w-5 text-white" />
                 </div>
-                <ArrowUpRight className="h-5 w-5 text-green-300 group-hover:scale-110 transition-transform duration-300" />
+                <ArrowUpRight className="h-4 w-4 text-green-300 group-hover:scale-110 transition-transform duration-300" />
               </div>
-              <div className="text-3xl font-bold text-white mb-1">{formatCurrency(data.summary.totalProfit)}</div>
-              <div className="text-sm text-slate-300">Total Profit</div>
-              <div className="w-full bg-white/20 rounded-full h-1 mt-3">
+              <div className="text-2xl font-bold text-white mb-1">{formatCurrency(data.summary.totalProfit)}</div>
+              <div className="text-xs text-slate-300">Total Profit</div>
+              <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                 <div className="bg-green-300 rounded-full h-1" style={{ width: '92%' }}></div>
               </div>
             </div>
             
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-red-500/30 rounded-xl">
-                  <Activity className="h-6 w-6 text-white" />
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 bg-red-500/30 rounded-lg">
+                  <Activity className="h-5 w-5 text-white" />
                 </div>
-                <ArrowDownRight className="h-5 w-5 text-red-300 group-hover:scale-110 transition-transform duration-300" />
+                <ArrowDownRight className="h-4 w-4 text-red-300 group-hover:scale-110 transition-transform duration-300" />
               </div>
-              <div className="text-3xl font-bold text-white mb-1">{formatCurrency(data.summary.totalCosts)}</div>
-              <div className="text-sm text-slate-300">Total Costs</div>
-              <div className="w-full bg-white/20 rounded-full h-1 mt-3">
+              <div className="text-2xl font-bold text-white mb-1">{formatCurrency(data.summary.totalCosts)}</div>
+              <div className="text-xs text-slate-300">Total Costs</div>
+              <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                 <div className="bg-red-300 rounded-full h-1" style={{ width: '45%' }}></div>
               </div>
             </div>
@@ -346,7 +404,7 @@ export default function Dashboard() {
           
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
+              <AreaChart data={chartData.length > 0 ? chartData : [{ name: 'No Data', revenue: 0, profit: 0, costs: 0, sales: 0 }]}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
@@ -382,7 +440,7 @@ export default function Dashboard() {
                     name === 'profit' ? `$${value.toLocaleString()}` : 
                     name === 'costs' ? `$${value.toLocaleString()}` : 
                     `${value} units`,
-                    name.charAt(0).toUpperCase() + name.slice(1)
+                    typeof name === 'string' ? name.charAt(0).toUpperCase() + name.slice(1) : String(name)
                   ]}
                 />
                 <Area 
