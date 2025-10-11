@@ -77,8 +77,35 @@ interface DashboardData {
   }
 }
 
+interface ChartData {
+  name: string
+  revenue: number
+  profit: number
+  costs: number
+  sales: number
+}
+
+interface AnalyticsData {
+  period: string
+  dateRange: any
+  salesTrend: Array<{
+    _id: string
+    sales: number
+    revenue: number
+    profit: number
+  }>
+  tasksTrend: Array<{
+    _id: string
+    tasks: number
+    profit: number
+    costs: number
+  }>
+}
+
 export default function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null)
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
+  const [chartData, setChartData] = useState<ChartData[]>([])
   const [loading, setLoading] = useState(true)
   const [period, setPeriod] = useState('all')
   const [selectedMetric, setSelectedMetric] = useState('revenue')
@@ -92,14 +119,60 @@ export default function Dashboard() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:5000/api/dashboard/overview?period=${period}`)
-      setData(response.data)
+      const [overviewResponse, analyticsResponse] = await Promise.all([
+        axios.get(`http://localhost:5000/api/dashboard/overview?period=${period}`),
+        axios.get(`http://localhost:5000/api/dashboard/analytics?period=${period}`)
+      ])
+      
+      setData(overviewResponse.data)
+      setAnalyticsData(analyticsResponse.data)
+      
+      // Process chart data from analytics
+      const salesTrend = analyticsResponse.data.salesTrend || []
+      const tasksTrend = analyticsResponse.data.tasksTrend || []
+      
+      // Combine sales and tasks data for charts
+      const processedChartData = salesTrend.map((item: any) => ({
+        name: formatDateForChart(item._id, period),
+        revenue: item.revenue || 0,
+        profit: item.profit || 0,
+        costs: 0, // Will be filled from tasks data
+        sales: item.sales || 0
+      }))
+      
+      // Add costs from tasks data
+      tasksTrend.forEach((taskItem: any) => {
+        const existingItem = processedChartData.find(item => item.name === formatDateForChart(taskItem._id, period))
+        if (existingItem) {
+          existingItem.costs = taskItem.costs || 0
+        } else {
+          processedChartData.push({
+            name: formatDateForChart(taskItem._id, period),
+            revenue: 0,
+            profit: 0,
+            costs: taskItem.costs || 0,
+            sales: 0
+          })
+        }
+      })
+      
+      setChartData(processedChartData.sort((a, b) => a.name.localeCompare(b.name)))
     } catch (error) {
       toast.error('Failed to fetch dashboard data')
       console.error('Dashboard error:', error)
     } finally {
       setLoading(false)
     }
+  }
+
+  const formatDateForChart = (dateString: string, period: string) => {
+    const date = new Date(dateString)
+    if (period === 'week' || period === 'month') {
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    } else if (period === 'year') {
+      return date.toLocaleDateString('en-US', { month: 'short' })
+    }
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 
   const handleQuickAction = async (action: string, route: string) => {
@@ -129,21 +202,6 @@ export default function Dashboard() {
     }).format(amount)
   }
 
-  // Mock data for charts (replace with real data from API)
-  const chartData = [
-    { name: 'Jan', revenue: 4000, profit: 2400, costs: 1600, sales: 24 },
-    { name: 'Feb', revenue: 3000, profit: 1398, costs: 1602, sales: 18 },
-    { name: 'Mar', revenue: 2000, profit: 9800, costs: 10200, sales: 32 },
-    { name: 'Apr', revenue: 2780, profit: 3908, costs: 1128, sales: 28 },
-    { name: 'May', revenue: 1890, profit: 4800, costs: 6900, sales: 35 },
-    { name: 'Jun', revenue: 2390, profit: 3800, costs: 1410, sales: 42 },
-    { name: 'Jul', revenue: 3490, profit: 4300, costs: 2100, sales: 38 },
-    { name: 'Aug', revenue: 4200, profit: 5200, costs: 1800, sales: 45 },
-    { name: 'Sep', revenue: 3800, profit: 4100, costs: 2200, sales: 41 },
-    { name: 'Oct', revenue: 4500, profit: 5800, costs: 1900, sales: 48 },
-    { name: 'Nov', revenue: 5200, profit: 6500, costs: 2100, sales: 52 },
-    { name: 'Dec', revenue: 6100, profit: 7200, costs: 2400, sales: 58 },
-  ]
 
   // Real inventory data from API
   const getInventoryChartData = () => {
@@ -346,7 +404,7 @@ export default function Dashboard() {
           
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
+              <AreaChart data={chartData.length > 0 ? chartData : [{ name: 'No Data', revenue: 0, profit: 0, costs: 0, sales: 0 }]}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
