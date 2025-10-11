@@ -255,14 +255,7 @@ export default function InventoryPage() {
       {/* Header Section */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div className="space-y-1">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                Inventory Management
-              </h1>
-              <p className="text-gray-600 text-sm">Manage your store items and stock levels with precision</p>
-            </div>
-            
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-end gap-4">
             {user?.role === 'admin' && (
               <button
                 onClick={() => setShowAddForm(true)}
