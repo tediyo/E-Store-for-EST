@@ -207,15 +207,15 @@ export default function Dashboard() {
   const getInventoryChartData = () => {
     if (!data) return []
     return [
-      { name: 'In Stock', value: data.inventory.inStockItems, color: '#10B981' },
-      { name: 'Low Stock', value: data.inventory.lowStockItems, color: '#F59E0B' },
-      { name: 'Out of Stock', value: data.inventory.outOfStockItems, color: '#EF4444' },
+      { name: 'In Stock', value: data.inventory.inStockItems, color: '#3B82F6' },
+      { name: 'Low Stock', value: data.inventory.lowStockItems, color: '#F97316' },
+      { name: 'Out of Stock', value: data.inventory.outOfStockItems, color: '#3B82F6' },
     ]
   }
 
   const salesComparisonData = [
     { name: 'Store Sales', value: 70, color: '#3B82F6' },
-    { name: 'Out of Store', value: 30, color: '#F59E0B' },
+    { name: 'Out of Store', value: 30, color: '#F97316' },
   ]
 
   const performanceData = [
@@ -259,7 +259,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       {/* Professional Dashboard Header */}
-      <div className="relative bg-gradient-to-br from-slate-800 via-blue-900 to-indigo-900 rounded-2xl p-6 text-white overflow-hidden border border-slate-700/50">
+      <div className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 rounded-2xl p-6 text-white overflow-hidden border border-blue-500/50">
         {/* Subtle background pattern */}
         <div className="absolute inset-0 bg-pattern-dots opacity-5"></div>
         
@@ -317,57 +317,57 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
               <div className="flex items-center justify-between mb-3">
-                <div className="p-2 bg-blue-500/30 rounded-lg">
+                <div className="p-2 bg-white/30 rounded-lg">
                   <BarChart3 className="h-5 w-5 text-white" />
                 </div>
-                <ArrowUpRight className="h-4 w-4 text-green-300 group-hover:scale-110 transition-transform duration-300" />
+                <ArrowUpRight className="h-4 w-4 text-orange-300 group-hover:scale-110 transition-transform duration-300" />
               </div>
               <div className="text-2xl font-bold text-white mb-1">{data.summary.totalTransactions}</div>
-              <div className="text-xs text-slate-300">Total Transactions</div>
+              <div className="text-xs text-white/80">Total Transactions</div>
               <div className="w-full bg-white/20 rounded-full h-1 mt-2">
-                <div className="bg-green-300 rounded-full h-1" style={{ width: '75%' }}></div>
+                <div className="bg-orange-300 rounded-full h-1" style={{ width: '75%' }}></div>
               </div>
             </div>
             
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
               <div className="flex items-center justify-between mb-3">
-                <div className="p-2 bg-green-500/30 rounded-lg">
+                <div className="p-2 bg-white/30 rounded-lg">
                   <DollarSign className="h-5 w-5 text-white" />
                 </div>
-                <ArrowUpRight className="h-4 w-4 text-green-300 group-hover:scale-110 transition-transform duration-300" />
+                <ArrowUpRight className="h-4 w-4 text-orange-300 group-hover:scale-110 transition-transform duration-300" />
               </div>
               <div className="text-2xl font-bold text-white mb-1">{formatCurrency(data.summary.totalRevenue)}</div>
-              <div className="text-xs text-slate-300">Total Revenue</div>
+              <div className="text-xs text-white/80">Total Revenue</div>
               <div className="w-full bg-white/20 rounded-full h-1 mt-2">
-                <div className="bg-green-300 rounded-full h-1" style={{ width: '85%' }}></div>
+                <div className="bg-orange-300 rounded-full h-1" style={{ width: '85%' }}></div>
               </div>
             </div>
             
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
               <div className="flex items-center justify-between mb-3">
-                <div className="p-2 bg-emerald-500/30 rounded-lg">
+                <div className="p-2 bg-white/30 rounded-lg">
                   <TrendingUp className="h-5 w-5 text-white" />
                 </div>
-                <ArrowUpRight className="h-4 w-4 text-green-300 group-hover:scale-110 transition-transform duration-300" />
+                <ArrowUpRight className="h-4 w-4 text-orange-300 group-hover:scale-110 transition-transform duration-300" />
               </div>
               <div className="text-2xl font-bold text-white mb-1">{formatCurrency(data.summary.totalProfit)}</div>
-              <div className="text-xs text-slate-300">Total Profit</div>
+              <div className="text-xs text-white/80">Total Profit</div>
               <div className="w-full bg-white/20 rounded-full h-1 mt-2">
-                <div className="bg-green-300 rounded-full h-1" style={{ width: '92%' }}></div>
+                <div className="bg-orange-300 rounded-full h-1" style={{ width: '92%' }}></div>
               </div>
             </div>
             
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
               <div className="flex items-center justify-between mb-3">
-                <div className="p-2 bg-red-500/30 rounded-lg">
+                <div className="p-2 bg-white/30 rounded-lg">
                   <Activity className="h-5 w-5 text-white" />
                 </div>
-                <ArrowDownRight className="h-4 w-4 text-red-300 group-hover:scale-110 transition-transform duration-300" />
+                <ArrowDownRight className="h-4 w-4 text-orange-300 group-hover:scale-110 transition-transform duration-300" />
               </div>
               <div className="text-2xl font-bold text-white mb-1">{formatCurrency(data.summary.totalCosts)}</div>
-              <div className="text-xs text-slate-300">Total Costs</div>
+              <div className="text-xs text-white/80">Total Costs</div>
               <div className="w-full bg-white/20 rounded-full h-1 mt-2">
-                <div className="bg-red-300 rounded-full h-1" style={{ width: '45%' }}></div>
+                <div className="bg-orange-300 rounded-full h-1" style={{ width: '45%' }}></div>
               </div>
             </div>
           </div>
@@ -380,7 +380,7 @@ export default function Dashboard() {
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl">
+              <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl">
                 <TrendingUp className="h-6 w-6 text-white" />
               </div>
               Revenue & Profit Trends
@@ -393,7 +393,7 @@ export default function Dashboard() {
                   className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
                     selectedMetric === metric
                       ? 'bg-blue-500 text-white shadow-lg'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      : 'bg-orange-100 text-orange-600 hover:bg-orange-200'
                   }`}
                 >
                   {metric.charAt(0).toUpperCase() + metric.slice(1)}
@@ -411,16 +411,16 @@ export default function Dashboard() {
                     <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1}/>
                   </linearGradient>
                   <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
+                    <stop offset="5%" stopColor="#F97316" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#F97316" stopOpacity={0.1}/>
                   </linearGradient>
                   <linearGradient id="colorCosts" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#EF4444" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#EF4444" stopOpacity={0.1}/>
+                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1}/>
                   </linearGradient>
                   <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#F59E0B" stopOpacity={0.1}/>
+                    <stop offset="5%" stopColor="#F97316" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#F97316" stopOpacity={0.1}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
@@ -446,7 +446,7 @@ export default function Dashboard() {
                 <Area 
                   type="monotone" 
                   dataKey={selectedMetric} 
-                  stroke={selectedMetric === 'revenue' ? '#3B82F6' : selectedMetric === 'profit' ? '#10B981' : selectedMetric === 'costs' ? '#EF4444' : '#F59E0B'} 
+                  stroke={selectedMetric === 'revenue' ? '#3B82F6' : selectedMetric === 'profit' ? '#F97316' : selectedMetric === 'costs' ? '#3B82F6' : '#F97316'} 
                   fill={selectedMetric === 'revenue' ? 'url(#colorRevenue)' : selectedMetric === 'profit' ? 'url(#colorProfit)' : selectedMetric === 'costs' ? 'url(#colorCosts)' : 'url(#colorSales)'}
                   strokeWidth={3}
                   activeDot={{ r: 8, strokeWidth: 2, stroke: '#fff' }}
@@ -460,14 +460,14 @@ export default function Dashboard() {
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl">
+              <div className="p-2 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl">
                 <Package className="h-6 w-6 text-white" />
               </div>
               Inventory Distribution
             </h3>
             <div className="text-right">
               <div className="text-sm text-gray-500">Total Items</div>
-              <div className="text-2xl font-bold text-green-600">{data.inventory.totalItems}</div>
+              <div className="text-2xl font-bold text-orange-600">{data.inventory.totalItems}</div>
             </div>
           </div>
           
@@ -503,10 +503,10 @@ export default function Dashboard() {
                 <Line 
                   type="monotone" 
                   dataKey="value" 
-                  stroke="#3B82F6" 
+                  stroke="#F97316" 
                   strokeWidth={4}
-                  dot={{ fill: '#3B82F6', strokeWidth: 2, r: 6 }}
-                  activeDot={{ r: 8, stroke: '#3B82F6', strokeWidth: 2, fill: '#fff' }}
+                  dot={{ fill: '#F97316', strokeWidth: 2, r: 6 }}
+                  activeDot={{ r: 8, stroke: '#F97316', strokeWidth: 2, fill: '#fff' }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -662,14 +662,14 @@ export default function Dashboard() {
       {/* Performance Radar Chart */}
       <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl">
-              <Target className="h-6 w-6 text-white" />
-            </div>
-            Performance Metrics
-          </h3>
+            <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl">
+                <Target className="h-6 w-6 text-white" />
+              </div>
+              Performance Metrics
+            </h3>
           <div className="text-sm text-gray-500">
-            Overall Score: <span className="font-bold text-indigo-600">78.8%</span>
+            Overall Score: <span className="font-bold text-blue-600">78.8%</span>
           </div>
         </div>
         
@@ -682,8 +682,8 @@ export default function Dashboard() {
               <Radar
                 name="Performance"
                 dataKey="value"
-                stroke="#6366F1"
-                fill="#6366F1"
+                stroke="#3B82F6"
+                fill="#3B82F6"
                 fillOpacity={0.3}
                 strokeWidth={3}
               />
@@ -703,7 +703,7 @@ export default function Dashboard() {
       {/* Quick Actions */}
       <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-3xl p-8 border border-gray-100">
         <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl">
+          <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl">
             <Zap className="h-6 w-6 text-white" />
           </div>
           Quick Actions
@@ -718,7 +718,7 @@ export default function Dashboard() {
             disabled={actionLoading === 'New Sale'}
           >
             <div className="text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                 {actionLoading === 'New Sale' ? (
                   <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 ) : (
@@ -742,7 +742,7 @@ export default function Dashboard() {
             disabled={actionLoading === 'Add Item'}
           >
             <div className="text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                 {actionLoading === 'Add Item' ? (
                   <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 ) : (
@@ -766,7 +766,7 @@ export default function Dashboard() {
             disabled={actionLoading === 'New Task'}
           >
             <div className="text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                 {actionLoading === 'New Task' ? (
                   <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 ) : (
@@ -790,7 +790,7 @@ export default function Dashboard() {
             disabled={actionLoading === 'View Reports'}
           >
             <div className="text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                 {actionLoading === 'View Reports' ? (
                   <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 ) : (

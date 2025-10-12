@@ -339,7 +339,7 @@ export default function TasksPage() {
     <PageLayout>
       <div className="space-y-8">
       {/* Header */}
-        <div className="relative bg-gradient-to-br from-red-500 via-orange-500 to-red-600 rounded-2xl p-6 text-white overflow-hidden">
+        <div className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 rounded-2xl p-6 text-white overflow-hidden">
           {/* Animated background elements */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute -top-8 -left-8 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
@@ -388,13 +388,13 @@ export default function TasksPage() {
             </div>
             
             <div className="flex flex-col gap-2">
-              <button
-                onClick={() => setShowClientForm(true)}
-                className="group bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl px-6 py-3 flex items-center font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-white/20"
-              >
-                <div className="p-1.5 bg-red-500 rounded-lg mr-2 group-hover:bg-red-600 transition-colors">
-                  <AlertCircle size={20} className="text-white" />
-                </div>
+          <button
+            onClick={() => setShowClientForm(true)}
+            className="group bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl px-6 py-3 flex items-center font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-white/20"
+          >
+            <div className="p-1.5 bg-orange-500 rounded-lg mr-2 group-hover:bg-orange-600 transition-colors">
+              <AlertCircle size={20} className="text-white" />
+            </div>
                 <div className="text-left">
                   <div className="text-base font-bold">Register Client</div>
                   <div className="text-xs text-white/80">Add new entry</div>
