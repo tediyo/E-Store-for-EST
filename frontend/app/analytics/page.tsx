@@ -1070,7 +1070,7 @@ export default function AnalyticsPage() {
                 {analyticsData.salesTrend.length > 0 ? (
                   <div className="space-y-4">
                     {analyticsData.salesTrend.map((trend, index) => (
-                      <div key={trend._id} className="group p-4 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-200 hover:scale-105">
+                      <div key={trend._id || `sales-trend-${index}`} className="group p-4 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-200 hover:scale-105">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <div className="p-2 bg-blue-100 rounded-xl">
@@ -1121,7 +1121,7 @@ export default function AnalyticsPage() {
                 {analyticsData.tasksTrend.length > 0 ? (
                   <div className="space-y-4">
                     {analyticsData.tasksTrend.map((trend, index) => (
-                      <div key={trend._id} className="group p-4 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-200 hover:scale-105">
+                      <div key={trend._id || `tasks-trend-${index}`} className="group p-4 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-200 hover:scale-105">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <div className="p-2 bg-orange-100 rounded-xl">

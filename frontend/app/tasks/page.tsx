@@ -339,47 +339,47 @@ export default function TasksPage() {
     <PageLayout>
       <div className="space-y-8">
       {/* Header */}
-        <div className="relative bg-gradient-to-br from-red-500 via-orange-500 to-red-600 rounded-3xl p-8 text-white overflow-hidden">
+        <div className="relative bg-gradient-to-br from-red-500 via-orange-500 to-red-600 rounded-2xl p-6 text-white overflow-hidden">
           {/* Animated background elements */}
           <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
-            <div className="absolute top-1/2 left-1/4 w-20 h-20 bg-white/5 rounded-full blur-lg animate-bounce delay-500"></div>
+            <div className="absolute -top-8 -left-8 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+            <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+            <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-white/5 rounded-full blur-lg animate-bounce delay-500"></div>
           </div>
           
           <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div className="mb-6 sm:mb-0">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl border border-white/30">
-                  <AlertCircle className="h-8 w-8 text-white" />
+            <div className="mb-4 sm:mb-0">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="p-2 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30">
+                  <AlertCircle className="h-6 w-6 text-white" />
                 </div>
-                <h1 className="text-5xl font-bold bg-gradient-to-r from-white to-yellow-100 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-yellow-100 bg-clip-text text-transparent">
                   Client Registry
                 </h1>
               </div>
-              <p className="text-xl text-white/90 mb-6">Track and manage problematic clients with ease</p>
+              <p className="text-base text-white/90 mb-4">Track and manage problematic clients with ease</p>
               
               {/* Enhanced Statistics Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
-                  <div className="text-3xl font-bold text-white mb-1">{tasks.length}</div>
-                  <div className="text-sm text-white/80">Total Clients</div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
+                  <div className="text-2xl font-bold text-white mb-1">{tasks.length}</div>
+                  <div className="text-xs text-white/80">Total Clients</div>
                   <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                     <div className="bg-white rounded-full h-1" style={{ width: `${Math.min((tasks.length / 10) * 100, 100)}%` }}></div>
                   </div>
                 </div>
                 
-                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
-                  <div className="text-3xl font-bold text-orange-200 mb-1">{tasks.filter(t => t.clientStatus === 'annoying').length}</div>
-                  <div className="text-sm text-white/80">Annoying</div>
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
+                  <div className="text-2xl font-bold text-orange-200 mb-1">{tasks.filter(t => t.clientStatus === 'annoying').length}</div>
+                  <div className="text-xs text-white/80">Annoying</div>
                   <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                     <div className="bg-orange-300 rounded-full h-1" style={{ width: `${tasks.length > 0 ? (tasks.filter(t => t.clientStatus === 'annoying').length / tasks.length) * 100 : 0}%` }}></div>
                   </div>
                 </div>
                 
-                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
-                  <div className="text-3xl font-bold text-red-200 mb-1">{tasks.filter(t => t.clientStatus === 'blocked').length}</div>
-                  <div className="text-sm text-white/80">Blocked</div>
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
+                  <div className="text-2xl font-bold text-red-200 mb-1">{tasks.filter(t => t.clientStatus === 'blocked').length}</div>
+                  <div className="text-xs text-white/80">Blocked</div>
                   <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                     <div className="bg-red-300 rounded-full h-1" style={{ width: `${tasks.length > 0 ? (tasks.filter(t => t.clientStatus === 'blocked').length / tasks.length) * 100 : 0}%` }}></div>
                   </div>
@@ -387,30 +387,30 @@ export default function TasksPage() {
               </div>
             </div>
             
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               <button
                 onClick={() => setShowClientForm(true)}
-                className="group bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-2xl px-8 py-4 flex items-center font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+                className="group bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl px-6 py-3 flex items-center font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-white/20"
               >
-                <div className="p-2 bg-red-500 rounded-xl mr-3 group-hover:bg-red-600 transition-colors">
-                  <AlertCircle size={24} className="text-white" />
+                <div className="p-1.5 bg-red-500 rounded-lg mr-2 group-hover:bg-red-600 transition-colors">
+                  <AlertCircle size={20} className="text-white" />
                 </div>
                 <div className="text-left">
-                  <div className="text-lg font-bold">Register Client</div>
-                  <div className="text-sm text-white/80">Add new entry</div>
+                  <div className="text-base font-bold">Register Client</div>
+                  <div className="text-xs text-white/80">Add new entry</div>
                 </div>
               </button>
               
               <button
                 onClick={() => setShowReminderForm(true)}
-                className="group bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-2xl px-8 py-4 flex items-center font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+                className="group bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl px-6 py-3 flex items-center font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-white/20"
               >
-                <div className="p-2 bg-blue-500 rounded-xl mr-3 group-hover:bg-blue-600 transition-colors">
-                  <Calendar size={24} className="text-white" />
+                <div className="p-1.5 bg-blue-500 rounded-lg mr-2 group-hover:bg-blue-600 transition-colors">
+                  <Calendar size={20} className="text-white" />
                 </div>
                 <div className="text-left">
-                  <div className="text-lg font-bold">Add Action Day</div>
-                  <div className="text-sm text-white/80">Schedule reminder</div>
+                  <div className="text-base font-bold">Add Action Day</div>
+                  <div className="text-xs text-white/80">Schedule reminder</div>
                 </div>
               </button>
             </div>

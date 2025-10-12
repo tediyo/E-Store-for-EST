@@ -515,7 +515,7 @@ export default function Dashboard() {
           {/* Simple Legend */}
           <div className="flex justify-center gap-6 mt-4">
             {getInventoryChartData().map((item, index) => (
-              <div key={index} className="flex items-center gap-2">
+              <div key={`legend-${item.name}-${index}`} className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded-full shadow-sm" style={{ backgroundColor: item.color }}></div>
                 <span className="text-sm font-medium text-gray-700">{item.name}</span>
               </div>
