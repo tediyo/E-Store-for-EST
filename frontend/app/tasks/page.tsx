@@ -339,47 +339,47 @@ export default function TasksPage() {
     <PageLayout>
       <div className="space-y-8">
       {/* Header */}
-        <div className="relative bg-gradient-to-br from-red-500 via-orange-500 to-red-600 rounded-3xl p-8 text-white overflow-hidden">
+        <div className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 rounded-2xl p-6 text-white overflow-hidden">
           {/* Animated background elements */}
           <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
-            <div className="absolute top-1/2 left-1/4 w-20 h-20 bg-white/5 rounded-full blur-lg animate-bounce delay-500"></div>
+            <div className="absolute -top-8 -left-8 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+            <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+            <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-white/5 rounded-full blur-lg animate-bounce delay-500"></div>
           </div>
           
           <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div className="mb-6 sm:mb-0">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl border border-white/30">
-                  <AlertCircle className="h-8 w-8 text-white" />
+            <div className="mb-4 sm:mb-0">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="p-2 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30">
+                  <AlertCircle className="h-6 w-6 text-white" />
                 </div>
-                <h1 className="text-5xl font-bold bg-gradient-to-r from-white to-yellow-100 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-yellow-100 bg-clip-text text-transparent">
                   Client Registry
                 </h1>
               </div>
-              <p className="text-xl text-white/90 mb-6">Track and manage problematic clients with ease</p>
+              <p className="text-base text-white/90 mb-4">Track and manage problematic clients with ease</p>
               
               {/* Enhanced Statistics Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
-                  <div className="text-3xl font-bold text-white mb-1">{tasks.length}</div>
-                  <div className="text-sm text-white/80">Total Clients</div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
+                  <div className="text-2xl font-bold text-white mb-1">{tasks.length}</div>
+                  <div className="text-xs text-white/80">Total Clients</div>
                   <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                     <div className="bg-white rounded-full h-1" style={{ width: `${Math.min((tasks.length / 10) * 100, 100)}%` }}></div>
                   </div>
                 </div>
                 
-                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
-                  <div className="text-3xl font-bold text-orange-200 mb-1">{tasks.filter(t => t.clientStatus === 'annoying').length}</div>
-                  <div className="text-sm text-white/80">Annoying</div>
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
+                  <div className="text-2xl font-bold text-orange-200 mb-1">{tasks.filter(t => t.clientStatus === 'annoying').length}</div>
+                  <div className="text-xs text-white/80">Annoying</div>
                   <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                     <div className="bg-orange-300 rounded-full h-1" style={{ width: `${tasks.length > 0 ? (tasks.filter(t => t.clientStatus === 'annoying').length / tasks.length) * 100 : 0}%` }}></div>
                   </div>
                 </div>
                 
-                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
-                  <div className="text-3xl font-bold text-red-200 mb-1">{tasks.filter(t => t.clientStatus === 'blocked').length}</div>
-                  <div className="text-sm text-white/80">Blocked</div>
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105">
+                  <div className="text-2xl font-bold text-red-200 mb-1">{tasks.filter(t => t.clientStatus === 'blocked').length}</div>
+                  <div className="text-xs text-white/80">Blocked</div>
                   <div className="w-full bg-white/20 rounded-full h-1 mt-2">
                     <div className="bg-red-300 rounded-full h-1" style={{ width: `${tasks.length > 0 ? (tasks.filter(t => t.clientStatus === 'blocked').length / tasks.length) * 100 : 0}%` }}></div>
                   </div>
@@ -387,30 +387,30 @@ export default function TasksPage() {
               </div>
             </div>
             
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={() => setShowClientForm(true)}
-                className="group bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-2xl px-8 py-4 flex items-center font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
-              >
-                <div className="p-2 bg-red-500 rounded-xl mr-3 group-hover:bg-red-600 transition-colors">
-                  <AlertCircle size={24} className="text-white" />
-                </div>
+            <div className="flex flex-col gap-2">
+          <button
+            onClick={() => setShowClientForm(true)}
+            className="group bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl px-6 py-3 flex items-center font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-white/20"
+          >
+            <div className="p-1.5 bg-orange-500 rounded-lg mr-2 group-hover:bg-orange-600 transition-colors">
+              <AlertCircle size={20} className="text-white" />
+            </div>
                 <div className="text-left">
-                  <div className="text-lg font-bold">Register Client</div>
-                  <div className="text-sm text-white/80">Add new entry</div>
+                  <div className="text-base font-bold">Register Client</div>
+                  <div className="text-xs text-white/80">Add new entry</div>
                 </div>
               </button>
               
               <button
                 onClick={() => setShowReminderForm(true)}
-                className="group bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-2xl px-8 py-4 flex items-center font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+                className="group bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl px-6 py-3 flex items-center font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-white/20"
               >
-                <div className="p-2 bg-blue-500 rounded-xl mr-3 group-hover:bg-blue-600 transition-colors">
-                  <Calendar size={24} className="text-white" />
+                <div className="p-1.5 bg-blue-500 rounded-lg mr-2 group-hover:bg-blue-600 transition-colors">
+                  <Calendar size={20} className="text-white" />
                 </div>
                 <div className="text-left">
-                  <div className="text-lg font-bold">Add Action Day</div>
-                  <div className="text-sm text-white/80">Schedule reminder</div>
+                  <div className="text-base font-bold">Add Action Day</div>
+                  <div className="text-xs text-white/80">Schedule reminder</div>
                 </div>
               </button>
             </div>
@@ -550,12 +550,12 @@ export default function TasksPage() {
                 <select
                   value={taskFilter}
                   onChange={(e) => setTaskFilter(e.target.value as any)}
-                  className="px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-300 text-lg font-medium bg-white min-w-[180px] cursor-pointer"
+                  className="px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-300 text-lg font-medium bg-white text-gray-900 min-w-[180px] cursor-pointer"
                 >
-                  <option value="all">🔍 All Clients</option>
-                  <option value="unsuccessful">❌ Unsuccessful</option>
-                  <option value="annoying">😤 Annoying</option>
-                  <option value="blocked">🚫 Blocked</option>
+                  <option value="all" className="text-gray-900 bg-white">🔍 All Clients</option>
+                  <option value="unsuccessful" className="text-gray-900 bg-white">❌ Unsuccessful</option>
+                  <option value="annoying" className="text-gray-900 bg-white">😤 Annoying</option>
+                  <option value="blocked" className="text-gray-900 bg-white">🚫 Blocked</option>
                 </select>
               </div>
             </div>
@@ -821,14 +821,14 @@ export default function TasksPage() {
 
         {/* Add Action Day Modal */}
         {showReminderForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700">
               <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Calendar className="h-8 w-8 text-emerald-600" />
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-orange-100 dark:from-blue-900/30 dark:to-orange-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Calendar className="h-8 w-8 text-blue-600 dark:text-orange-400" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Add Action Day</h2>
-                <p className="text-gray-600">Schedule your next important task or reminder</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Add Action Day</h2>
+                <p className="text-gray-600 dark:text-gray-400">Schedule your next important task or reminder</p>
               </div>
               
               <form onSubmit={createReminder} className="space-y-6">
@@ -848,31 +848,31 @@ export default function TasksPage() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Action Type *</label>
                     <select
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900"
                       value={reminderActionType}
                       onChange={(e) => setReminderActionType(e.target.value as any)}
                     >
-                      <option value="follow_up">📞 Follow Up</option>
-                      <option value="meeting">🤝 Meeting</option>
-                      <option value="delivery">📦 Delivery</option>
-                      <option value="pickup">🚚 Pickup</option>
-                      <option value="payment">💰 Payment</option>
-                      <option value="inspection">🔍 Inspection</option>
-                      <option value="other">📋 Other</option>
+                      <option value="follow_up" className="text-gray-900 bg-white">📞 Follow Up</option>
+                      <option value="meeting" className="text-gray-900 bg-white">🤝 Meeting</option>
+                      <option value="delivery" className="text-gray-900 bg-white">📦 Delivery</option>
+                      <option value="pickup" className="text-gray-900 bg-white">🚚 Pickup</option>
+                      <option value="payment" className="text-gray-900 bg-white">💰 Payment</option>
+                      <option value="inspection" className="text-gray-900 bg-white">🔍 Inspection</option>
+                      <option value="other" className="text-gray-900 bg-white">📋 Other</option>
                     </select>
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
                     <select
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900"
                       value={reminderPriority}
                       onChange={(e) => setReminderPriority(e.target.value as any)}
                     >
-                      <option value="low">Low</option>
-                      <option value="medium">Medium</option>
-                      <option value="high">High</option>
-                      <option value="urgent">Urgent</option>
+                      <option value="low" className="text-gray-900 bg-white">Low</option>
+                      <option value="medium" className="text-gray-900 bg-white">Medium</option>
+                      <option value="high" className="text-gray-900 bg-white">High</option>
+                      <option value="urgent" className="text-gray-900 bg-white">Urgent</option>
                     </select>
                   </div>
                 </div>
@@ -937,15 +937,15 @@ export default function TasksPage() {
 
         {/* Enhanced Client Registration Modal */}
         {showClientForm && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300">
-            <div className="bg-white rounded-3xl p-8 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom-4 duration-300">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700">
               {/* Modal Header */}
               <div className="text-center mb-8 relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-red-50 to-orange-50 rounded-3xl -m-8 p-8 -z-10"></div>
-                <div className="w-20 h-20 bg-gradient-to-br from-red-100 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <AlertCircle className="h-10 w-10 text-red-600" />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-orange-50 dark:from-blue-900/20 dark:to-orange-900/20 rounded-2xl -m-8 p-8 -z-10"></div>
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-orange-100 dark:from-blue-900/30 dark:to-orange-900/30 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <AlertCircle className="h-10 w-10 text-blue-600 dark:text-orange-400" />
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent">
                   Register Problematic Client
                 </h2>
                 <p className="text-gray-600 text-lg">Track difficult clients to avoid future issues</p>
@@ -957,14 +957,14 @@ export default function TasksPage() {
                   <label className="block text-sm font-bold text-gray-700 mb-3 text-lg">Client Status *</label>
                   <div className="relative">
                     <select
-                      className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 text-lg font-medium bg-gradient-to-r from-gray-50 to-white hover:from-gray-100 hover:to-white cursor-pointer"
+                      className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 text-lg font-medium bg-gradient-to-r from-gray-50 to-white hover:from-gray-100 hover:to-white cursor-pointer text-gray-900"
                       value={clientStatus}
                       onChange={(e) => setClientStatus(e.target.value as any)}
                       required
                     >
-                      <option value="unsuccessful">❌ Unsuccessful - Client didn't complete transaction</option>
-                      <option value="annoying">😤 Annoying - Client was difficult to work with</option>
-                      <option value="blocked">🚫 Blocked - Client is banned from future interactions</option>
+                      <option value="unsuccessful" className="text-gray-900 bg-white">❌ Unsuccessful - Client didn't complete transaction</option>
+                      <option value="annoying" className="text-gray-900 bg-white">😤 Annoying - Client was difficult to work with</option>
+                      <option value="blocked" className="text-gray-900 bg-white">🚫 Blocked - Client is banned from future interactions</option>
                     </select>
                     <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-red-500 transition-colors">
                       <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>

@@ -42,7 +42,7 @@ export default function RegisterForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
-        <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="username" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
           Username
         </label>
         <input
@@ -60,12 +60,12 @@ export default function RegisterForm() {
           placeholder="Enter your username"
         />
         {errors.username && (
-          <p className="mt-1 text-sm text-danger-600">{errors.username.message}</p>
+          <p className="mt-2 text-sm text-red-500 font-medium">{errors.username.message}</p>
         )}
       </div>
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
           Email address
         </label>
         <input
@@ -83,12 +83,12 @@ export default function RegisterForm() {
           placeholder="Enter your email"
         />
         {errors.email && (
-          <p className="mt-1 text-sm text-danger-600">{errors.email.message}</p>
+          <p className="mt-2 text-sm text-red-500 font-medium">{errors.email.message}</p>
         )}
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="password" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
           Password
         </label>
         <input
@@ -106,12 +106,12 @@ export default function RegisterForm() {
           placeholder="Enter your password"
         />
         {errors.password && (
-          <p className="mt-1 text-sm text-danger-600">{errors.password.message}</p>
+          <p className="mt-2 text-sm text-red-500 font-medium">{errors.password.message}</p>
         )}
       </div>
 
       <div>
-        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
           Confirm Password
         </label>
         <input
@@ -126,12 +126,12 @@ export default function RegisterForm() {
           placeholder="Confirm your password"
         />
         {errors.confirmPassword && (
-          <p className="mt-1 text-sm text-danger-600">{errors.confirmPassword.message}</p>
+          <p className="mt-2 text-sm text-red-500 font-medium">{errors.confirmPassword.message}</p>
         )}
       </div>
 
       <div>
-        <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="role" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
           Role
         </label>
         <select
@@ -143,7 +143,7 @@ export default function RegisterForm() {
           <option value="admin">Admin</option>
         </select>
         {errors.role && (
-          <p className="mt-1 text-sm text-danger-600">{errors.role.message}</p>
+          <p className="mt-2 text-sm text-red-500 font-medium">{errors.role.message}</p>
         )}
       </div>
 

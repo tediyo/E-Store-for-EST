@@ -36,7 +36,7 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
           Email address
         </label>
         <input
@@ -50,16 +50,16 @@ export default function LoginForm() {
               message: 'Invalid email address'
             }
           })}
-          className="input mt-1"
+          className="input w-full"
           placeholder="Enter your email"
         />
         {errors.email && (
-          <p className="mt-1 text-sm text-danger-600">{errors.email.message}</p>
+          <p className="mt-2 text-sm text-red-500 font-medium">{errors.email.message}</p>
         )}
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="password" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
           Password
         </label>
         <input
@@ -77,7 +77,7 @@ export default function LoginForm() {
           placeholder="Enter your password"
         />
         {errors.password && (
-          <p className="mt-1 text-sm text-danger-600">{errors.password.message}</p>
+          <p className="mt-2 text-sm text-red-500 font-medium">{errors.password.message}</p>
         )}
       </div>
 
