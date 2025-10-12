@@ -181,20 +181,20 @@ export default function SalesForm({ isOpen, onClose, onSuccess }: SalesFormProps
   if (!isOpen) return null
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content animate-scale-in">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200 dark:border-gray-700 animate-scale-in">
         {/* Enhanced Header */}
-        <div className="relative flex items-center justify-between p-8 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900/20 rounded-t-3xl">
+        <div className="relative flex items-center justify-between p-8 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-t-2xl">
           {/* Background Pattern */}
           <div className="absolute inset-0 bg-pattern-dots opacity-5 rounded-t-3xl"></div>
           
           <div className="relative z-10 flex items-center">
             <div className="relative">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg mr-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg mr-4">
                 <ShoppingCart className="h-7 w-7 text-white" />
               </div>
               {/* Glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl blur-lg opacity-20"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl blur-lg opacity-20"></div>
             </div>
             <div>
               <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-blue-800 dark:from-white dark:to-blue-200 bg-clip-text text-transparent">
@@ -217,7 +217,7 @@ export default function SalesForm({ isOpen, onClose, onSuccess }: SalesFormProps
           {/* Sale Type Selection - Enhanced */}
           <div className="space-y-4">
             <label className="block text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-3">
                 <Package className="h-4 w-4 text-white" />
               </div>
               Sale Type *

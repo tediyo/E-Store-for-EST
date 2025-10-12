@@ -821,14 +821,14 @@ export default function TasksPage() {
 
         {/* Add Action Day Modal */}
         {showReminderForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700">
               <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Calendar className="h-8 w-8 text-emerald-600" />
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-orange-100 dark:from-blue-900/30 dark:to-orange-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Calendar className="h-8 w-8 text-blue-600 dark:text-orange-400" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Add Action Day</h2>
-                <p className="text-gray-600">Schedule your next important task or reminder</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Add Action Day</h2>
+                <p className="text-gray-600 dark:text-gray-400">Schedule your next important task or reminder</p>
               </div>
               
               <form onSubmit={createReminder} className="space-y-6">
@@ -937,15 +937,15 @@ export default function TasksPage() {
 
         {/* Enhanced Client Registration Modal */}
         {showClientForm && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300">
-            <div className="bg-white rounded-3xl p-8 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom-4 duration-300">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700">
               {/* Modal Header */}
               <div className="text-center mb-8 relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-red-50 to-orange-50 rounded-3xl -m-8 p-8 -z-10"></div>
-                <div className="w-20 h-20 bg-gradient-to-br from-red-100 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <AlertCircle className="h-10 w-10 text-red-600" />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-orange-50 dark:from-blue-900/20 dark:to-orange-900/20 rounded-2xl -m-8 p-8 -z-10"></div>
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-orange-100 dark:from-blue-900/30 dark:to-orange-900/30 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <AlertCircle className="h-10 w-10 text-blue-600 dark:text-orange-400" />
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent">
                   Register Problematic Client
                 </h2>
                 <p className="text-gray-600 text-lg">Track difficult clients to avoid future issues</p>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { Package } from 'lucide-react'
 
 interface ItemFormData {
   name: string
@@ -133,24 +134,27 @@ export default function InventoryForm({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl">
+              <Package className="h-6 w-6 text-white" />
+            </div>
             {editingItem ? 'Edit Item' : 'Add New Item'}
           </h2>
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-3xl p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
             ×
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                 Item Name *
               </label>
               <input
@@ -161,12 +165,12 @@ export default function InventoryForm({
                 placeholder="Enter item name"
               />
               {errors.name && (
-                <p className="text-danger-500 text-sm mt-1">{errors.name}</p>
+                <p className="text-red-500 text-sm mt-2 font-medium">{errors.name}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                 Shoe Type *
               </label>
               <select
@@ -185,12 +189,12 @@ export default function InventoryForm({
                 <option value="heels">Heels</option>
               </select>
               {errors.shoeType && (
-                <p className="text-danger-500 text-sm mt-1">{errors.shoeType}</p>
+                <p className="text-red-500 text-sm mt-2 font-medium">{errors.shoeType}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                 Base Price *
               </label>
               <input
@@ -203,12 +207,12 @@ export default function InventoryForm({
                 placeholder="0.00"
               />
               {errors.basePrice && (
-                <p className="text-danger-500 text-sm mt-1">{errors.basePrice}</p>
+                <p className="text-red-500 text-sm mt-2 font-medium">{errors.basePrice}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                 Selling Price *
               </label>
               <input
@@ -221,12 +225,12 @@ export default function InventoryForm({
                 placeholder="0.00"
               />
               {errors.sellingPrice && (
-                <p className="text-danger-500 text-sm mt-1">{errors.sellingPrice}</p>
+                <p className="text-red-500 text-sm mt-2 font-medium">{errors.sellingPrice}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                 Quantity *
               </label>
               <input
@@ -238,12 +242,12 @@ export default function InventoryForm({
                 placeholder="0"
               />
               {errors.quantity && (
-                <p className="text-danger-500 text-sm mt-1">{errors.quantity}</p>
+                <p className="text-red-500 text-sm mt-2 font-medium">{errors.quantity}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                 Supplier *
               </label>
               <input
@@ -254,15 +258,15 @@ export default function InventoryForm({
                 placeholder="Enter supplier name"
               />
               {errors.supplier && (
-                <p className="text-danger-500 text-sm mt-1">{errors.supplier}</p>
+                <p className="text-red-500 text-sm mt-2 font-medium">{errors.supplier}</p>
               )}
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Description
-            </label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                Description
+              </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
@@ -291,17 +295,17 @@ export default function InventoryForm({
             </div>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
             <button
               type="submit"
-              className="btn btn-primary flex-1"
+              className="btn btn-primary flex-1 py-3 text-lg font-semibold"
             >
               {editingItem ? 'Update Item' : 'Add Item'}
             </button>
             <button
               type="button"
               onClick={handleClose}
-              className="btn btn-secondary flex-1"
+              className="btn btn-secondary flex-1 py-3 text-lg font-semibold"
             >
               Cancel
             </button>
