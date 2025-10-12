@@ -74,8 +74,64 @@ async function migrateData() {
     }
     
     if (sales.length > 0) {
-      await Sale.insertMany(sales);
-      console.log(`✅ Imported ${sales.length} sales`);
+      // Clean and validate sales data before importing
+      console.log('🧹 Cleaning sales data...');
+      const cleanedSales = sales.map(sale => {
+        // Ensure basePrice exists and is valid
+        if (!sale.basePrice || sale.basePrice < 0) {
+          sale.basePrice = sale.sellingPrice || 0;
+        }
+        
+        // Ensure profit is not negative (set to 0 if negative)
+        if (sale.profit < 0) {
+          sale.profit = 0;
+        }
+        
+        // Ensure sellingPrice exists
+        if (!sale.sellingPrice || sale.sellingPrice < 0) {
+          sale.sellingPrice = sale.basePrice || 0;
+        }
+        
+        // Recalculate totalAmount
+        sale.totalAmount = sale.quantity * sale.sellingPrice;
+        
+        // Recalculate profit if it's still invalid
+        if (!sale.profit || sale.profit < 0) {
+          sale.profit = Math.max(0, sale.sellingPrice - sale.basePrice) * sale.quantity;
+        }
+        
+        // Handle out-of-store sales required fields
+        if (sale.saleType === 'out_of_store') {
+          // Ensure fromWhom exists
+          if (!sale.fromWhom) {
+            sale.fromWhom = 'Unknown Supplier';
+          }
+          
+          // Ensure itemName exists
+          if (!sale.itemName) {
+            sale.itemName = 'Unknown Item';
+          }
+          
+          // Ensure itemType exists
+          if (!sale.itemType) {
+            sale.itemType = 'Unknown Type';
+          }
+        }
+        
+        // Ensure clientDetails exists (can be empty object)
+        if (!sale.clientDetails) {
+          sale.clientDetails = {
+            phone: '',
+            address: '',
+            intentionalBehaviour: ''
+          };
+        }
+        
+        return sale;
+      });
+      
+      await Sale.insertMany(cleanedSales);
+      console.log(`✅ Imported ${cleanedSales.length} sales (cleaned and validated)`);
     }
     
     if (tasks.length > 0) {
