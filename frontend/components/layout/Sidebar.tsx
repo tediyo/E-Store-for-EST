@@ -78,7 +78,7 @@ export default function Sidebar() {
             <div className="flex flex-col items-center justify-center">
               {/* Logo Image */}
               <img 
-                src="/esho.jpg"
+                src="/esho.png"
                 alt="E Store Logo" 
                 className="w-32 h-32 object-contain rounded-2xl shadow-xl border-2 border-white bg-white/10"
                 onError={(e) => {

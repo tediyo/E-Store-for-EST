@@ -1,0 +1,409 @@
+{
+  "timestamp": "2025-10-12T06:19:37.414Z",
+  "users": [
+    {
+      "socialLogin": {
+        "provider": "local",
+        "socialId": null,
+        "avatar": null
+      },
+      "_id": "68a4335d7a7cc5a054adcd7b",
+      "username": "thedron16",
+      "email": "tt@gmail.com",
+      "password": "$2a$10$RkkldzmgnMhNQC1YKTSTtuoRdLbqMJZALdkZHK1.q6hRzBrhW0r92",
+      "role": "admin",
+      "isActive": true,
+      "createdAt": "2025-08-19T08:18:37.731Z",
+      "updatedAt": "2025-08-26T08:01:47.995Z",
+      "__v": 0
+    },
+    {
+      "socialLogin": {
+        "provider": "local"
+      },
+      "_id": "68adb2aaaf2903552baf43bd",
+      "username": "teddy",
+      "email": "tewodrosberhanu19@gmail.com",
+      "password": "$2a$10$Um2N4SNttcQKzfPEFSyRS.puUMvkjNMTx6pSimNAWcvPOTxOxYO56",
+      "role": "user",
+      "isActive": true,
+      "createdAt": "2025-08-26T13:12:10.543Z",
+      "updatedAt": "2025-08-26T13:12:10.543Z",
+      "__v": 0
+    },
+    {
+      "socialLogin": {
+        "provider": "google",
+        "socialId": "103205329749302525712",
+        "avatar": "https://lh3.googleusercontent.com/a/ACg8ocI5SiqMIXZbRYqJI4Ijadmsgtgl7-aDkrK21qKrwjFpvx2Ml7s=s96-c"
+      },
+      "profile": {
+        "firstName": "Tewodros",
+        "lastName": "Berhanu"
+      },
+      "_id": "68b0609fa0ebdb799a88b680",
+      "username": "tewodrosberhanuiz3zp",
+      "email": "thedronberhanu16@gmail.com",
+      "role": "user",
+      "isActive": true,
+      "createdAt": "2025-08-28T13:58:55.879Z",
+      "updatedAt": "2025-08-28T13:58:55.879Z",
+      "__v": 0
+    },
+    {
+      "socialLogin": {
+        "provider": "google",
+        "socialId": "103535002418879290161",
+        "avatar": "https://lh3.googleusercontent.com/a/ACg8ocLeIXY8-e0fH1SNzmUeSnzq6FwwOIiEzU-AYJWQ1CPqVuSHYkM=s96-c"
+      },
+      "profile": {
+        "firstName": "Theodor",
+        "lastName": "Berhanu"
+      },
+      "_id": "68b094c10678ba2cb29240c3",
+      "username": "theodorberhanu807sz",
+      "email": "theodorberhanu1605@gmail.com",
+      "role": "user",
+      "isActive": true,
+      "createdAt": "2025-08-28T17:41:21.477Z",
+      "updatedAt": "2025-08-28T17:41:21.477Z",
+      "__v": 0
+    },
+    {
+      "socialLogin": {
+        "provider": "google",
+        "socialId": "113354511818866911722",
+        "avatar": "https://lh3.googleusercontent.com/a/ACg8ocILxCi5rn-NsOxVPHizDfS7hc9zCeAqd82zHU8NqXM-C4oM-70=s96-c"
+      },
+      "profile": {
+        "firstName": "Tewodros",
+        "lastName": "Berhanu"
+      },
+      "_id": "68ea1ed1f9ad81a5802abb6f",
+      "username": "tewodrosberhanupegjf",
+      "email": "tewodrosberhanu16@gmail.com",
+      "role": "user",
+      "isActive": true,
+      "createdAt": "2025-10-11T09:09:37.793Z",
+      "updatedAt": "2025-10-11T09:09:37.793Z",
+      "__v": 0
+    }
+  ],
+  "items": [
+    {
+      "_id": "68a46175396bf3cbf0200abf",
+      "name": "test",
+      "shoeType": "sneakers",
+      "basePrice": 1500,
+      "sellingPrice": 5000,
+      "quantity": 0,
+      "supplier": "Abdu",
+      "description": "Orginal",
+      "status": "out_of_stock",
+      "addedBy": "68a4335d7a7cc5a054adcd7b",
+      "createdAt": "2025-08-19T11:35:17.996Z",
+      "updatedAt": "2025-08-19T12:38:27.340Z",
+      "__v": 0,
+      "image": "/api/items/image/image-1755604264616-852461891.png"
+    },
+    {
+      "_id": "68a471ea8134fb3f82571cc7",
+      "name": "new one",
+      "shoeType": "casual",
+      "basePrice": 2300,
+      "sellingPrice": 5000,
+      "quantity": 1,
+      "supplier": "16",
+      "description": "Jordan 2",
+      "image": "/api/items/image/image-1755607530573-717817857.png",
+      "status": "low_stock",
+      "addedBy": "68a4335d7a7cc5a054adcd7b",
+      "createdAt": "2025-08-19T12:45:30.582Z",
+      "updatedAt": "2025-08-28T18:39:58.039Z",
+      "__v": 0
+    },
+    {
+      "_id": "68a974e3baaee4f513c7e784",
+      "name": "llllllllllllllllllllllllllllllllll",
+      "shoeType": "formal",
+      "basePrice": 3400,
+      "sellingPrice": 5500,
+      "quantity": 6,
+      "supplier": "33",
+      "description": "",
+      "image": null,
+      "status": "in_stock",
+      "addedBy": "68a4335d7a7cc5a054adcd7b",
+      "createdAt": "2025-08-23T07:59:31.279Z",
+      "updatedAt": "2025-08-23T07:59:31.279Z",
+      "__v": 0
+    }
+  ],
+  "sales": [
+    {
+      "clientDetails": {
+        "phone": "0909090909",
+        "address": "0909090909",
+        "intentionalBehaviour": ""
+      },
+      "_id": "68a47c1f0aa9e8399b69b667",
+      "item": "68a471ea8134fb3f82571cc7",
+      "quantity": 1,
+      "sellingPrice": 1222,
+      "totalAmount": 1222,
+      "profit": -1078,
+      "saleType": "store",
+      "soldBy": "68a4335d7a7cc5a054adcd7b",
+      "saleDate": "2025-08-19T13:29:03.337Z",
+      "createdAt": "2025-08-19T13:29:03.338Z",
+      "updatedAt": "2025-08-19T13:29:03.338Z",
+      "__v": 0
+    },
+    {
+      "clientDetails": {
+        "phone": "0909090909",
+        "address": "Bole",
+        "intentionalBehaviour": ""
+      },
+      "_id": "68a47df9171dfea0d7c9ddec",
+      "itemName": "Air Force",
+      "shoeType": "Sneaker",
+      "basePrice": 2500,
+      "fromWhom": "Abdu",
+      "quantity": 1,
+      "sellingPrice": 3700,
+      "totalAmount": 3700,
+      "profit": 1200,
+      "saleType": "out_of_store",
+      "soldBy": "68a4335d7a7cc5a054adcd7b",
+      "saleDate": "2025-08-19T13:36:57.448Z",
+      "createdAt": "2025-08-19T13:36:57.457Z",
+      "updatedAt": "2025-08-19T13:36:57.457Z",
+      "__v": 0
+    },
+    {
+      "clientDetails": {
+        "phone": "0911223344",
+        "address": "Yeka",
+        "intentionalBehaviour": "good"
+      },
+      "_id": "68a4c3736490b2b2e8f0b603",
+      "item": null,
+      "quantity": 1,
+      "basePrice": 1900,
+      "sellingPrice": 4900,
+      "totalAmount": 4900,
+      "profit": 3000,
+      "saleType": "out_of_store",
+      "fromWhom": "Shemsu",
+      "itemName": "Air Jordan",
+      "itemType": "Boots",
+      "soldBy": "68a4335d7a7cc5a054adcd7b",
+      "saleDate": "2025-08-19T18:33:23.878Z",
+      "createdAt": "2025-08-19T18:33:23.884Z",
+      "updatedAt": "2025-08-19T18:33:23.884Z",
+      "__v": 0
+    },
+    {
+      "clientDetails": {
+        "phone": "0911223344",
+        "address": "Jemo",
+        "intentionalBehaviour": "cool"
+      },
+      "_id": "68aed797c002b4dedd5ec837",
+      "item": null,
+      "quantity": 1,
+      "basePrice": 2550,
+      "sellingPrice": 4500,
+      "totalAmount": 4500,
+      "profit": 1950,
+      "saleType": "out_of_store",
+      "fromWhom": "Shemsu",
+      "itemName": "Colombian",
+      "itemType": "Sneakers",
+      "soldBy": "68adb2aaaf2903552baf43bd",
+      "saleDate": "2025-08-27T10:01:59.625Z",
+      "createdAt": "2025-08-27T10:01:59.637Z",
+      "updatedAt": "2025-08-27T10:01:59.637Z",
+      "__v": 0
+    },
+    {
+      "clientDetails": {
+        "phone": "0909090909",
+        "address": "Bahir Dar",
+        "intentionalBehaviour": "Bahir Dar"
+      },
+      "_id": "68b0a27edb8d78e207008b04",
+      "item": "68a471ea8134fb3f82571cc7",
+      "quantity": 6,
+      "basePrice": 2300,
+      "sellingPrice": 5000,
+      "totalAmount": 30000,
+      "profit": 16200,
+      "saleType": "store",
+      "fromWhom": "",
+      "soldBy": "68a4335d7a7cc5a054adcd7b",
+      "saleDate": "2025-08-28T18:39:58.006Z",
+      "createdAt": "2025-08-28T18:39:58.021Z",
+      "updatedAt": "2025-08-28T18:39:58.021Z",
+      "__v": 0
+    }
+  ],
+  "tasks": [
+    {
+      "_id": "68a96e0cb94d0523a79d5eaf",
+      "shoeType": "Air force",
+      "saleLocation": "store",
+      "basePrice": 0,
+      "profitGained": 0,
+      "taxiCost": 0,
+      "otherCosts": 0,
+      "supplier": "N&#x2F;A",
+      "clientStatus": "unsuccessful",
+      "clientPhone": "0099887766",
+      "behavioralDetails": "one",
+      "cause": "two",
+      "preferredShoeType": "Air force",
+      "totalCost": 0,
+      "netProfit": 0,
+      "createdBy": "68a4335d7a7cc5a054adcd7b",
+      "notes": "Annoying",
+      "taskDate": "2025-08-23T07:30:20.227Z",
+      "createdAt": "2025-08-23T07:30:20.234Z",
+      "updatedAt": "2025-08-23T07:30:20.234Z",
+      "__v": 0
+    },
+    {
+      "_id": "68a97062baaee4f513c7e662",
+      "clientStatus": "unsuccessful",
+      "clientPhone": "0911225566",
+      "behavioralDetails": "bb dd",
+      "cause": "cc aa",
+      "preferredShoeType": "Nike Air Max",
+      "notes": "Any Other",
+      "taxiCost": 30,
+      "otherCosts": 56,
+      "totalCost": 86,
+      "createdBy": "68a4335d7a7cc5a054adcd7b",
+      "taskDate": "2025-08-23T07:40:18.539Z",
+      "createdAt": "2025-08-23T07:40:18.541Z",
+      "updatedAt": "2025-08-23T07:40:18.541Z",
+      "__v": 0
+    }
+  ],
+  "reminders": [
+    {
+      "actionType": "follow_up",
+      "priority": "medium",
+      "_id": "68a5f202e7a468acd6fe6bd6",
+      "title": "TEST1",
+      "description": "TEST1",
+      "actionAt": "2025-08-20T16:05:00.000Z",
+      "sent": true,
+      "createdBy": "68a4335d7a7cc5a054adcd7b",
+      "createdAt": "2025-08-20T16:04:18.644Z",
+      "updatedAt": "2025-08-20T16:05:40.400Z",
+      "__v": 0,
+      "sentAt": "2025-08-20T16:05:40.395Z"
+    },
+    {
+      "actionType": "follow_up",
+      "priority": "medium",
+      "_id": "68a5f24be7a468acd6fe6bfb",
+      "title": "Tewodros",
+      "description": "Tewodros",
+      "actionAt": "2025-08-20T16:06:00.000Z",
+      "sent": true,
+      "createdBy": "68a4335d7a7cc5a054adcd7b",
+      "createdAt": "2025-08-20T16:05:31.759Z",
+      "updatedAt": "2025-08-20T16:05:40.400Z",
+      "__v": 0,
+      "sentAt": "2025-08-20T16:05:40.395Z"
+    },
+    {
+      "_id": "68a5f496194b13ab2096de03",
+      "title": "Task one",
+      "actionType": "delivery",
+      "description": "note",
+      "place": "Merkato",
+      "actionAt": "2025-08-20T16:16:00.000Z",
+      "priority": "high",
+      "sent": true,
+      "createdBy": "68a4335d7a7cc5a054adcd7b",
+      "createdAt": "2025-08-20T16:15:18.511Z",
+      "updatedAt": "2025-08-20T16:15:47.915Z",
+      "__v": 0,
+      "sentAt": "2025-08-20T16:15:47.910Z"
+    },
+    {
+      "_id": "68a5f596194b13ab2096de25",
+      "title": "Task two",
+      "actionType": "payment",
+      "place": "Merjkato",
+      "actionAt": "2025-08-20T16:20:00.000Z",
+      "priority": "medium",
+      "sent": true,
+      "createdBy": "68a4335d7a7cc5a054adcd7b",
+      "createdAt": "2025-08-20T16:19:34.140Z",
+      "updatedAt": "2025-08-20T16:19:52.812Z",
+      "__v": 0,
+      "sentAt": "2025-08-20T16:19:52.809Z"
+    },
+    {
+      "_id": "68a5f671194b13ab2096de73",
+      "title": "Task three",
+      "actionType": "delivery",
+      "place": "Merkato",
+      "actionAt": "2025-08-20T16:24:00.000Z",
+      "priority": "high",
+      "sent": true,
+      "createdBy": "68a4335d7a7cc5a054adcd7b",
+      "createdAt": "2025-08-20T16:23:13.144Z",
+      "updatedAt": "2025-08-20T16:23:15.668Z",
+      "__v": 0,
+      "sentAt": "2025-08-20T16:23:15.665Z"
+    },
+    {
+      "_id": "68a5f694194b13ab2096de7f",
+      "title": "ttttttttttttttttttttttt",
+      "actionType": "follow_up",
+      "place": "ttttttttttttttt",
+      "actionAt": "2025-08-20T16:24:00.000Z",
+      "priority": "medium",
+      "sent": true,
+      "createdBy": "68a4335d7a7cc5a054adcd7b",
+      "createdAt": "2025-08-20T16:23:48.816Z",
+      "updatedAt": "2025-08-20T16:24:15.659Z",
+      "__v": 0,
+      "sentAt": "2025-08-20T16:24:15.656Z"
+    },
+    {
+      "_id": "68a9720bbaaee4f513c7e68e",
+      "title": "rttre",
+      "actionType": "follow_up",
+      "description": "fff",
+      "place": "sdfds",
+      "actionAt": "2025-08-23T07:47:00.000Z",
+      "priority": "medium",
+      "sent": true,
+      "createdBy": "68a4335d7a7cc5a054adcd7b",
+      "createdAt": "2025-08-23T07:47:23.456Z",
+      "updatedAt": "2025-08-23T07:47:31.023Z",
+      "__v": 0,
+      "sentAt": "2025-08-23T07:47:31.018Z"
+    },
+    {
+      "_id": "68a97234baaee4f513c7e69a",
+      "title": "fffffffffffffffffffffffffffffffff",
+      "actionType": "follow_up",
+      "place": "ffffffffffffffffffffffffff",
+      "actionAt": "2025-08-24T07:53:00.000Z",
+      "priority": "medium",
+      "sent": false,
+      "createdBy": "68a4335d7a7cc5a054adcd7b",
+      "createdAt": "2025-08-23T07:48:04.033Z",
+      "updatedAt": "2025-08-23T07:48:04.033Z",
+      "__v": 0
+    }
+  ]
+}
