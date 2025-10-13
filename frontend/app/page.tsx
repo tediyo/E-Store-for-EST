@@ -41,10 +41,11 @@ export default function Home() {
         <div className="max-w-md w-full space-y-8">
           <div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-              Inventory Management System
+              Ermi Shoe
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-              Manage your shoe store inventory efficiently
+            Every great business once started as a small idea. stay consistent, keep learning, and your persistence will turn that idea into success.
+            Have a great day!
             </p>
           </div>
           

@@ -8,8 +8,13 @@ import { ThemeProvider } from '../hooks/useTheme'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Inventory Management System',
+  title: 'Ermi Shoe',
   description: 'Full-stack inventory management system for shoe store',
+  icons: {
+    icon: '/Es.png',
+    shortcut: '/Es.png',
+    apple: '/Es.png',
+  },
 }
 
 export default function RootLayout({
@@ -20,6 +25,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Favicon */}
+        <link rel="icon" href="/Es.png" type="image/png" />
+        <link rel="shortcut icon" href="/Es.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/Es.png" />
+        
         {/* Preload critical resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
