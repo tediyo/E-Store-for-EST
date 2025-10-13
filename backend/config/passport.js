@@ -24,7 +24,9 @@ if (process.env.JWT_SECRET) {
 }
 
 // Google OAuth Strategy
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && 
+    process.env.GOOGLE_CLIENT_ID !== 'your_google_client_id_here' && 
+    process.env.GOOGLE_CLIENT_SECRET !== 'your_google_client_secret_here') {
   passport.use('google', new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -77,7 +79,9 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 }
 
 // GitHub OAuth Strategy
-if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET && 
+    process.env.GITHUB_CLIENT_ID !== 'your_github_client_id_here' && 
+    process.env.GITHUB_CLIENT_SECRET !== 'your_github_client_secret_here') {
   passport.use('github', new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,

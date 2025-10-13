@@ -156,9 +156,12 @@ router.put('/profile', auth, [
 // Social Login Routes
 
 // Google OAuth
-router.get('/google', passport.authenticate('google', { 
-  scope: ['profile', 'email'] 
-}));
+router.get('/google', (req, res) => {
+  if (!process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID === 'your_google_client_id_here') {
+    return res.status(400).json({ message: 'Google OAuth not configured' });
+  }
+  passport.authenticate('google', { scope: ['profile', 'email'] })(req, res);
+});
 
 router.get('/google/callback', 
   passport.authenticate('google', { session: false }),
@@ -180,9 +183,12 @@ router.get('/google/callback',
 );
 
 // GitHub OAuth
-router.get('/github', passport.authenticate('github', { 
-  scope: ['user:email'] 
-}));
+router.get('/github', (req, res) => {
+  if (!process.env.GITHUB_CLIENT_ID || process.env.GITHUB_CLIENT_ID === 'your_github_client_id_here') {
+    return res.status(400).json({ message: 'GitHub OAuth not configured' });
+  }
+  passport.authenticate('github', { scope: ['user:email'] })(req, res);
+});
 
 router.get('/github/callback', 
   passport.authenticate('github', { session: false }),

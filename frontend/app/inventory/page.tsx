@@ -205,7 +205,7 @@ export default function InventoryPage() {
     let aValue = a[sortBy as keyof Item]
     let bValue = b[sortBy as keyof Item]
     
-    if (typeof aValue === 'string') {
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
       aValue = aValue.toLowerCase()
       bValue = bValue.toLowerCase()
     }

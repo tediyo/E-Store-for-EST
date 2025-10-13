@@ -42,7 +42,7 @@ export default function TasksPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [showReminderForm, setShowReminderForm] = useState(false)
   const [reminders, setReminders] = useState<Reminder[]>([])
-  const [taskFilter, setTaskFilter] = useState<'all' | 'client_issues' | 'sales'>('all')
+  const [taskFilter, setTaskFilter] = useState<'all' | 'unsuccessful' | 'annoying' | 'blocked'>('all')
   
   // Reminder form state
   const [reminderTitle, setReminderTitle] = useState('')
@@ -188,11 +188,11 @@ export default function TasksPage() {
 
   const filteredTasks = tasks.filter(task => {
     const matchesSearch = 
-      task.clientPhone.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.behavioralDetails.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.cause.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.preferredShoeType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (task.notes && task.notes.toLowerCase().includes(searchTerm.toLowerCase()))
+      (task.clientPhone && typeof task.clientPhone === 'string' && task.clientPhone.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (task.behavioralDetails && typeof task.behavioralDetails === 'string' && task.behavioralDetails.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (task.cause && typeof task.cause === 'string' && task.cause.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (task.preferredShoeType && typeof task.preferredShoeType === 'string' && task.preferredShoeType.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (task.notes && typeof task.notes === 'string' && task.notes.toLowerCase().includes(searchTerm.toLowerCase()))
 
     if (taskFilter === 'unsuccessful') {
       return matchesSearch && task.clientStatus === 'unsuccessful'
@@ -549,7 +549,7 @@ export default function TasksPage() {
               <div className="relative">
                 <select
                   value={taskFilter}
-                  onChange={(e) => setTaskFilter(e.target.value as any)}
+                  onChange={(e) => setTaskFilter(e.target.value as 'all' | 'unsuccessful' | 'annoying' | 'blocked')}
                   className="px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-300 text-lg font-medium bg-white text-gray-900 min-w-[180px] cursor-pointer"
                 >
                   <option value="all" className="text-gray-900 bg-white">🔍 All Clients</option>
