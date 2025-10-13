@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const Item = require('../models/Item');
-const { auth, adminAuth } = require('../middleware/auth');
+// JWT auth removed - no authentication required
 
 const router = express.Router();
 
@@ -66,7 +66,7 @@ router.get('/image/:filename', (req, res) => {
 });
 
 // Get all items
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { page = 1, limit = 10, search, status, shoeType } = req.query;
     
@@ -101,7 +101,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 // Get single item
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const item = await Item.findById(req.params.id).populate('addedBy', 'username');
     if (!item) {
@@ -114,7 +114,7 @@ router.get('/:id', auth, async (req, res) => {
 });
 
 // Add new item
-router.post('/', [auth, adminAuth], (req, res, next) => {
+router.post('/', (req, res, next) => {
   upload(req, res, (err) => {
     if (err) {
       return handleMulterError(err, req, res, next);
@@ -172,7 +172,7 @@ router.post('/', [auth, adminAuth], (req, res, next) => {
 });
 
 // Update item
-router.put('/:id', [auth, adminAuth], (req, res, next) => {
+router.put('/:id', (req, res, next) => {
   upload(req, res, (err) => {
     if (err) {
       return handleMulterError(err, req, res, next);
@@ -278,7 +278,7 @@ router.put('/:id', [auth, adminAuth], (req, res, next) => {
 });
 
 // Delete item
-router.delete('/:id', [auth, adminAuth], async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     if (!item) {
@@ -302,7 +302,7 @@ router.delete('/:id', [auth, adminAuth], async (req, res) => {
 });
 
 // Update all items status based on their quantities
-router.put('/status/bulk-update', auth, adminAuth, async (req, res) => {
+router.put('/status/bulk-update', async (req, res) => {
   try {
     const items = await Item.find({});
     let updatedCount = 0;
@@ -328,7 +328,7 @@ router.put('/status/bulk-update', auth, adminAuth, async (req, res) => {
 });
 
 // Force update item status based on current quantity
-router.put('/:id/fix-status', auth, adminAuth, async (req, res) => {
+router.put('/:id/fix-status', async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     if (!item) {
@@ -371,7 +371,7 @@ router.put('/:id/fix-status', auth, adminAuth, async (req, res) => {
 });
 
 // Update item status based on quantity
-router.put('/:id/status', auth, adminAuth, async (req, res) => {
+router.put('/:id/status', async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     if (!item) {
@@ -395,7 +395,7 @@ router.put('/:id/status', auth, adminAuth, async (req, res) => {
 });
 
 // Get item statistics
-router.get('/stats/overview', auth, async (req, res) => {
+router.get('/stats/overview', async (req, res) => {
   try {
     const totalItems = await Item.countDocuments();
     const inStockItems = await Item.countDocuments({ status: 'in_stock' });
