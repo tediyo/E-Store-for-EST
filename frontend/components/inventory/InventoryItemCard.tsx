@@ -22,14 +22,12 @@ interface InventoryItemCardProps {
   item: Item
   onEdit: (item: Item) => void
   onDelete: (id: string) => void
-  isAdmin: boolean
 }
 
 export default function InventoryItemCard({ 
   item, 
   onEdit, 
-  onDelete, 
-  isAdmin 
+  onDelete
 }: InventoryItemCardProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -158,24 +156,22 @@ export default function InventoryItemCard({
       </div>
 
       {/* Action Buttons */}
-      {isAdmin && (
-        <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-600">
-          <button
-            onClick={() => onEdit(item)}
-            className="btn btn-secondary flex-1 flex items-center justify-center group"
-          >
-            <Edit size={16} className="mr-2 group-hover:scale-110 transition-transform duration-200" />
-            Edit
-          </button>
-          <button
-            onClick={() => onDelete(item._id)}
-            className="btn btn-danger flex-1 flex items-center justify-center group"
-          >
-            <Trash2 size={16} className="mr-2 group-hover:scale-110 transition-transform duration-200" />
-            Delete
-          </button>
-        </div>
-      )}
+      <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-600">
+        <button
+          onClick={() => onEdit(item)}
+          className="btn btn-secondary flex-1 flex items-center justify-center group"
+        >
+          <Edit size={16} className="mr-2 group-hover:scale-110 transition-transform duration-200" />
+          Edit
+        </button>
+        <button
+          onClick={() => onDelete(item._id)}
+          className="btn btn-danger flex-1 flex items-center justify-center group"
+        >
+          <Trash2 size={16} className="mr-2 group-hover:scale-110 transition-transform duration-200" />
+          Delete
+        </button>
+      </div>
 
       {/* Hover Effects */}
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-600/0 to-purple-600/0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none"></div>

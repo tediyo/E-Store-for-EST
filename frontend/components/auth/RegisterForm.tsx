@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback, memo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
@@ -11,10 +11,9 @@ interface RegisterFormData {
   email: string
   password: string
   confirmPassword: string
-  role: 'user' | 'admin'
 }
 
-export default function RegisterForm() {
+function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false)
   const { register: registerUser } = useAuth()
   
@@ -27,17 +26,21 @@ export default function RegisterForm() {
 
   const password = watch('password')
 
-  const onSubmit = async (data: RegisterFormData) => {
+  const onSubmit = useCallback(async (data: RegisterFormData) => {
     setIsLoading(true)
     try {
-      await registerUser(data.username, data.email, data.password, data.role)
+      await registerUser(data.username, data.email, data.password, 'admin')
       toast.success('Registration successful! Please login.')
+      // Switch to login form after successful registration
+      setTimeout(() => {
+        window.location.reload()
+      }, 2000)
     } catch (error: any) {
       toast.error(error.message || 'Registration failed')
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [registerUser])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -130,22 +133,6 @@ export default function RegisterForm() {
         )}
       </div>
 
-      <div>
-        <label htmlFor="role" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-          Role
-        </label>
-        <select
-          id="role"
-          {...register('role', { required: 'Role is required' })}
-          className="input mt-1"
-        >
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-        </select>
-        {errors.role && (
-          <p className="mt-2 text-sm text-red-500 font-medium">{errors.role.message}</p>
-        )}
-      </div>
 
       <div>
         <button
@@ -162,3 +149,5 @@ export default function RegisterForm() {
     </form>
   )
 }
+
+export default memo(RegisterForm)

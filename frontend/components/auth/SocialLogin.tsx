@@ -2,8 +2,9 @@
 
 import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import toast from 'react-hot-toast'
+import { api } from '../../lib/api'
 
 interface SocialLoginProps {
   onSuccess?: (provider: string) => void
@@ -13,27 +14,20 @@ interface SocialLoginProps {
 export default function SocialLogin({ onSuccess, onError }: SocialLoginProps) {
   const [isLoading, setIsLoading] = useState<string | null>(null)
 
-  const handleGoogleLogin = () => {
-    setIsLoading('google')
+  const handleSocialLogin = useCallback((provider: 'google' | 'github') => {
+    setIsLoading(provider)
     try {
-      window.location.href = 'http://localhost:5000/api/auth/google'
+      const url = provider === 'google' ? api.endpoints.auth.google : api.endpoints.auth.github
+      window.location.href = url
     } catch (error) {
       toast.error('Unable to connect to authentication service')
       onError?.('Unable to connect to authentication service')
       setIsLoading(null)
     }
-  }
+  }, [onError])
 
-  const handleGitHubLogin = () => {
-    setIsLoading('github')
-    try {
-      window.location.href = 'http://localhost:5000/api/auth/github'
-    } catch (error) {
-      toast.error('Unable to connect to authentication service')
-      onError?.('Unable to connect to authentication service')
-      setIsLoading(null)
-    }
-  }
+  const handleGoogleLogin = useCallback(() => handleSocialLogin('google'), [handleSocialLogin])
+  const handleGitHubLogin = useCallback(() => handleSocialLogin('github'), [handleSocialLogin])
 
   return (
     <div className="space-y-4">

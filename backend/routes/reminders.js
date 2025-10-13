@@ -1,12 +1,12 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Reminder = require('../models/Reminder');
-// JWT auth removed - no authentication required
+const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
 // Create reminder
-router.post('/', [
+router.post('/', auth, [
   body('title').notEmpty().trim().escape(),
   body('actionType').isIn(['follow_up', 'meeting', 'delivery', 'pickup', 'payment', 'inspection', 'other']),
   body('description').optional().trim().escape(),
@@ -79,7 +79,7 @@ router.post('/due', async (req, res) => {
 });
 
 // Update reminder
-router.put('/:id', [
+router.put('/:id', auth, [
   body('title').optional().trim().escape(),
   body('actionType').optional().isIn(['follow_up', 'meeting', 'delivery', 'pickup', 'payment', 'inspection', 'other']),
   body('description').optional().trim().escape(),
@@ -107,7 +107,7 @@ router.put('/:id', [
 });
 
 // Delete reminder
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   try {
     const reminder = await Reminder.findOneAndDelete({ _id: req.params.id, createdBy: req.user._id });
     if (!reminder) return res.status(404).json({ message: 'Reminder not found' });

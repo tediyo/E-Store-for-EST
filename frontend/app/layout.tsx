@@ -19,6 +19,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* Preload critical resources */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://e-store-for-est.onrender.com" />
+        {/* Preload critical CSS */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            .loading-spinner {
+              animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+              from { transform: rotate(0deg); }
+              to { transform: rotate(360deg); }
+            }
+          `
+        }} />
+      </head>
       <body className={inter.className}>
         <ThemeProvider>
           <AuthProvider>

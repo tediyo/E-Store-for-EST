@@ -41,6 +41,7 @@ export default function Sidebar() {
   ]
 
   const handleLogout = () => {
+    console.log('Logout button clicked')
     logout()
   }
 
@@ -150,8 +151,14 @@ export default function Sidebar() {
           {/* Logout Button - Fixed at Bottom */}
           <div className="flex-shrink-0 px-6 pb-6 border-t border-blue-800/50 pt-4">
             <button
-              onClick={handleLogout}
-              className="group w-full flex items-center justify-center px-4 py-3 text-sm text-white rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 border border-red-500/30 hover:border-red-400/50"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                console.log('Logout button clicked - event:', e)
+                handleLogout()
+              }}
+              className="group w-full flex items-center justify-center px-4 py-3 text-sm text-white rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 border border-red-500/30 hover:border-red-400/50 cursor-pointer"
+              type="button"
             >
               <LogOut size={18} className="mr-3 group-hover:scale-110 transition-transform duration-300" />
               Sign out
@@ -165,7 +172,24 @@ export default function Sidebar() {
         <div
           className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden transition-opacity duration-300"
           onClick={() => setIsOpen(false)}
-        />
+        >
+          {/* Mobile Logout Button */}
+          <div className="absolute bottom-4 left-4 right-4">
+            <button
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                console.log('Mobile logout button clicked')
+                handleLogout()
+              }}
+              className="w-full flex items-center justify-center px-4 py-3 text-sm text-white rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 border border-red-500/30 hover:border-red-400/50"
+              type="button"
+            >
+              <LogOut size={18} className="mr-3" />
+              Sign out
+            </button>
+          </div>
+        </div>
       )}
     </>
   )

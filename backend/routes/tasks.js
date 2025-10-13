@@ -1,7 +1,7 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Task = require('../models/Task');
-// JWT auth removed - no authentication required
+const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -53,7 +53,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create new task
-router.post('/', [
+router.post('/', auth, [
   body('clientStatus').isIn(['unsuccessful', 'annoying', 'blocked']),
   body('clientPhone').notEmpty().trim(),
   body('behavioralDetails').notEmpty().trim(),
@@ -105,7 +105,7 @@ router.post('/', [
 });
 
 // Update task
-router.put('/:id', [
+router.put('/:id', auth, [
   body('clientStatus').optional().isIn(['unsuccessful', 'annoying', 'blocked']),
   body('clientPhone').optional().trim(),
   body('behavioralDetails').optional().trim(),
@@ -141,7 +141,7 @@ router.put('/:id', [
 });
 
 // Delete task
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   try {
     const task = await Task.findByIdAndDelete(req.params.id);
     if (!task) {

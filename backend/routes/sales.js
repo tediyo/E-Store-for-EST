@@ -2,7 +2,7 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Sale = require('../models/Sale');
 const Item = require('../models/Item');
-// JWT auth removed - no authentication required
+const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -82,7 +82,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create new sale
-router.post('/', [
+router.post('/', auth, [
   body('itemId').notEmpty().withMessage('Item ID is required'),
   body('quantity').isInt({ min: 1 }),
   body('basePrice').isFloat({ min: 0 }).withMessage('Base price must be a positive number'),
@@ -177,7 +177,7 @@ router.post('/', [
 });
 
 // Update sale
-router.put('/:id', [
+router.put('/:id', auth, [
   body('sellingPrice').optional().isFloat({ min: 0 }),
   body('clientDetails.phone').optional().trim(),
   body('clientDetails.address').optional().trim(),
@@ -225,7 +225,7 @@ router.put('/:id', [
 });
 
 // Delete sale (with item quantity restoration)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   try {
     const sale = await Sale.findById(req.params.id);
     if (!sale) {

@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '../../../hooks/useAuth'
 import toast from 'react-hot-toast'
+import axios from 'axios'
 
 export default function AuthCallback() {
   const router = useRouter()
@@ -11,7 +12,7 @@ export default function AuthCallback() {
   const { login } = useAuth()
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
 
-  useEffect(() => {
+  const handleAuthCallback = useCallback(() => {
     const token = searchParams.get('token')
     const error = searchParams.get('error')
     const provider = searchParams.get('provider')
@@ -28,7 +29,6 @@ export default function AuthCallback() {
       localStorage.setItem('token', token)
       
       // Set the token in axios headers
-      const axios = require('axios')
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       
       setStatus('success')
@@ -42,6 +42,15 @@ export default function AuthCallback() {
       setTimeout(() => router.push('/'), 2000)
     }
   }, [searchParams, router])
+
+  useEffect(() => {
+    // Use requestIdleCallback for better performance
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      requestIdleCallback(handleAuthCallback)
+    } else {
+      setTimeout(handleAuthCallback, 0)
+    }
+  }, [handleAuthCallback])
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">

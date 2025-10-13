@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const Item = require('../models/Item');
-// JWT auth removed - no authentication required
+const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -114,7 +114,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Add new item
-router.post('/', (req, res, next) => {
+router.post('/', auth, (req, res, next) => {
   upload(req, res, (err) => {
     if (err) {
       return handleMulterError(err, req, res, next);
@@ -172,7 +172,7 @@ router.post('/', (req, res, next) => {
 });
 
 // Update item
-router.put('/:id', (req, res, next) => {
+router.put('/:id', auth, (req, res, next) => {
   upload(req, res, (err) => {
     if (err) {
       return handleMulterError(err, req, res, next);
@@ -278,7 +278,7 @@ router.put('/:id', (req, res, next) => {
 });
 
 // Delete item
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     if (!item) {
@@ -302,7 +302,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // Update all items status based on their quantities
-router.put('/status/bulk-update', async (req, res) => {
+router.put('/status/bulk-update', auth, async (req, res) => {
   try {
     const items = await Item.find({});
     let updatedCount = 0;
@@ -328,7 +328,7 @@ router.put('/status/bulk-update', async (req, res) => {
 });
 
 // Force update item status based on current quantity
-router.put('/:id/fix-status', async (req, res) => {
+router.put('/:id/fix-status', auth, async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     if (!item) {
@@ -371,7 +371,7 @@ router.put('/:id/fix-status', async (req, res) => {
 });
 
 // Update item status based on quantity
-router.put('/:id/status', async (req, res) => {
+router.put('/:id/status', auth, async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     if (!item) {
