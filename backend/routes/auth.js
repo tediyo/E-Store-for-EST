@@ -172,19 +172,35 @@ router.get('/google', (req, res) => {
 });
 
 router.get('/google/callback', 
-  passport.authenticate('google', { session: false }),
+  (req, res, next) => {
+    console.log('Google OAuth callback hit:', req.query);
+    next();
+  },
+  passport.authenticate('google', { 
+    session: false,
+    failureRedirect: `${process.env.FRONTEND_URL}/auth/callback?error=Authentication failed`
+  }),
   (req, res) => {
     try {
+      console.log('Google OAuth callback received:', { user: req.user });
       const user = req.user;
+      
+      if (!user) {
+        console.log('No user found in OAuth callback');
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=No user found`);
+      }
+      
       const token = jwt.sign(
         { userId: user._id },
         process.env.JWT_SECRET,
         { expiresIn: '24h' }
       );
 
+      console.log('JWT token created, redirecting to frontend');
       // Redirect to frontend with token
       res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}&provider=google`);
     } catch (error) {
+      console.error('OAuth callback error:', error);
       res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=Authentication failed`);
     }
   }
