@@ -16,6 +16,7 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:3000',
+    'http://172.24.194.149:3000',
     'https://ermishoe.vercel.app'
   ],
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
@@ -25,6 +26,7 @@ app.use(cors({
 app.options('*', cors({
   origin: [
     'http://localhost:3000',
+    'http://172.24.194.149:3000',
     'https://ermishoe.vercel.app'
   ],
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
@@ -62,6 +64,9 @@ app.get('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+const HOST = process.env.HOST || '0.0.0.0';
+app.listen(PORT, HOST, () => {
+  console.log(`Server running on ${HOST}:${PORT}`);
+  console.log(`Access from mobile: http://172.24.194.149:${PORT}`);
+  console.log(`Access from desktop: http://localhost:${PORT}`);
 });
