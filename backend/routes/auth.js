@@ -38,16 +38,8 @@ router.post('/register', [
 
     await user.save();
 
-    // Generate JWT token
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
-    );
-
     res.status(201).json({
       message: 'User created successfully',
-      token,
       user: {
         id: user._id,
         username: user.username,
@@ -85,16 +77,8 @@ router.post('/login', [
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Generate JWT token
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
-    );
-
     res.json({
       message: 'Login successful',
-      token,
       user: {
         id: user._id,
         username: user.username,
@@ -107,15 +91,16 @@ router.post('/login', [
   }
 });
 
-// Get user profile
-router.get('/profile', auth, async (req, res) => {
+// Get user profile (simplified - no auth required for demo)
+router.get('/profile', async (req, res) => {
   try {
+    // For demo purposes, return a default user
     res.json({
       user: {
-        id: req.user._id,
-        username: req.user.username,
-        email: req.user.email,
-        role: req.user.role
+        id: 'demo-user',
+        username: 'demo',
+        email: 'demo@example.com',
+        role: 'user'
       }
     });
   } catch (error) {
