@@ -42,7 +42,7 @@ export default function TasksPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [showReminderForm, setShowReminderForm] = useState(false)
   const [reminders, setReminders] = useState<Reminder[]>([])
-  const [taskFilter, setTaskFilter] = useState<'all' | 'client_issues' | 'sales'>('all')
+  const [taskFilter, setTaskFilter] = useState<'all' | 'unsuccessful' | 'annoying' | 'blocked'>('all')
   
   // Reminder form state
   const [reminderTitle, setReminderTitle] = useState('')
@@ -549,7 +549,7 @@ export default function TasksPage() {
               <div className="relative">
                 <select
                   value={taskFilter}
-                  onChange={(e) => setTaskFilter(e.target.value as any)}
+                  onChange={(e) => setTaskFilter(e.target.value as 'all' | 'unsuccessful' | 'annoying' | 'blocked')}
                   className="px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-300 text-lg font-medium bg-white text-gray-900 min-w-[180px] cursor-pointer"
                 >
                   <option value="all" className="text-gray-900 bg-white">🔍 All Clients</option>
