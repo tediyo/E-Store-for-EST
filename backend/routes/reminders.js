@@ -38,7 +38,7 @@ router.post('/', [
 });
 
 // List reminders (optionally upcoming)
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { upcoming } = req.query;
     const filter = { createdBy: req.user._id };
@@ -54,7 +54,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 // Get due reminders now (within a window) and mark as sent
-router.post('/due', auth, async (req, res) => {
+router.post('/due', async (req, res) => {
   try {
     const windowMinutes = Number(req.body.windowMinutes || 5);
     const now = new Date();
@@ -79,7 +79,7 @@ router.post('/due', auth, async (req, res) => {
 });
 
 // Update reminder
-router.put('/:id', auth, [
+router.put('/:id', [
   body('title').optional().trim().escape(),
   body('actionType').optional().isIn(['follow_up', 'meeting', 'delivery', 'pickup', 'payment', 'inspection', 'other']),
   body('description').optional().trim().escape(),
@@ -107,7 +107,7 @@ router.put('/:id', auth, [
 });
 
 // Delete reminder
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const reminder = await Reminder.findOneAndDelete({ _id: req.params.id, createdBy: req.user._id });
     if (!reminder) return res.status(404).json({ message: 'Reminder not found' });

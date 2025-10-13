@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
-const { auth } = require('../middleware/auth');
+// JWT auth removed - no authentication required
 
 const router = express.Router();
 
@@ -109,7 +109,7 @@ router.get('/profile', async (req, res) => {
 });
 
 // Update user profile
-router.put('/profile', auth, [
+router.put('/profile', [
   body('username').optional().isLength({ min: 3 }).trim().escape(),
   body('email').optional().isEmail().normalizeEmail()
 ], async (req, res) => {
@@ -195,7 +195,7 @@ router.get('/github/callback',
 );
 
 // Link social account to existing user
-router.post('/link-social', auth, async (req, res) => {
+router.post('/link-social', async (req, res) => {
   try {
     const { provider, socialId, avatar } = req.body;
     
@@ -224,7 +224,7 @@ router.post('/link-social', auth, async (req, res) => {
 });
 
 // Unlink social account
-router.delete('/unlink-social', auth, async (req, res) => {
+router.delete('/unlink-social', async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     

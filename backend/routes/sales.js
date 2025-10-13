@@ -55,7 +55,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get single sale
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const sale = await Sale.findById(req.params.id)
       .populate('item', 'name shoeType basePrice')
@@ -177,7 +177,7 @@ router.post('/', [
 });
 
 // Update sale
-router.put('/:id', auth, [
+router.put('/:id', [
   body('sellingPrice').optional().isFloat({ min: 0 }),
   body('clientDetails.phone').optional().trim(),
   body('clientDetails.address').optional().trim(),
@@ -225,7 +225,7 @@ router.put('/:id', auth, [
 });
 
 // Delete sale (with item quantity restoration)
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const sale = await Sale.findById(req.params.id);
     if (!sale) {
@@ -250,7 +250,7 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 // Get sales statistics
-router.get('/stats/overview', auth, async (req, res) => {
+router.get('/stats/overview', async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
     
