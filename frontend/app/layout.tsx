@@ -11,9 +11,14 @@ export const metadata: Metadata = {
   title: 'Ermi Shoe',
   description: 'Full-stack inventory management system for shoe store',
   icons: {
-    icon: '/Es.png',
+    icon: [
+      { url: '/Es.png', sizes: '32x32', type: 'image/png' },
+      { url: '/Es.png', sizes: '16x16', type: 'image/png' },
+    ],
     shortcut: '/Es.png',
-    apple: '/Es.png',
+    apple: [
+      { url: '/Es.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
 }
 
@@ -25,10 +30,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Favicon */}
-        <link rel="icon" href="/Es.png" type="image/png" />
+        {/* Favicon - Multiple formats for better compatibility */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/Es.png" type="image/png" sizes="32x32" />
+        <link rel="icon" href="/Es.png" type="image/png" sizes="16x16" />
         <link rel="shortcut icon" href="/Es.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/Es.png" />
+        <link rel="apple-touch-icon" href="/Es.png" sizes="180x180" />
+        <link rel="apple-touch-icon" href="/Es.png" sizes="152x152" />
+        <link rel="apple-touch-icon" href="/Es.png" sizes="144x144" />
+        <link rel="apple-touch-icon" href="/Es.png" sizes="120x120" />
+        <link rel="apple-touch-icon" href="/Es.png" sizes="114x114" />
+        <link rel="apple-touch-icon" href="/Es.png" sizes="76x76" />
+        <link rel="apple-touch-icon" href="/Es.png" sizes="72x72" />
+        <link rel="apple-touch-icon" href="/Es.png" sizes="60x60" />
+        <link rel="apple-touch-icon" href="/Es.png" sizes="57x57" />
+        <meta name="msapplication-TileImage" content="/Es.png" />
+        <meta name="msapplication-TileColor" content="#ffffff" />
+        <link rel="manifest" href="/site.webmanifest" />
         
         {/* Preload critical resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
