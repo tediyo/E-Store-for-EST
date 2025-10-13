@@ -6,11 +6,11 @@ const { auth } = require('../middleware/auth');
 const router = express.Router();
 
 // Get all tasks
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
     const { page = 1, limit = 10, startDate, endDate, saleLocation, shoeType } = req.query;
     
-    const query = {};
+    const query = { createdBy: req.user._id }; // Filter by authenticated user
     if (startDate && endDate) {
       query.taskDate = {
         $gte: new Date(startDate),

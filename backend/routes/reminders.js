@@ -38,7 +38,7 @@ router.post('/', auth, [
 });
 
 // List reminders (optionally upcoming)
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
     const { upcoming } = req.query;
     const filter = { createdBy: req.user._id };

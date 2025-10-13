@@ -18,8 +18,25 @@ export default function SocialLogin({ onSuccess, onError }: SocialLoginProps) {
     setIsLoading(provider)
     try {
       const url = provider === 'google' ? api.endpoints.auth.google : api.endpoints.auth.github
-      window.location.href = url
+      
+      // Add timestamp to prevent caching
+      const timestamp = new Date().getTime()
+      const urlWithTimestamp = `${url}?t=${timestamp}`
+      
+      console.log('Redirecting to OAuth:', urlWithTimestamp)
+      
+      // Use window.open for mobile to ensure proper OAuth flow
+      if (window.innerWidth <= 768) {
+        const popup = window.open(urlWithTimestamp, '_blank', 'width=500,height=600,scrollbars=yes,resizable=yes')
+        if (!popup) {
+          // Fallback to direct redirect if popup is blocked
+          window.location.href = urlWithTimestamp
+        }
+      } else {
+        window.location.href = urlWithTimestamp
+      }
     } catch (error) {
+      console.error('OAuth error:', error)
       toast.error('Unable to connect to authentication service')
       onError?.('Unable to connect to authentication service')
       setIsLoading(null)

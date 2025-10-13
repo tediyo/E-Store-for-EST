@@ -7,11 +7,11 @@ const { auth } = require('../middleware/auth');
 const router = express.Router();
 
 // Get all sales
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
     const { page = 1, limit = 10, startDate, endDate, saleType } = req.query;
     
-    const query = {};
+    const query = { soldBy: req.user._id }; // Filter by authenticated user
     if (startDate && endDate) {
       query.saleDate = {
         $gte: new Date(startDate),

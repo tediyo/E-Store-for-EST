@@ -66,11 +66,11 @@ router.get('/image/:filename', (req, res) => {
 });
 
 // Get all items
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
     const { page = 1, limit = 10, search, status, shoeType } = req.query;
     
-    const query = {};
+    const query = { addedBy: req.user._id }; // Filter by authenticated user
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: 'i' } },
