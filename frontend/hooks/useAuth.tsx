@@ -32,7 +32,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const token = localStorage.getItem('token')
       console.log('Current token:', token ? token.substring(0, 20) + '...' : 'No token')
       
-      const response = await axios.get(api.endpoints.auth.profile)
+      // Ensure token is attached to the request
+      if (token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      }
+      
+      const response = await axios.get(api.endpoints.auth.profile, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
       console.log('Profile response:', response.data)
       setUser(response.data.user)
     } catch (error) {
@@ -46,6 +56,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
+    // Set up axios interceptor to always attach token
+    const interceptorId = axios.interceptors.request.use((config) => {
+      const token = localStorage.getItem('token')
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
+      return config
+    })
+
     // Use requestIdleCallback for better performance
     const checkAuth = () => {
       const token = localStorage.getItem('token')
@@ -62,6 +81,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       requestIdleCallback(checkAuth)
     } else {
       setTimeout(checkAuth, 0)
+    }
+
+    // Cleanup interceptor on unmount
+    return () => {
+      axios.interceptors.request.eject(interceptorId)
     }
   }, [checkAuthStatus])
 
