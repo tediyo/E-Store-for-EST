@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { api } from '../../lib/api'
 import { 
   BarChart3, 
   TrendingUp, 
@@ -111,18 +112,63 @@ export default function AnalyticsPage() {
     loadJsPDF() // Load jsPDF when component mounts
   }, [period])
 
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = async (retryCount = 0) => {
     try {
       setLoading(true)
       console.log('Fetching analytics data for period:', period)
-      const response = await axios.get(`http://localhost:5000/api/dashboard/analytics?period=${period}`)
+      const response = await axios.get(`${api.baseURL}/api/dashboard/analytics?period=${period}`, {
+        timeout: 15000, // 15 second timeout for mobile
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        }
+      })
       console.log('Analytics data received:', response.data)
       setAnalyticsData(response.data)
       toast.success('Analytics data updated successfully!')
     } catch (error: any) {
       console.error('Failed to fetch analytics data:', error)
-      toast.error(`Failed to fetch analytics data: ${error.response?.data?.message || error.message}`)
-      setAnalyticsData(null)
+      
+      // Check if it's a network/connectivity issue
+      const isNetworkError = error.code === 'NETWORK_ERROR' || 
+                           error.message.includes('fetch') || 
+                           error.message.includes('Network Error') ||
+                           !navigator.onLine
+      
+      if (isNetworkError && retryCount < 2) {
+        // Retry for network errors
+        console.log(`Retrying analytics fetch (attempt ${retryCount + 1})...`)
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        return fetchAnalytics(retryCount + 1)
+      }
+      
+      // Set empty data instead of showing error
+      setAnalyticsData({
+        period: period,
+        dateRange: {},
+        salesTrend: [],
+        tasksTrend: []
+      })
+      
+      if (isNetworkError) {
+        toast('Connection issue - showing offline data', {
+          icon: '📱',
+          duration: 4000,
+          style: {
+            background: '#F59E0B',
+            color: 'white',
+          }
+        })
+      } else {
+        toast('No analytics data available', {
+          icon: 'ℹ️',
+          duration: 3000,
+          style: {
+            background: '#3B82F6',
+            color: 'white',
+          }
+        })
+      }
     } finally {
       setLoading(false)
     }

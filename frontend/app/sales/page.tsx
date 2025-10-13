@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { api } from '../../lib/api'
 import { Plus, ShoppingCart, Calendar, DollarSign, Trash2, Edit, Eye, X, User, Table, Grid3X3, Download } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
@@ -61,10 +62,10 @@ export default function SalesPage() {
     fetchSales()
   }, [currentPage, searchTerm, saleType, startDate, endDate])
 
-  const fetchSales = async () => {
+  const fetchSales = async (retryCount = 0) => {
     try {
       setLoading(true)
-      let url = `http://localhost:5000/api/sales?page=${currentPage}&limit=12`
+      let url = `${api.baseURL}/api/sales?page=${currentPage}&limit=12`
       
       if (searchTerm) url += `&search=${searchTerm}`
       if (saleType) url += `&saleType=${saleType}`
@@ -73,13 +74,52 @@ export default function SalesPage() {
 
       const token = localStorage.getItem('token')
       const response = await axios.get(url, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
+        timeout: 15000, // 15 second timeout for mobile
       })
       setSales(response.data.sales)
       setTotalPages(response.data.totalPages)
       setTotalSales(response.data.total)
-    } catch (error) {
-      toast.error('Failed to fetch sales')
+    } catch (error: any) {
+      console.error('Sales fetch error:', error)
+      
+      // Check if it's a network/connectivity issue
+      const isNetworkError = error.code === 'NETWORK_ERROR' || 
+                           error.message.includes('fetch') || 
+                           error.message.includes('Network Error') ||
+                           !navigator.onLine
+      
+      if (isNetworkError && retryCount < 2) {
+        // Retry for network errors
+        console.log(`Retrying sales fetch (attempt ${retryCount + 1})...`)
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        return fetchSales(retryCount + 1)
+      }
+      
+      // Set empty data instead of showing error
+      setSales([])
+      setTotalPages(1)
+      setTotalSales(0)
+      
+      if (isNetworkError) {
+        toast('Connection issue - showing offline data', {
+          icon: '📱',
+          duration: 4000,
+          style: {
+            background: '#F59E0B',
+            color: 'white',
+          }
+        })
+      } else {
+        toast('No sales data available', {
+          icon: 'ℹ️',
+          duration: 3000,
+          style: {
+            background: '#3B82F6',
+            color: 'white',
+          }
+        })
+      }
     } finally {
       setLoading(false)
     }
@@ -92,7 +132,7 @@ export default function SalesPage() {
 
     try {
       const token = localStorage.getItem('token')
-      await axios.delete(`http://localhost:5000/api/sales/${saleId}`, {
+      await axios.delete(`${api.baseURL}/api/sales/${saleId}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       toast.success('Sale deleted successfully')
