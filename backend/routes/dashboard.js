@@ -2,12 +2,12 @@ const express = require('express');
 const Sale = require('../models/Sale');
 const Item = require('../models/Item');
 const Task = require('../models/Task');
-// JWT auth removed - no authentication required
+const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
 // Get comprehensive dashboard data
-router.get('/overview', async (req, res) => {
+router.get('/overview', auth, async (req, res) => {
   try {
     const { period = 'all', startDate, endDate } = req.query;
     
@@ -52,7 +52,8 @@ router.get('/overview', async (req, res) => {
     }
 
     // Get sales data
-    const salesQuery = dateQuery.$gte ? { saleDate: dateQuery } : {};
+    const salesQuery = { soldBy: req.user._id };
+    if (dateQuery.$gte) salesQuery.saleDate = dateQuery;
     const salesStats = await Sale.aggregate([
       { $match: salesQuery },
       {
@@ -68,7 +69,8 @@ router.get('/overview', async (req, res) => {
     ]);
 
     // Get items data
-    const itemsQuery = dateQuery.$gte ? { createdAt: dateQuery } : {};
+    const itemsQuery = { addedBy: req.user._id };
+    if (dateQuery.$gte) itemsQuery.createdAt = dateQuery;
     const itemsStats = await Item.aggregate([
       { $match: itemsQuery },
       {
@@ -84,7 +86,8 @@ router.get('/overview', async (req, res) => {
     ]);
 
     // Get tasks data
-    const tasksQuery = dateQuery.$gte ? { taskDate: dateQuery } : {};
+    const tasksQuery = { createdBy: req.user._id };
+    if (dateQuery.$gte) tasksQuery.taskDate = dateQuery;
     const tasksStats = await Task.aggregate([
       { $match: tasksQuery },
       {
@@ -215,7 +218,7 @@ router.get('/overview', async (req, res) => {
 });
 
 // Get time-based analytics
-router.get('/analytics', async (req, res) => {
+router.get('/analytics', auth, async (req, res) => {
   try {
     const { period = 'month', startDate, endDate } = req.query;
     
@@ -261,7 +264,7 @@ router.get('/analytics', async (req, res) => {
     }
 
     const salesTrend = await Sale.aggregate([
-      { $match: { saleDate: dateQuery } },
+      { $match: { soldBy: req.user._id, saleDate: dateQuery } },
       {
         $group: {
           _id: groupBy,
@@ -274,7 +277,7 @@ router.get('/analytics', async (req, res) => {
     ]);
 
     const tasksTrend = await Task.aggregate([
-      { $match: { taskDate: dateQuery } },
+      { $match: { createdBy: req.user._id, taskDate: dateQuery } },
       {
         $group: {
           _id: groupBy,
