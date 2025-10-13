@@ -2,12 +2,12 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Sale = require('../models/Sale');
 const Item = require('../models/Item');
-const { auth } = require('../middleware/auth');
+// JWT auth removed - no authentication required
 
 const router = express.Router();
 
 // Get all sales
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { page = 1, limit = 10, startDate, endDate, saleType } = req.query;
     
@@ -82,7 +82,7 @@ router.get('/:id', auth, async (req, res) => {
 });
 
 // Create new sale
-router.post('/', auth, [
+router.post('/', [
   body('itemId').notEmpty().withMessage('Item ID is required'),
   body('quantity').isInt({ min: 1 }),
   body('basePrice').isFloat({ min: 0 }).withMessage('Base price must be a positive number'),

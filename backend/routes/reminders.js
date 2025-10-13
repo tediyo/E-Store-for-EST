@@ -1,12 +1,12 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Reminder = require('../models/Reminder');
-const { auth } = require('../middleware/auth');
+// JWT auth removed - no authentication required
 
 const router = express.Router();
 
 // Create reminder
-router.post('/', auth, [
+router.post('/', [
   body('title').notEmpty().trim().escape(),
   body('actionType').isIn(['follow_up', 'meeting', 'delivery', 'pickup', 'payment', 'inspection', 'other']),
   body('description').optional().trim().escape(),

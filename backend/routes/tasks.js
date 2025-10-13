@@ -1,12 +1,12 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Task = require('../models/Task');
-const { auth } = require('../middleware/auth');
+// JWT auth removed - no authentication required
 
 const router = express.Router();
 
 // Get all tasks
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { page = 1, limit = 10, startDate, endDate, saleLocation, shoeType } = req.query;
     
@@ -40,7 +40,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 // Get single task
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const task = await Task.findById(req.params.id).populate('createdBy', 'username');
     if (!task) {
@@ -53,7 +53,7 @@ router.get('/:id', auth, async (req, res) => {
 });
 
 // Create new task
-router.post('/', auth, [
+router.post('/', [
   body('clientStatus').isIn(['unsuccessful', 'annoying', 'blocked']),
   body('clientPhone').notEmpty().trim(),
   body('behavioralDetails').notEmpty().trim(),
@@ -105,7 +105,7 @@ router.post('/', auth, [
 });
 
 // Update task
-router.put('/:id', auth, [
+router.put('/:id', [
   body('clientStatus').optional().isIn(['unsuccessful', 'annoying', 'blocked']),
   body('clientPhone').optional().trim(),
   body('behavioralDetails').optional().trim(),
@@ -141,7 +141,7 @@ router.put('/:id', auth, [
 });
 
 // Delete task
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const task = await Task.findByIdAndDelete(req.params.id);
     if (!task) {
@@ -155,7 +155,7 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 // Get task statistics
-router.get('/stats/overview', auth, async (req, res) => {
+router.get('/stats/overview', async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
     

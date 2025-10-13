@@ -2,12 +2,12 @@ const express = require('express');
 const Sale = require('../models/Sale');
 const Item = require('../models/Item');
 const Task = require('../models/Task');
-const { auth } = require('../middleware/auth');
+// JWT auth removed - no authentication required
 
 const router = express.Router();
 
 // Get comprehensive dashboard data
-router.get('/overview', auth, async (req, res) => {
+router.get('/overview', async (req, res) => {
   try {
     const { period = 'all', startDate, endDate } = req.query;
     
@@ -215,7 +215,7 @@ router.get('/overview', auth, async (req, res) => {
 });
 
 // Get time-based analytics
-router.get('/analytics', auth, async (req, res) => {
+router.get('/analytics', async (req, res) => {
   try {
     const { period = 'month', startDate, endDate } = req.query;
     
