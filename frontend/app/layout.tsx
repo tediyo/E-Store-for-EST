@@ -12,13 +12,18 @@ export const metadata: Metadata = {
   description: 'Full-stack inventory management system for shoe store',
   icons: {
     icon: [
+      { url: '/favicon.ico', sizes: 'any' },
       { url: '/Es.png', sizes: '32x32', type: 'image/png' },
       { url: '/Es.png', sizes: '16x16', type: 'image/png' },
     ],
-    shortcut: '/Es.png',
+    shortcut: '/favicon.ico',
     apple: [
       { url: '/Es.png', sizes: '180x180', type: 'image/png' },
     ],
+  },
+  other: {
+    'msapplication-TileImage': '/Es.png',
+    'msapplication-TileColor': '#ffffff',
   },
 }
 
@@ -30,20 +35,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Favicon - Multiple formats for better compatibility */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/Es.png" type="image/png" sizes="32x32" />
-        <link rel="icon" href="/Es.png" type="image/png" sizes="16x16" />
-        <link rel="shortcut icon" href="/Es.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/Es.png" sizes="180x180" />
-        <link rel="apple-touch-icon" href="/Es.png" sizes="152x152" />
-        <link rel="apple-touch-icon" href="/Es.png" sizes="144x144" />
-        <link rel="apple-touch-icon" href="/Es.png" sizes="120x120" />
-        <link rel="apple-touch-icon" href="/Es.png" sizes="114x114" />
-        <link rel="apple-touch-icon" href="/Es.png" sizes="76x76" />
-        <link rel="apple-touch-icon" href="/Es.png" sizes="72x72" />
-        <link rel="apple-touch-icon" href="/Es.png" sizes="60x60" />
-        <link rel="apple-touch-icon" href="/Es.png" sizes="57x57" />
+        {/* Explicit favicon links with cache busting */}
+        <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/Es.png?v=2" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/Es.png?v=2" />
+        <link rel="shortcut icon" href="/favicon.ico?v=2" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/Es.png?v=2" />
+        
+        {/* Additional meta tags for better favicon support */}
         <meta name="msapplication-TileImage" content="/Es.png" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <link rel="manifest" href="/site.webmanifest" />
