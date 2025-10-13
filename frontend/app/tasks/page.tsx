@@ -75,7 +75,7 @@ export default function TasksPage() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/tasks')
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/tasks`)
       setTasks(response.data.tasks)
     } catch (error) {
       toast.error('Failed to fetch tasks')
@@ -86,7 +86,7 @@ export default function TasksPage() {
 
   const fetchReminders = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/reminders', { params: { upcoming: true } })
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/reminders`, { params: { upcoming: true } })
       setReminders(response.data.reminders)
     } catch (error) {
       // silent
@@ -111,7 +111,7 @@ export default function TasksPage() {
 
   const pollDueReminders = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/reminders/due', { windowMinutes: 1 })
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/reminders/due`, { windowMinutes: 1 })
       const due: Reminder[] = response.data.reminders
       if (due && due.length) {
         due.forEach(r => showNotification(r.title, new Date(r.actionAt).toLocaleString()))
@@ -129,7 +129,7 @@ export default function TasksPage() {
         return
       }
       const iso = new Date(reminderActionAt).toISOString()
-      await axios.post('http://localhost:5000/api/reminders', {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/reminders`, {
         title: reminderTitle,
         actionType: reminderActionType,
         description: reminderDescription || undefined,
@@ -159,7 +159,7 @@ export default function TasksPage() {
         return
       }
 
-      await axios.post('http://localhost:5000/api/tasks', {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/tasks`, {
         clientStatus,
         clientPhone,
         behavioralDetails,

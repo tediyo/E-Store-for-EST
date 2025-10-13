@@ -66,7 +66,7 @@ export default function InventoryPage() {
 
   const fetchItems = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/items')
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/items`)
       setItems(response.data.items)
     } catch (error) {
       toast.error('Failed to fetch items')
@@ -101,7 +101,7 @@ export default function InventoryPage() {
       console.log('Axios headers:', axios.defaults.headers.common)
       
       if (editingItem) {
-        const response = await axios.put(`http://localhost:5000/api/items/${editingItem._id}`, formDataToSend, {
+        const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/items/${editingItem._id}`, formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -109,7 +109,7 @@ export default function InventoryPage() {
         toast.success('Item updated successfully!')
         console.log('Update response:', response.data)
       } else {
-        const response = await axios.post('http://localhost:5000/api/items', formDataToSend, {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/items`, formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }

@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import axios from 'axios'
+import { api } from '../lib/api'
 
 interface User {
   id: string
@@ -37,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/auth/profile')
+      const response = await axios.get(api.endpoints.auth.profile)
       setUser(response.data.user)
     } catch (error) {
       localStorage.removeItem('token')
@@ -49,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await axios.post(api.endpoints.auth.login, {
         email,
         password
       })
@@ -65,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (username: string, email: string, password: string, role: 'user' | 'admin') => {
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
+      await axios.post(api.endpoints.auth.register, {
         username,
         email,
         password,
