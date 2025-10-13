@@ -174,12 +174,28 @@ router.get('/google', (req, res) => {
 router.get('/google/callback', 
   (req, res, next) => {
     console.log('Google OAuth callback hit:', req.query);
+    console.log('Environment check:', {
+      JWT_SECRET: process.env.JWT_SECRET ? 'SET' : 'NOT SET',
+      FRONTEND_URL: process.env.FRONTEND_URL,
+      NODE_ENV: process.env.NODE_ENV
+    });
     next();
   },
-  passport.authenticate('google', { 
-    session: false,
-    failureRedirect: `${process.env.FRONTEND_URL}/auth/callback?error=Authentication failed`
-  }),
+  (req, res, next) => {
+    passport.authenticate('google', { 
+      session: false
+    })(req, res, (err) => {
+      if (err) {
+        console.error('Passport authentication error:', err);
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=Passport authentication failed`);
+      }
+      if (!req.user) {
+        console.error('No user after passport authentication');
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=No user after authentication`);
+      }
+      next();
+    });
+  },
   (req, res) => {
     try {
       console.log('Google OAuth callback received:', { user: req.user });
@@ -188,6 +204,16 @@ router.get('/google/callback',
       if (!user) {
         console.log('No user found in OAuth callback');
         return res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=No user found`);
+      }
+      
+      if (!process.env.JWT_SECRET) {
+        console.error('JWT_SECRET not set');
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=JWT secret not set`);
+      }
+      
+      if (process.env.JWT_SECRET === 'your_actual_jwt_secret_key_here_use_a_strong_random_string') {
+        console.error('JWT_SECRET is still placeholder');
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=JWT secret is placeholder`);
       }
       
       const token = jwt.sign(
@@ -201,7 +227,7 @@ router.get('/google/callback',
       res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}&provider=google`);
     } catch (error) {
       console.error('OAuth callback error:', error);
-      res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=Authentication failed`);
+      res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=Authentication failed: ${error.message}`);
     }
   }
 );
