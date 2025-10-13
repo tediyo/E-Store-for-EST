@@ -5,6 +5,7 @@ import { useState, useEffect, Suspense, lazy, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../hooks/useAuth'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
+import MobileDebug from '../components/debug/MobileDebug'
 
 // Lazy load components for better performance
 const LoginForm = lazy(() => import('../components/auth/LoginForm'))
@@ -85,14 +86,19 @@ export default function Home() {
   }
 
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <LoadingSpinner size="lg" text="Loading dashboard..." />
-      </div>
-    }>
-      <PageLayout>
-        <Dashboard />
-      </PageLayout>
-    </Suspense>
+    <>
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <LoadingSpinner size="lg" text="Loading dashboard..." />
+        </div>
+      }>
+        <PageLayout>
+          <Dashboard />
+        </PageLayout>
+      </Suspense>
+      
+      {/* Mobile Debug Component - only in development */}
+      <MobileDebug />
+    </>
   )
 }
