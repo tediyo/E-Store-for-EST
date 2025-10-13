@@ -188,11 +188,11 @@ export default function TasksPage() {
 
   const filteredTasks = tasks.filter(task => {
     const matchesSearch = 
-      task.clientPhone.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.behavioralDetails.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.cause.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.preferredShoeType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (task.notes && task.notes.toLowerCase().includes(searchTerm.toLowerCase()))
+      (task.clientPhone && typeof task.clientPhone === 'string' && task.clientPhone.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (task.behavioralDetails && typeof task.behavioralDetails === 'string' && task.behavioralDetails.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (task.cause && typeof task.cause === 'string' && task.cause.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (task.preferredShoeType && typeof task.preferredShoeType === 'string' && task.preferredShoeType.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (task.notes && typeof task.notes === 'string' && task.notes.toLowerCase().includes(searchTerm.toLowerCase()))
 
     if (taskFilter === 'unsuccessful') {
       return matchesSearch && task.clientStatus === 'unsuccessful'
