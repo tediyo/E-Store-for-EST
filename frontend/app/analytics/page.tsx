@@ -765,7 +765,7 @@ export default function AnalyticsPage() {
                   </div>
                   
                   <button
-                    onClick={fetchAnalytics}
+                    onClick={() => fetchAnalytics()}
                     disabled={loading}
                     className="px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-white font-semibold hover:bg-white/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
