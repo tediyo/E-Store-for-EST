@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { api } from '../../lib/api'
 import { TrendingUp, DollarSign, ShoppingCart, Store, MapPin } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '../dashboard/ui/Card'
 
@@ -28,10 +29,10 @@ export default function SalesStats() {
     fetchStats()
   }, [dateRange])
 
-  const fetchStats = async () => {
+  const fetchStats = async (retryCount = 0) => {
     try {
       setLoading(true)
-      let url = 'http://localhost:5000/api/sales/stats/overview'
+      let url = `${api.baseURL}/api/sales/stats/overview`
       
       if (dateRange !== 'all') {
         const now = new Date()
@@ -59,11 +60,34 @@ export default function SalesStats() {
       
       const token = localStorage.getItem('token')
       const response = await axios.get(url, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
+        timeout: 15000, // 15 second timeout for mobile
       })
       setStats(response.data)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch sales stats:', error)
+      
+      // Check if it's a network/connectivity issue
+      const isNetworkError = error.code === 'NETWORK_ERROR' || 
+                           error.message.includes('fetch') || 
+                           error.message.includes('Network Error') ||
+                           !navigator.onLine
+      
+      if (isNetworkError && retryCount < 2) {
+        // Retry for network errors
+        console.log(`Retrying sales stats fetch (attempt ${retryCount + 1})...`)
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        return fetchStats(retryCount + 1)
+      }
+      
+      // Set zero data instead of showing error
+      setStats({
+        totalSales: 0,
+        totalRevenue: 0,
+        totalProfit: 0,
+        storeSales: 0,
+        outOfStoreSales: 0
+      })
     } finally {
       setLoading(false)
     }
