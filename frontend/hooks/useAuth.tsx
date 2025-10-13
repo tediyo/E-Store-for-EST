@@ -41,8 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await axios.get(api.endpoints.auth.profile)
       setUser(response.data.user)
     } catch (error) {
-      localStorage.removeItem('token')
-      delete axios.defaults.headers.common['Authorization']
+      // No token to remove, just set loading to false
     } finally {
       setLoading(false)
     }
@@ -55,9 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password
       })
       
-      const { token, user } = response.data
-      localStorage.setItem('token', token)
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      const { user } = response.data
       setUser(user)
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Login failed')
@@ -78,8 +75,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const logout = () => {
-    localStorage.removeItem('token')
-    delete axios.defaults.headers.common['Authorization']
     setUser(null)
   }
 
