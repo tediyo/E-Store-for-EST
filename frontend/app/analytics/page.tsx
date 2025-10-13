@@ -969,7 +969,7 @@ export default function AnalyticsPage() {
                           />
                           <Bar 
                             dataKey="value" 
-                            fill={(entry) => entry.color}
+                            fill="#3B82F6"
                             radius={[0, 4, 4, 0]}
                           />
                           <Line 
