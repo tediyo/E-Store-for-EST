@@ -44,6 +44,12 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET &&
     callbackURL: callbackURL
   }, async (accessToken, refreshToken, profile, done) => {
     try {
+      console.log('Google OAuth profile received:', {
+        id: profile.id,
+        displayName: profile.displayName,
+        email: profile.emails[0]?.value
+      });
+
       // Check if user already exists
       let user = await User.findOne({ 
         'socialLogin.provider': 'google',
@@ -55,6 +61,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET &&
         const existingUser = await User.findOne({ email: profile.emails[0].value });
         
         if (existingUser) {
+          console.log('Linking social account to existing user');
           // Link social account to existing user
           existingUser.socialLogin = {
             provider: 'google',
@@ -64,6 +71,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET &&
           await existingUser.save();
           user = existingUser;
         } else {
+          console.log('Creating new user');
           // Create new user
           user = new User({
             username: profile.displayName.replace(/\s+/g, '').toLowerCase() + Math.random().toString(36).substr(2, 5),
@@ -79,11 +87,15 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET &&
             }
           });
           await user.save();
+          console.log('New user created:', user._id);
         }
+      } else {
+        console.log('Existing user found:', user._id);
       }
 
       return done(null, user);
     } catch (error) {
+      console.error('Passport strategy error:', error);
       return done(error, null);
     }
   }));
