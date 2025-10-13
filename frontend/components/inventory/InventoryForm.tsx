@@ -13,6 +13,16 @@ interface ItemFormData {
   description: string
 }
 
+interface FormErrors {
+  name?: string
+  shoeType?: string
+  basePrice?: string
+  sellingPrice?: string
+  quantity?: string
+  supplier?: string
+  description?: string
+}
+
 interface Item {
   _id: string
   name: string
@@ -52,7 +62,7 @@ export default function InventoryForm({
     description: ''
   })
 
-  const [errors, setErrors] = useState<Partial<ItemFormData>>({})
+  const [errors, setErrors] = useState<FormErrors>({})
 
   useEffect(() => {
     if (editingItem) {
@@ -84,7 +94,7 @@ export default function InventoryForm({
   }
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<ItemFormData> = {}
+    const newErrors: FormErrors = {}
 
     if (!formData.name.trim()) {
       newErrors.name = 'Item name is required'
