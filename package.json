@@ -1,21 +1,14 @@
 {
-  "name": "inventory-management-system",
+  "name": "e-store",
   "version": "1.0.0",
-  "description": "Full-stack inventory management system with Next.js frontend and Node.js backend",
-  "main": "index.js",
+  "description": "E-Store application with frontend and backend",
   "scripts": {
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend && npm run dev",
-    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
-    "build": "cd frontend && npm run build",
     "start": "cd backend && npm start",
-    "setup": "node setup.js"
+    "build": "cd frontend && npm run build",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
   },
-  "keywords": ["inventory", "management", "nextjs", "nodejs", "mongodb"],
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^7.6.0"
   }
 }
