@@ -6,6 +6,7 @@ import { Plus, Search, Edit, Trash2, Package, Filter, SortAsc, SortDesc, Trendin
 import { useAuth } from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
 import PageLayout from '../../components/layout/PageLayout'
+import { api } from '../../lib/api'
 
 interface Item {
   _id: string
@@ -66,9 +67,16 @@ export default function InventoryPage() {
 
   const fetchItems = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/items`)
+      // Ensure token is set in axios headers
+      const token = localStorage.getItem('token')
+      if (token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      }
+      
+      const response = await axios.get(api.endpoints.items)
       setItems(response.data.items)
     } catch (error) {
+      console.error('Error fetching items:', error)
       toast.error('Failed to fetch items')
     } finally {
       setLoading(false)
@@ -78,7 +86,24 @@ export default function InventoryPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
+    // Check if user is logged in
+    if (!user) {
+      toast.error('Please log in to add items')
+      return
+    }
+    
     try {
+      // Ensure token is set in axios headers
+      const token = localStorage.getItem('token')
+      if (token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        console.log('Token set in axios headers:', axios.defaults.headers.common['Authorization'])
+      } else {
+        console.error('No token found in localStorage')
+        toast.error('Please log in again')
+        return
+      }
+      
       // Create FormData for file upload
       const formDataToSend = new FormData()
       
@@ -97,11 +122,11 @@ export default function InventoryPage() {
       }
       
       console.log('Submitting form data:', formData)
-      console.log('Auth token:', localStorage.getItem('token'))
-      console.log('Axios headers:', axios.defaults.headers.common)
+      console.log('Auth token:', token)
+      console.log('API endpoint:', api.endpoints.items)
       
       if (editingItem) {
-        const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/items/${editingItem._id}`, formDataToSend, {
+        const response = await axios.put(`${api.endpoints.items}/${editingItem._id}`, formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -109,7 +134,7 @@ export default function InventoryPage() {
         toast.success('Item updated successfully!')
         console.log('Update response:', response.data)
       } else {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/items`, formDataToSend, {
+        const response = await axios.post(api.endpoints.items, formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -130,7 +155,7 @@ export default function InventoryPage() {
       if (error.response?.status === 401) {
         toast.error('Authentication failed. Please log in again.')
       } else if (error.response?.status === 403) {
-        toast.error('Access denied. Admin role required.')
+        toast.error('Access denied. Please try again.')
       } else if (error.response?.status === 400) {
         const errorMessage = error.response?.data?.errors?.[0]?.msg || 
                            error.response?.data?.message || 
@@ -160,10 +185,17 @@ export default function InventoryPage() {
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/items/${id}`)
+        // Ensure token is set in axios headers
+        const token = localStorage.getItem('token')
+        if (token) {
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        }
+        
+        await axios.delete(`${api.endpoints.items}/${id}`)
         toast.success('Item deleted successfully!')
         fetchItems()
       } catch (error: any) {
+        console.error('Error deleting item:', error)
         toast.error(error.response?.data?.message || 'Failed to delete item')
       }
     }
@@ -249,6 +281,29 @@ export default function InventoryPage() {
     )
   }
 
+  // Redirect to login if not authenticated
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg className="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Authentication Required</h2>
+          <p className="text-gray-600 mb-6">Please log in to access the inventory management system.</p>
+          <button
+            onClick={() => window.location.href = '/'}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <PageLayout>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
@@ -256,16 +311,14 @@ export default function InventoryPage() {
       <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-end gap-4">
-            {user?.role === 'admin' && (
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="group relative inline-flex items-center justify-center px-6 py-2.5 text-base font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 hover:from-blue-700 hover:to-indigo-700"
-              >
-                <Plus size={20} className="mr-2 group-hover:rotate-90 transition-transform duration-200" />
-                Add New Item
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-              </button>
-            )}
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="group relative inline-flex items-center justify-center px-6 py-2.5 text-base font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 hover:from-blue-700 hover:to-indigo-700"
+            >
+              <Plus size={20} className="mr-2 group-hover:rotate-90 transition-transform duration-200" />
+              Add New Item
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+            </button>
           </div>
         </div>
       </div>
@@ -457,7 +510,7 @@ export default function InventoryPage() {
                 {item.image ? (
                   <div className="relative h-48 overflow-hidden">
                     <img 
-                      src={`http://localhost:5000${item.image}`} 
+                      src={`${api.baseURL}${item.image}`} 
                       alt={item.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       onError={(e) => {
@@ -527,24 +580,22 @@ export default function InventoryPage() {
                   </div>
 
                   {/* Action Buttons */}
-                  {user?.role === 'admin' && (
-                    <div className="flex gap-2 pt-4 border-t border-gray-100">
-                      <button
-                        onClick={() => handleEdit(item)}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors duration-200 font-medium"
-                      >
-                        <Edit size={16} />
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(item._id)}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors duration-200 font-medium"
-                      >
-                        <Trash2 size={16} />
-                        Delete
-                      </button>
-                    </div>
-                  )}
+                  <div className="flex gap-2 pt-4 border-t border-gray-100">
+                    <button
+                      onClick={() => handleEdit(item)}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors duration-200 font-medium"
+                    >
+                      <Edit size={16} />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item._id)}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors duration-200 font-medium"
+                    >
+                      <Trash2 size={16} />
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -571,7 +622,7 @@ export default function InventoryPage() {
                         <div className="flex items-center">
                           {item.image ? (
                             <img 
-                              src={`http://localhost:5000${item.image}`} 
+                              src={`${api.baseURL}${item.image}`} 
                               alt={item.name}
                               className="h-12 w-12 rounded-lg object-cover mr-3"
                             />
@@ -616,22 +667,20 @@ export default function InventoryPage() {
                         <div className="text-sm text-gray-900">{item.supplier}</div>
                       </td>
                       <td className="px-6 py-4">
-                        {user?.role === 'admin' && (
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleEdit(item)}
-                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
-                            >
-                              <Edit size={16} />
-                            </button>
-                            <button
-                              onClick={() => handleDelete(item._id)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
-                        )}
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleEdit(item)}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                          >
+                            <Edit size={16} />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(item._id)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -653,7 +702,7 @@ export default function InventoryPage() {
                 ? 'Try adjusting your search terms or filters to find what you\'re looking for.' 
                 : 'Get started by adding your first inventory item to the system.'}
             </p>
-            {user?.role === 'admin' && !searchTerm && statusFilter === 'all' && shoeTypeFilter === 'all' && (
+            {!searchTerm && statusFilter === 'all' && shoeTypeFilter === 'all' && (
               <button
                 onClick={() => setShowAddForm(true)}
                 className="mt-6 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
@@ -813,7 +862,7 @@ export default function InventoryPage() {
                     <div className="mt-4">
                       <p className="text-sm text-gray-600 mb-2">Current image:</p>
                       <img 
-                        src={`http://localhost:5000${editingItem.image}`} 
+                        src={`${api.baseURL}${editingItem.image}`} 
                         alt="Current" 
                         className="w-32 h-32 object-cover rounded-xl border-2 border-gray-200"
                       />
