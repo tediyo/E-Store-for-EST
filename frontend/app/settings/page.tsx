@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { api } from '../../lib/api'
 import { 
   User, 
   Settings, 
@@ -137,7 +138,7 @@ export default function SettingsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await axios.put('http://localhost:5000/api/auth/profile', formData)
+      const response = await axios.put(`${api.baseURL}/api/auth/profile`, formData)
       setProfile(response.data.user)
       setEditing(false)
       toast.success('Profile updated successfully')
@@ -154,7 +155,7 @@ export default function SettingsPage() {
     }
     
     try {
-      await axios.put('http://localhost:5000/api/auth/password', {
+      await axios.put(`${api.baseURL}/api/auth/password`, {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword
       })
@@ -187,7 +188,7 @@ export default function SettingsPage() {
 
   const handleDeleteAccount = async () => {
     try {
-      await axios.delete('http://localhost:5000/api/auth/account')
+      await axios.delete(`${api.baseURL}/api/auth/account`)
       toast.success('Account deleted successfully')
       logout()
     } catch (error: any) {
@@ -581,7 +582,7 @@ export default function SettingsPage() {
                         </div>
                       </div>
                       <button
-                        onClick={() => window.location.href = 'http://localhost:5000/api/auth/google'}
+                        onClick={() => window.location.href = `${api.baseURL}/api/auth/google`}
                         className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200"
                       >
                         Connect
@@ -600,7 +601,7 @@ export default function SettingsPage() {
                         </div>
                       </div>
                       <button
-                        onClick={() => window.location.href = 'http://localhost:5000/api/auth/github'}
+                        onClick={() => window.location.href = `${api.baseURL}/api/auth/github`}
                         className="px-4 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-900 transition-colors duration-200"
                       >
                         Connect

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { api } from '../../lib/api'
 import { X, ShoppingCart, User, MapPin, Phone, Info, DollarSign, Package, TrendingUp, AlertTriangle } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -60,15 +61,52 @@ export default function SalesForm({ isOpen, onClose, onSuccess }: SalesFormProps
     }
   }, [isOpen])
 
-  const fetchItems = async () => {
+  const fetchItems = async (retryCount = 0) => {
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.get('http://localhost:5000/api/items?limit=1000', {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await axios.get(`${api.baseURL}/api/items?limit=1000`, {
+        headers: { Authorization: `Bearer ${token}` },
+        timeout: 15000, // 15 second timeout for mobile
       })
       setItems(response.data.items.filter((item: Item) => item.quantity > 0))
-    } catch (error) {
-      toast.error('Failed to fetch items')
+    } catch (error: any) {
+      console.error('Failed to fetch items:', error)
+      
+      // Check if it's a network/connectivity issue
+      const isNetworkError = error.code === 'NETWORK_ERROR' || 
+                           error.message.includes('fetch') || 
+                           error.message.includes('Network Error') ||
+                           !navigator.onLine
+      
+      if (isNetworkError && retryCount < 2) {
+        // Retry for network errors
+        console.log(`Retrying items fetch (attempt ${retryCount + 1})...`)
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        return fetchItems(retryCount + 1)
+      }
+      
+      // Set empty items instead of showing error
+      setItems([])
+      
+      if (isNetworkError) {
+        toast('Connection issue - showing offline data', {
+          icon: '📱',
+          duration: 4000,
+          style: {
+            background: '#F59E0B',
+            color: 'white',
+          }
+        })
+      } else {
+        toast('No items available', {
+          icon: 'ℹ️',
+          duration: 3000,
+          style: {
+            background: '#3B82F6',
+            color: 'white',
+          }
+        })
+      }
     }
   }
 
@@ -146,15 +184,35 @@ export default function SalesForm({ isOpen, onClose, onSuccess }: SalesFormProps
     setLoading(true)
     try {
       const token = localStorage.getItem('token')
-      await axios.post('http://localhost:5000/api/sales', formData, {
-        headers: { Authorization: `Bearer ${token}` }
+      await axios.post(`${api.baseURL}/api/sales`, formData, {
+        headers: { Authorization: `Bearer ${token}` },
+        timeout: 15000, // 15 second timeout for mobile
       })
       toast.success('Sale recorded successfully!')
       onSuccess()
       onClose()
       resetForm()
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to record sale')
+      console.error('Failed to record sale:', error)
+      
+      // Check if it's a network/connectivity issue
+      const isNetworkError = error.code === 'NETWORK_ERROR' || 
+                           error.message.includes('fetch') || 
+                           error.message.includes('Network Error') ||
+                           !navigator.onLine
+      
+      if (isNetworkError) {
+        toast('Connection issue - please check your internet and try again', {
+          icon: '📱',
+          duration: 5000,
+          style: {
+            background: '#F59E0B',
+            color: 'white',
+          }
+        })
+      } else {
+        toast.error(error.response?.data?.message || 'Failed to record sale')
+      }
     } finally {
       setLoading(false)
     }
