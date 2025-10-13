@@ -1,7 +1,27 @@
 import axios from 'axios'
 
 // API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://e-store-for-est.onrender.com')
+const getAPIBaseURL = () => {
+  if (typeof window === 'undefined') {
+    return process.env.NEXT_PUBLIC_API_URL || 'https://e-store-for-est.onrender.com'
+  }
+  
+  // Check if we're in development
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'http://localhost:5000'
+  }
+  
+  // Production URLs - try multiple options for better mobile compatibility
+  const productionURLs = [
+    process.env.NEXT_PUBLIC_API_URL,
+    'https://e-store-for-est.onrender.com',
+    'https://e-store-backend-1234.onrender.com'
+  ].filter(Boolean)
+  
+  return productionURLs[0] || 'https://e-store-for-est.onrender.com'
+}
+
+const API_BASE_URL = getAPIBaseURL()
 
 // Configure axios defaults for mobile compatibility
 if (typeof window !== 'undefined') {

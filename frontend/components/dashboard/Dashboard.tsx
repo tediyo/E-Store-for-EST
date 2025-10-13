@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import { api } from '../../lib/api'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
 import { 
   Package, 
@@ -116,12 +117,34 @@ export default function Dashboard() {
     fetchDashboardData()
   }, [period])
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = async (retryCount = 0) => {
     try {
       setLoading(true)
+      
+      // Add retry logic for mobile connectivity issues
+      const makeRequest = async (url: string) => {
+        try {
+          return await axios.get(url, {
+            timeout: 15000, // 15 second timeout for mobile
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            }
+          })
+        } catch (error: any) {
+          // If it's a network error and we haven't retried yet, try again
+          if (retryCount < 2 && (error.code === 'NETWORK_ERROR' || error.message.includes('fetch'))) {
+            console.log(`Retrying request (attempt ${retryCount + 1})...`)
+            await new Promise(resolve => setTimeout(resolve, 1000)) // Wait 1 second
+            return makeRequest(url)
+          }
+          throw error
+        }
+      }
+      
       const [overviewResponse, analyticsResponse] = await Promise.all([
-        axios.get(`http://localhost:5000/api/dashboard/overview?period=${period}`),
-        axios.get(`http://localhost:5000/api/dashboard/analytics?period=${period}`)
+        makeRequest(`${api.baseURL}/api/dashboard/overview?period=${period}`),
+        makeRequest(`${api.baseURL}/api/dashboard/analytics?period=${period}`)
       ])
       
       setData(overviewResponse.data)
@@ -157,9 +180,75 @@ export default function Dashboard() {
       })
       
       setChartData(processedChartData.sort((a, b) => a.name.localeCompare(b.name)))
-    } catch (error) {
-      toast.error('Failed to fetch dashboard data')
+    } catch (error: any) {
       console.error('Dashboard error:', error)
+      
+      // Check if it's a network/connectivity issue
+      const isNetworkError = error.code === 'NETWORK_ERROR' || 
+                           error.message.includes('fetch') || 
+                           error.message.includes('Network Error') ||
+                           !navigator.onLine
+      
+      // Instead of showing error, set zero data to display empty state gracefully
+      const zeroData: DashboardData = {
+        summary: {
+          totalTransactions: 0,
+          totalProfit: 0,
+          totalRevenue: 0,
+          totalCosts: 0
+        },
+        sales: {
+          totalSales: 0,
+          totalRevenue: 0,
+          totalProfit: 0,
+          storeSales: 0,
+          outOfStoreSales: 0
+        },
+        inventory: {
+          totalItems: 0,
+          totalValue: 0,
+          inStockItems: 0,
+          lowStockItems: 0,
+          outOfStockItems: 0
+        },
+        tasks: {
+          totalTasks: 0,
+          totalProfit: 0,
+          totalCosts: 0,
+          storeTasks: 0,
+          outOfStoreTasks: 0
+        }
+      }
+      
+      setData(zeroData)
+      setAnalyticsData({
+        period: period,
+        dateRange: {},
+        salesTrend: [],
+        tasksTrend: []
+      })
+      setChartData([])
+      
+      // Show appropriate message based on error type
+      if (isNetworkError) {
+        toast('Connection issue - showing offline data', {
+          icon: '📱',
+          duration: 4000,
+          style: {
+            background: '#F59E0B',
+            color: 'white',
+          }
+        })
+      } else {
+        toast('No data available - showing empty dashboard', {
+          icon: 'ℹ️',
+          duration: 3000,
+          style: {
+            background: '#3B82F6',
+            color: 'white',
+          }
+        })
+      }
     } finally {
       setLoading(false)
     }
@@ -205,7 +294,11 @@ export default function Dashboard() {
 
   // Real inventory data from API
   const getInventoryChartData = () => {
-    if (!data) return []
+    if (!data) return [
+      { name: 'In Stock', value: 0, color: '#3B82F6' },
+      { name: 'Low Stock', value: 0, color: '#F97316' },
+      { name: 'Out of Stock', value: 0, color: '#3B82F6' },
+    ]
     return [
       { name: 'In Stock', value: data.inventory.inStockItems, color: '#3B82F6' },
       { name: 'Low Stock', value: data.inventory.lowStockItems, color: '#F97316' },
@@ -244,17 +337,6 @@ export default function Dashboard() {
     )
   }
 
-  if (!data) {
-    return (
-      <div className="text-center py-20 bg-gradient-to-br from-gray-50 to-white rounded-3xl shadow-xl border border-gray-100">
-        <div className="w-32 h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-8">
-          <BarChart3 className="h-16 w-16 text-blue-500" />
-        </div>
-        <h3 className="text-3xl font-bold text-gray-900 mb-4">No Data Available</h3>
-        <p className="text-lg text-gray-600">Start adding data to see your dashboard analytics</p>
-      </div>
-    )
-  }
 
   return (
     <div className="space-y-8">
@@ -292,7 +374,7 @@ export default function Dashboard() {
                 
                 {/* Refresh Button */}
                 <button
-                  onClick={fetchDashboardData}
+                  onClick={() => fetchDashboardData()}
                   disabled={loading}
                   className="relative group px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-white font-semibold hover:bg-white/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
