@@ -292,7 +292,7 @@ export default function InventoryPage() {
             </svg>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Authentication Required</h2>
-          <p className="text-gray-600 mb-6">Please log in to access the inventory management system.</p>
+          <p className="text-gray-600 mb-6">Please log in to access the ermi shoe store.</p>
           <button
             onClick={() => window.location.href = '/'}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"

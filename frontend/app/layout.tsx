@@ -8,7 +8,7 @@ import { ThemeProvider } from '../hooks/useTheme'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Inventory Management System',
+  title: 'Ermi Shoe Store',
   description: 'Full-stack inventory management system for shoe store',
 }
 
