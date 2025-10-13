@@ -5,7 +5,6 @@ const nextConfig = {
   },
   // Performance optimizations
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ['react-icons', 'lucide-react']
   },
   // Enable compression
@@ -21,9 +20,7 @@ const nextConfig = {
       }
     }
     return config
-  },
-  // Enable static optimization
-  output: 'standalone'
+  }
 }
 
 module.exports = nextConfig
