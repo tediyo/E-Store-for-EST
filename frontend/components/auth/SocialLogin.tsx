@@ -71,7 +71,7 @@ export default function SocialLogin({ onSuccess, onError }: SocialLoginProps) {
 
       {/* Info Text */}
       <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-        By continuing, you agree to our Terms of Service and Privacy Policy
+        {/* By continuing, you agree to our Terms of Service and Privacy Policy */}
       </p>
     </div>
   )
