@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Ermi Shoe',
-  description: 'Full-stack inventory management system for shoe store',
+  description: 'Full-stack inventory management system for Ermi shoe store',
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
