@@ -589,24 +589,6 @@ export default function SettingsPage() {
                       </button>
                     </div>
 
-                    {/* GitHub Account */}
-                    <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center mr-3">
-                          <span className="text-white text-sm font-bold">G</span>
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900">GitHub</p>
-                          <p className="text-sm text-gray-500">Sign in with GitHub account</p>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => window.location.href = `${api.baseURL}/api/auth/github`}
-                        className="px-4 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-900 transition-colors duration-200"
-                      >
-                        Connect
-                      </button>
-                    </div>
                   </div>
                 </div>
               </div>

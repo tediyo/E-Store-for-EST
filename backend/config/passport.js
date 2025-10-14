@@ -1,6 +1,5 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const GitHubStrategy = require('passport-github2').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 const User = require('../models/User');
@@ -101,62 +100,6 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET &&
   }));
 }
 
-// GitHub OAuth Strategy
-if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET && 
-    process.env.GITHUB_CLIENT_ID !== 'your_github_client_id_here' && 
-    process.env.GITHUB_CLIENT_SECRET !== 'your_github_client_secret_here') {
-  passport.use('github', new GitHubStrategy({
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.NODE_ENV === 'production' 
-      ? 'https://e-store-for-est.onrender.com/api/auth/github/callback'
-      : 'http://localhost:5000/api/auth/github/callback'
-  }, async (accessToken, refreshToken, profile, done) => {
-    try {
-      // Check if user already exists
-      let user = await User.findOne({ 
-        'socialLogin.provider': 'github',
-        'socialLogin.socialId': profile.id 
-      });
-
-      if (!user) {
-        // Check if email already exists
-        const existingUser = await User.findOne({ email: profile.emails[0]?.value });
-        
-        if (existingUser) {
-          // Link social account to existing user
-          existingUser.socialLogin = {
-            provider: 'github',
-            socialId: profile.id,
-            avatar: profile.photos[0]?.value
-          };
-          await existingUser.save();
-          user = existingUser;
-        } else {
-          // Create new user
-          user = new User({
-            username: profile.username + Math.random().toString(36).substr(2, 5),
-            email: profile.emails[0]?.value || `${profile.username}@github.com`,
-            socialLogin: {
-              provider: 'github',
-              socialId: profile.id,
-              avatar: profile.photos[0]?.value
-            },
-            profile: {
-              firstName: profile.displayName?.split(' ')[0] || profile.username,
-              lastName: profile.displayName?.split(' ').slice(1).join(' ') || ''
-            }
-          });
-          await user.save();
-        }
-      }
-
-      return done(null, user);
-    } catch (error) {
-      return done(error, null);
-    }
-  }));
-}
 
 // Serialize user for the session
 passport.serializeUser((user, done) => {

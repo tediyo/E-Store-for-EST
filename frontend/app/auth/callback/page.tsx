@@ -32,7 +32,7 @@ export default function AuthCallback() {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       
       setStatus('success')
-      toast.success(`Successfully signed in with ${provider}!`)
+      toast.success(`Successfully signed in with Google!`)
       
       // Redirect to dashboard
       setTimeout(() => router.push('/'), 1000)
