@@ -12,13 +12,12 @@ export const metadata: Metadata = {
   description: 'Full-stack inventory management system for shoe store',
   icons: {
     icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon.ico', sizes: 'any' },
-      { url: '/Es.png', sizes: '32x32', type: 'image/png' },
-      { url: '/Es.png', sizes: '16x16', type: 'image/png' },
     ],
     shortcut: '/favicon.ico',
     apple: [
-      { url: '/Es.png', sizes: '180x180', type: 'image/png' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
   },
   manifest: '/site.webmanifest',
