@@ -38,7 +38,6 @@ export const api = {
       register: `${API_BASE_URL}/api/auth/register`,
       profile: `${API_BASE_URL}/api/auth/profile`,
       google: `${API_BASE_URL}/api/auth/google`,
-      github: `${API_BASE_URL}/api/auth/github`,
     },
     items: `${API_BASE_URL}/api/items`,
     tasks: `${API_BASE_URL}/api/tasks`,

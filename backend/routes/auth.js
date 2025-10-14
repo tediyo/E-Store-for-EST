@@ -232,32 +232,6 @@ router.get('/google/callback',
   }
 );
 
-// GitHub OAuth
-router.get('/github', (req, res) => {
-  if (!process.env.GITHUB_CLIENT_ID || process.env.GITHUB_CLIENT_ID === 'your_github_client_id_here') {
-    return res.status(400).json({ message: 'GitHub OAuth not configured' });
-  }
-  passport.authenticate('github', { scope: ['user:email'] })(req, res);
-});
-
-router.get('/github/callback', 
-  passport.authenticate('github', { session: false }),
-  (req, res) => {
-    try {
-      const user = req.user;
-      const token = jwt.sign(
-        { userId: user._id },
-        process.env.JWT_SECRET,
-        { expiresIn: '24h' }
-      );
-
-      // Redirect to frontend with token
-      res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}&provider=github`);
-    } catch (error) {
-      res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=Authentication failed`);
-    }
-  }
-);
 
 // Link social account to existing user
 router.post('/link-social', async (req, res) => {

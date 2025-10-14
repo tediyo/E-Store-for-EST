@@ -15,7 +15,7 @@ interface RegisterFormData {
 
 function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false)
-  const { register: registerUser } = useAuth()
+  const { register: registerUser, login } = useAuth()
   
   const {
     register,
@@ -30,17 +30,30 @@ function RegisterForm() {
     setIsLoading(true)
     try {
       await registerUser(data.username, data.email, data.password, 'admin')
-      toast.success('Registration successful! Please login.')
-      // Switch to login form after successful registration
-      setTimeout(() => {
-        window.location.reload()
-      }, 2000)
+      toast.success('Registration successful! Logging you in...')
+      
+      // Automatically log in the user after successful registration
+      try {
+        await login(data.email, data.password)
+        toast.success('Welcome! Redirecting to dashboard...')
+        // Redirect to dashboard after successful login
+        setTimeout(() => {
+          window.location.href = '/inventory'
+        }, 1000)
+      } catch (loginError: any) {
+        console.error('Auto-login failed:', loginError)
+        toast.error('Registration successful but auto-login failed. Please login manually.')
+        // Still reload to show login form
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000)
+      }
     } catch (error: any) {
       toast.error(error.message || 'Registration failed')
     } finally {
       setIsLoading(false)
     }
-  }, [registerUser])
+  }, [registerUser, login])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

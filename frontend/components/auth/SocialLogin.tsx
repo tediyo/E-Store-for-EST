@@ -1,7 +1,6 @@
 'use client'
 
 import { FcGoogle } from 'react-icons/fc'
-import { FaGithub } from 'react-icons/fa'
 import { useState, useCallback } from 'react'
 import toast from 'react-hot-toast'
 import { api } from '../../lib/api'
@@ -14,10 +13,10 @@ interface SocialLoginProps {
 export default function SocialLogin({ onSuccess, onError }: SocialLoginProps) {
   const [isLoading, setIsLoading] = useState<string | null>(null)
 
-  const handleSocialLogin = useCallback((provider: 'google' | 'github') => {
-    setIsLoading(provider)
+  const handleGoogleLogin = useCallback(() => {
+    setIsLoading('google')
     try {
-      const url = provider === 'google' ? api.endpoints.auth.google : api.endpoints.auth.github
+      const url = api.endpoints.auth.google
       
       // Add timestamp to prevent caching
       const timestamp = new Date().getTime()
@@ -35,9 +34,6 @@ export default function SocialLogin({ onSuccess, onError }: SocialLoginProps) {
     }
   }, [onError])
 
-  const handleGoogleLogin = useCallback(() => handleSocialLogin('google'), [handleSocialLogin])
-  const handleGitHubLogin = useCallback(() => handleSocialLogin('github'), [handleSocialLogin])
-
   return (
     <div className="space-y-4">
       {/* Divider */}
@@ -52,13 +48,13 @@ export default function SocialLogin({ onSuccess, onError }: SocialLoginProps) {
         </div>
       </div>
 
-      {/* Social Login Buttons */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Social Login Button */}
+      <div className="flex justify-center">
         {/* Google Login */}
         <button
           onClick={handleGoogleLogin}
           disabled={isLoading === 'google'}
-          className={`flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 ${
+          className={`flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 ${
             isLoading === 'google' ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
@@ -68,32 +64,14 @@ export default function SocialLogin({ onSuccess, onError }: SocialLoginProps) {
             <FcGoogle className="h-5 w-5 mr-2" />
           )}
           <span className="text-sm font-medium">
-            {isLoading === 'google' ? 'Connecting...' : 'Google'}
-          </span>
-        </button>
-
-        {/* GitHub Login */}
-        <button
-          onClick={handleGitHubLogin}
-          disabled={isLoading === 'github'}
-          className={`flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 ${
-            isLoading === 'github' ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
-        >
-          {isLoading === 'github' ? (
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-600 mr-2"></div>
-          ) : (
-            <FaGithub className="h-5 w-5 mr-2" />
-          )}
-          <span className="text-sm font-medium">
-            {isLoading === 'github' ? 'Connecting...' : 'GitHub'}
+            {isLoading === 'google' ? 'Connecting...' : 'Continue with Google'}
           </span>
         </button>
       </div>
 
       {/* Info Text */}
       <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-        By continuing, you agree to our Terms of Service and Privacy Policy
+        {/* By continuing, you agree to our Terms of Service and Privacy Policy */}
       </p>
     </div>
   )
