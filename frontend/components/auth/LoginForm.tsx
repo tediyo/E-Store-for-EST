@@ -39,6 +39,12 @@ function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {/* Brand header */}
+      <div className="flex flex-col items-center mb-2">
+        <img src="/esho.png" alt="Ermi Shoe" width={56} height={56} className="w-14 h-14 object-contain rounded-xl shadow-md border-2 border-gray-200 dark:border-gray-700 bg-white/90" />
+        <span className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">Ermi Shoe</span>
+      </div>
+
       <div>
         <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
           Email address
