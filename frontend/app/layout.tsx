@@ -21,6 +21,7 @@ export const metadata: Metadata = {
       { url: '/Es.png', sizes: '180x180', type: 'image/png' },
     ],
   },
+  manifest: '/site.webmanifest',
   other: {
     'msapplication-TileImage': '/Es.png',
     'msapplication-TileColor': '#ffffff',
@@ -35,18 +36,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Explicit favicon links with cache busting */}
-        <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/Es.png?v=2" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/Es.png?v=2" />
-        <link rel="shortcut icon" href="/favicon.ico?v=2" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/Es.png?v=2" />
-        
-        {/* Additional meta tags for better favicon support */}
-        <meta name="msapplication-TileImage" content="/Es.png" />
-        <meta name="msapplication-TileColor" content="#ffffff" />
-        <link rel="manifest" href="/site.webmanifest" />
-        
         {/* Preload critical resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
