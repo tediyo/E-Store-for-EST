@@ -14,15 +14,16 @@ export const metadata: Metadata = {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon.ico', sizes: 'any' },
+      { url: '/esho.png', type: 'image/png', sizes: '192x192' },
     ],
     shortcut: '/favicon.ico',
     apple: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/esho.png', type: 'image/png', sizes: '180x180' },
     ],
   },
   manifest: '/site.webmanifest',
   other: {
-    'msapplication-TileImage': '/Es.png',
+    'msapplication-TileImage': '/esho.png',
     'msapplication-TileColor': '#ffffff',
   },
 }
@@ -35,6 +36,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Explicit favicon links to avoid browser-specific fallbacks */}
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/esho.png" type="image/png" sizes="32x32" />
+        <link rel="icon" href="/esho.png" type="image/png" sizes="192x192" />
+        <link rel="apple-touch-icon" href="/esho.png" sizes="180x180" />
+        <meta name="msapplication-TileImage" content="/esho.png" />
+        <meta name="msapplication-TileColor" content="#ffffff" />
+        <link rel="manifest" href="/site.webmanifest" />
+
         {/* Preload critical resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
