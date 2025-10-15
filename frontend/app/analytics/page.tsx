@@ -729,9 +729,9 @@ export default function AnalyticsPage() {
 
   return (
     <PageLayout>
-      <div className="space-y-8">
+      <div className="space-y-4 sm:space-y-6 lg:space-y-8">
         {/* Enhanced Header with Gradient Background */}
-        <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 rounded-3xl p-8 text-white overflow-hidden">
+        <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 text-white overflow-hidden">
           {/* Animated background elements */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-xl animate-pulse"></div>
@@ -740,23 +740,24 @@ export default function AnalyticsPage() {
           </div>
           
           <div className="relative z-10">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 lg:mb-8">
               <div>
-                <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                  Analytics & Reports
+                <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold mb-1 sm:mb-2 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                  <span className="hidden sm:inline">Analytics & Reports</span>
+                  <span className="sm:hidden">Analytics</span>
                 </h1>
-                <p className="text-xl text-blue-100">Comprehensive insights into your business performance</p>
+                <p className="text-sm sm:text-base lg:text-xl text-blue-100">Comprehensive insights into your business performance</p>
               </div>
               
               {/* Enhanced Controls */}
-              <div className="mt-6 sm:mt-0 space-y-3">
-                <div className="flex gap-3">
+              <div className="mt-4 sm:mt-0 space-y-2 sm:space-y-3">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                   <div className="relative group">
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 rounded-xl sm:rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <select
                       value={period}
                       onChange={(e) => setPeriod(e.target.value)}
-                      className="relative px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-white font-semibold focus:ring-4 focus:ring-white/20 focus:border-white/50 transition-all duration-300 cursor-pointer"
+                      className="relative px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl sm:rounded-2xl text-white font-semibold focus:ring-4 focus:ring-white/20 focus:border-white/50 transition-all duration-300 cursor-pointer text-xs sm:text-sm"
                     >
                       <option value="week">📅 This Week</option>
                       <option value="month">📊 This Month</option>
@@ -767,17 +768,17 @@ export default function AnalyticsPage() {
                   <button
                     onClick={() => fetchAnalytics()}
                     disabled={loading}
-                    className="px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-white font-semibold hover:bg-white/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl sm:rounded-2xl text-white font-semibold hover:bg-white/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 sm:gap-2"
                   >
-                    <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
-                    {loading ? 'Loading...' : 'Refresh'}
+                    <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''}`} />
+                    <span className="text-xs sm:text-sm">{loading ? 'Loading...' : 'Refresh'}</span>
                   </button>
                 </div>
                 
-                <div className="flex gap-2">
+                <div className="flex gap-1 sm:gap-2">
                   <button
                     onClick={() => setViewMode('overview')}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+                    className={`px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 ${
                       viewMode === 'overview' 
                         ? 'bg-white/30 text-white' 
                         : 'bg-white/10 text-blue-100 hover:bg-white/20'
@@ -787,7 +788,7 @@ export default function AnalyticsPage() {
                   </button>
                   <button
                     onClick={() => setViewMode('detailed')}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+                    className={`px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 ${
                       viewMode === 'detailed' 
                         ? 'bg-white/30 text-white' 
                         : 'bg-white/10 text-blue-100 hover:bg-white/20'
@@ -800,20 +801,20 @@ export default function AnalyticsPage() {
             </div>
             
             {/* Enhanced Summary Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105 group">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 bg-green-500/30 rounded-xl">
-                    <DollarSign className="h-6 w-6 text-white" />
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105 group">
+                <div className="flex items-center justify-between mb-2 sm:mb-3 lg:mb-4">
+                  <div className="p-2 sm:p-3 bg-green-500/30 rounded-lg sm:rounded-xl">
+                    <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
                   </div>
-                  <ArrowUpRight className="h-5 w-5 text-green-300 group-hover:scale-110 transition-transform duration-300" />
+                  <ArrowUpRight className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-green-300 group-hover:scale-110 transition-transform duration-300" />
                 </div>
-                <div className="text-3xl font-bold text-white mb-1">
+                <div className="text-lg sm:text-xl lg:text-3xl font-bold text-white mb-1 truncate">
                   {analyticsData ? formatCurrency(analyticsData.salesTrend.reduce((sum, trend) => sum + trend.revenue, 0)) : '$0'}
                 </div>
-                <div className="text-sm text-blue-100">Total Revenue</div>
-                <div className="w-full bg-white/20 rounded-full h-1 mt-3">
-                  <div className="bg-green-300 rounded-full h-1" style={{ width: '85%' }}></div>
+                <div className="text-xs sm:text-sm text-blue-100">Total Revenue</div>
+                <div className="w-full bg-white/20 rounded-full h-1 sm:h-1.5 mt-2 sm:mt-3">
+                  <div className="bg-green-300 rounded-full h-1 sm:h-1.5" style={{ width: '85%' }}></div>
                 </div>
               </div>
               

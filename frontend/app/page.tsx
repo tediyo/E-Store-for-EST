@@ -44,24 +44,24 @@ export default function Home() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-6 sm:space-y-8">
           <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+            <h2 className="mt-4 sm:mt-6 text-center text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">
               Ermi Shoe
             </h2>
-            <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-2 text-center text-xs sm:text-sm text-gray-600 dark:text-gray-400 px-2">
             Every great business once started as a small idea. stay consistent, keep learning, and your persistence will turn that idea into success.
             
             </p>
-             <p className="text-yellow-500 font-bold italic text-center">{getDayGreeting()}</p>
+             <p className="text-yellow-500 font-bold italic text-center text-sm sm:text-base">{getDayGreeting()}</p>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-200 dark:border-gray-700">
-            <div className="flex mb-6">
+          <div className="bg-white dark:bg-gray-800 py-6 sm:py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-200 dark:border-gray-700">
+            <div className="flex mb-4 sm:mb-6">
               <button
                 onClick={() => setShowLogin(true)}
-                className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors duration-200 ${
+                className={`flex-1 py-2 px-3 sm:px-4 text-xs sm:text-sm font-medium rounded-md transition-colors duration-200 ${
                   showLogin
                     ? 'bg-primary-600 text-white'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
@@ -71,7 +71,7 @@ export default function Home() {
               </button>
               <button
                 onClick={() => setShowLogin(false)}
-                className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors duration-200 ${
+                className={`flex-1 py-2 px-3 sm:px-4 text-xs sm:text-sm font-medium rounded-md transition-colors duration-200 ${
                   !showLogin
                     ? 'bg-primary-600 text-white'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
@@ -82,7 +82,7 @@ export default function Home() {
             </div>
             
             <Suspense fallback={
-              <div className="flex justify-center py-8">
+              <div className="flex justify-center py-6 sm:py-8">
                 <LoadingSpinner size="md" text="Loading form..." />
               </div>
             }>

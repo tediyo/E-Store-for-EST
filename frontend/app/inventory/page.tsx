@@ -309,14 +309,15 @@ export default function InventoryPage() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Header Section */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-end gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 sm:gap-4">
             <button
               onClick={() => setShowAddForm(true)}
-              className="group relative inline-flex items-center justify-center px-6 py-2.5 text-base font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 hover:from-blue-700 hover:to-indigo-700"
+              className="group relative inline-flex items-center justify-center px-4 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 hover:from-blue-700 hover:to-indigo-700"
             >
-              <Plus size={20} className="mr-2 group-hover:rotate-90 transition-transform duration-200" />
-              Add New Item
+              <Plus size={18} className="mr-2 group-hover:rotate-90 transition-transform duration-200" />
+              <span className="hidden sm:inline">Add New Item</span>
+              <span className="sm:hidden">Add Item</span>
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
             </button>
           </div>
@@ -325,32 +326,32 @@ export default function InventoryPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search and Filters Section */}
-        <div className="bg-white/70 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-4 mb-6">
-          <div className="space-y-4">
+        <div className="bg-white/70 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-3 sm:p-4 mb-4 sm:mb-6">
+          <div className="space-y-3 sm:space-y-4">
             {/* Search Bar */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <input
                 type="text"
                 placeholder="Search items by name, type, or supplier..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 text-base bg-white/80 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base bg-white/80 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
               />
             </div>
 
             {/* Advanced Filters and Controls */}
-            <div className="flex flex-col lg:flex-row gap-3 items-center justify-between">
-              <div className="flex flex-wrap gap-3 items-center">
+            <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+              <div className="flex flex-wrap gap-2 sm:gap-3 items-center">
                 <div className="flex items-center gap-2 text-gray-600">
-                  <Filter size={18} />
-                  <span className="font-medium text-sm">Filters:</span>
+                  <Filter size={16} />
+                  <span className="font-medium text-xs sm:text-sm">Filters:</span>
                 </div>
                 
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-3 py-2 bg-white/80 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm"
+                  className="px-2 sm:px-3 py-1.5 sm:py-2 bg-white/80 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs sm:text-sm"
                 >
                   <option value="all">All Status</option>
                   <option value="in_stock">In Stock</option>
@@ -361,7 +362,7 @@ export default function InventoryPage() {
                 <select
                   value={shoeTypeFilter}
                   onChange={(e) => setShoeTypeFilter(e.target.value)}
-                  className="px-3 py-2 bg-white/80 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm"
+                  className="px-2 sm:px-3 py-1.5 sm:py-2 bg-white/80 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-xs sm:text-sm"
                 >
                   <option value="all">All Types</option>
                   <option value="sneakers">Sneakers</option>
@@ -372,38 +373,38 @@ export default function InventoryPage() {
                 </select>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 {/* View Mode Toggle */}
                 <div className="flex bg-white/80 rounded-lg p-1 border border-gray-200">
                   <button
                     onClick={() => setViewMode('grid')}
-                    className={`p-1.5 rounded-md transition-all duration-200 ${
+                    className={`p-1 sm:p-1.5 rounded-md transition-all duration-200 ${
                       viewMode === 'grid' 
                         ? 'bg-blue-500 text-white shadow-md' 
                         : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
-                    <Grid3X3 size={18} />
+                    <Grid3X3 size={16} />
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`p-1.5 rounded-md transition-all duration-200 ${
+                    className={`p-1 sm:p-1.5 rounded-md transition-all duration-200 ${
                       viewMode === 'list' 
                         ? 'bg-blue-500 text-white shadow-md' 
                         : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
-                    <List size={18} />
+                    <List size={16} />
                   </button>
                 </div>
 
                 {/* Sort Controls */}
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-600 font-medium">Sort by:</span>
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <span className="text-xs text-gray-600 font-medium hidden sm:inline">Sort by:</span>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="px-2 py-1.5 bg-white/80 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="px-1.5 sm:px-2 py-1 sm:py-1.5 bg-white/80 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   >
                     <option value="name">Name</option>
                     <option value="quantity">Quantity</option>
@@ -414,9 +415,9 @@ export default function InventoryPage() {
                   
                   <button
                     onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                    className="p-1.5 bg-white/80 border border-gray-200 rounded-lg hover:bg-white transition-all duration-200"
+                    className="p-1 sm:p-1.5 bg-white/80 border border-gray-200 rounded-lg hover:bg-white transition-all duration-200"
                   >
-                    {sortOrder === 'asc' ? <SortAsc size={16} /> : <SortDesc size={16} />}
+                    {sortOrder === 'asc' ? <SortAsc size={14} /> : <SortDesc size={14} />}
                   </button>
                 </div>
               </div>
@@ -425,90 +426,94 @@ export default function InventoryPage() {
         </div>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-all duration-300">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl sm:rounded-2xl shadow-xl p-3 sm:p-4 lg:p-6 text-white transform hover:scale-105 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-100 text-sm font-medium">Total Items</p>
-                <p className="text-3xl font-bold">{items.length}</p>
+                <p className="text-blue-100 text-xs sm:text-sm font-medium">Total Items</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold">{items.length}</p>
               </div>
-              <div className="bg-white/20 p-3 rounded-xl">
-                <Package className="h-8 w-8 text-white" />
+              <div className="bg-white/20 p-2 sm:p-3 rounded-lg sm:rounded-xl">
+                <Package className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
               </div>
             </div>
-            <div className="mt-4 flex items-center text-blue-100 text-sm">
-              <TrendingUp size={16} className="mr-1" />
-              <span>All categories</span>
+            <div className="mt-2 sm:mt-4 flex items-center text-blue-100 text-xs sm:text-sm">
+              <TrendingUp size={14} className="mr-1" />
+              <span className="hidden sm:inline">All categories</span>
+              <span className="sm:hidden">All</span>
             </div>
           </div>
           
-          <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-all duration-300">
+          <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl sm:rounded-2xl shadow-xl p-3 sm:p-4 lg:p-6 text-white transform hover:scale-105 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-emerald-100 text-sm font-medium">In Stock</p>
-                <p className="text-3xl font-bold">
+                <p className="text-emerald-100 text-xs sm:text-sm font-medium">In Stock</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold">
                   {items.filter(item => item.status === 'in_stock').length}
                 </p>
               </div>
-              <div className="bg-white/20 p-3 rounded-xl">
-                <div className="h-8 w-8 bg-emerald-300 rounded-full"></div>
+              <div className="bg-white/20 p-2 sm:p-3 rounded-lg sm:rounded-xl">
+                <div className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 bg-emerald-300 rounded-full"></div>
               </div>
             </div>
-            <div className="mt-4 flex items-center text-emerald-100 text-sm">
-              <TrendingUp size={16} className="mr-1" />
-              <span>Available</span>
+            <div className="mt-2 sm:mt-4 flex items-center text-emerald-100 text-xs sm:text-sm">
+              <TrendingUp size={14} className="mr-1" />
+              <span className="hidden sm:inline">Available</span>
+              <span className="sm:hidden">Stock</span>
             </div>
           </div>
           
-          <div className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-all duration-300">
+          <div className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl sm:rounded-2xl shadow-xl p-3 sm:p-4 lg:p-6 text-white transform hover:scale-105 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-amber-100 text-sm font-medium">Low Stock</p>
-                <p className="text-3xl font-bold">
+                <p className="text-amber-100 text-xs sm:text-sm font-medium">Low Stock</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold">
                   {items.filter(item => item.status === 'low_stock').length}
                 </p>
               </div>
-              <div className="bg-white/20 p-3 rounded-xl">
-                <div className="h-8 w-8 bg-amber-300 rounded-full"></div>
+              <div className="bg-white/20 p-2 sm:p-3 rounded-lg sm:rounded-xl">
+                <div className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 bg-amber-300 rounded-full"></div>
               </div>
             </div>
-            <div className="mt-4 flex items-center text-amber-100 text-sm">
-              <TrendingDown size={16} className="mr-1" />
-              <span>Need attention</span>
+            <div className="mt-2 sm:mt-4 flex items-center text-amber-100 text-xs sm:text-sm">
+              <TrendingDown size={14} className="mr-1" />
+              <span className="hidden sm:inline">Need attention</span>
+              <span className="sm:hidden">Low</span>
             </div>
           </div>
           
-          <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-all duration-300">
+          <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl sm:rounded-2xl shadow-xl p-3 sm:p-4 lg:p-6 text-white transform hover:scale-105 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-red-100 text-sm font-medium">Out of Stock</p>
-                <p className="text-3xl font-bold">
+                <p className="text-red-100 text-xs sm:text-sm font-medium">Out of Stock</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold">
                   {items.filter(item => item.status === 'out_of_stock').length}
                 </p>
               </div>
-              <div className="bg-white/20 p-3 rounded-xl">
-                <div className="h-8 w-8 bg-red-300 rounded-full"></div>
+              <div className="bg-white/20 p-2 sm:p-3 rounded-lg sm:rounded-xl">
+                <div className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 bg-red-300 rounded-full"></div>
               </div>
             </div>
-            <div className="mt-4 flex items-center text-red-100 text-sm">
-              <TrendingDown size={16} className="mr-1" />
-              <span>Restock needed</span>
+            <div className="mt-2 sm:mt-4 flex items-center text-red-100 text-xs sm:text-sm">
+              <TrendingDown size={14} className="mr-1" />
+              <span className="hidden sm:inline">Restock needed</span>
+              <span className="sm:hidden">Empty</span>
             </div>
           </div>
         </div>
 
         {/* Items Display */}
         {viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {filteredItems.map((item, index) => (
               <div 
                 key={item._id} 
-                className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 overflow-hidden transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
+                className="group bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/50 overflow-hidden transform hover:scale-105 hover:shadow-2xl transition-all duration-300"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
                 {/* Product Image */}
                 {item.image ? (
-                  <div className="relative h-48 overflow-hidden">
+                  <div className="relative h-32 sm:h-40 lg:h-48 overflow-hidden">
                     <img 
                       src={`${api.baseURL}${item.image}`} 
                       alt={item.name}
@@ -520,46 +525,46 @@ export default function InventoryPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                 ) : (
-                  <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                    <Package className="h-16 w-16 text-gray-400" />
+                  <div className="h-32 sm:h-40 lg:h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                    <Package className="h-12 w-12 sm:h-16 sm:w-16 text-gray-400" />
                   </div>
                 )}
 
                 {/* Status Badge */}
-                <div className="absolute top-4 right-4">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(item.status)}`}>
+                <div className="absolute top-2 sm:top-4 right-2 sm:right-4">
+                  <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(item.status)}`}>
                     {getStatusText(item.status)}
                   </span>
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
-                  <div className="mb-4">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-200">
+                <div className="p-3 sm:p-4 lg:p-6">
+                  <div className="mb-3 sm:mb-4">
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1 sm:mb-2 group-hover:text-blue-600 transition-colors duration-200 truncate">
                       {item.name}
                     </h3>
-                    <p className="text-sm text-gray-500 uppercase tracking-wide font-medium">
+                    <p className="text-xs sm:text-sm text-gray-500 uppercase tracking-wide font-medium">
                       {item.shoeType}
                     </p>
                   </div>
 
                   {/* Price and Quantity Info */}
-                  <div className="space-y-3 mb-4">
+                  <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600 text-sm">Base Price:</span>
-                      <span className="font-semibold text-gray-900">${item.basePrice}</span>
+                      <span className="text-gray-600 text-xs sm:text-sm">Base Price:</span>
+                      <span className="font-semibold text-gray-900 text-sm sm:text-base">${item.basePrice}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600 text-sm">Selling Price:</span>
-                      <span className="font-semibold text-gray-900">${item.sellingPrice}</span>
+                      <span className="text-gray-600 text-xs sm:text-sm">Selling Price:</span>
+                      <span className="font-semibold text-gray-900 text-sm sm:text-base">${item.sellingPrice}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600 text-sm">Quantity:</span>
-                      <span className="font-semibold text-gray-900">{item.quantity}</span>
+                      <span className="text-gray-600 text-xs sm:text-sm">Quantity:</span>
+                      <span className="font-semibold text-gray-900 text-sm sm:text-base">{item.quantity}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600 text-sm">Profit Margin:</span>
-                      <span className={`font-semibold ${
+                      <span className="text-gray-600 text-xs sm:text-sm">Profit Margin:</span>
+                      <span className={`font-semibold text-sm sm:text-base ${
                         getProfitMargin(item.basePrice, item.sellingPrice) > 0 
                           ? 'text-emerald-600' 
                           : 'text-red-600'
@@ -580,20 +585,20 @@ export default function InventoryPage() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex gap-2 pt-4 border-t border-gray-100">
+                  <div className="flex gap-1 sm:gap-2 pt-3 sm:pt-4 border-t border-gray-100">
                     <button
                       onClick={() => handleEdit(item)}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors duration-200 font-medium"
+                      className="flex-1 flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors duration-200 font-medium text-xs sm:text-sm"
                     >
-                      <Edit size={16} />
-                      Edit
+                      <Edit size={14} />
+                      <span className="hidden sm:inline">Edit</span>
                     </button>
                     <button
                       onClick={() => handleDelete(item._id)}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors duration-200 font-medium"
+                      className="flex-1 flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors duration-200 font-medium text-xs sm:text-sm"
                     >
-                      <Trash2 size={16} />
-                      Delete
+                      <Trash2 size={14} />
+                      <span className="hidden sm:inline">Delete</span>
                     </button>
                   </div>
                 </div>
@@ -601,49 +606,49 @@ export default function InventoryPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50/80">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prices</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supplier</th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+                    <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Type</th>
+                    <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Prices</th>
+                    <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                    <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Supplier</th>
+                    <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200/50">
                   {filteredItems.map((item) => (
                     <tr key={item._id} className="hover:bg-gray-50/50 transition-colors duration-200">
-                      <td className="px-6 py-4">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4">
                         <div className="flex items-center">
                           {item.image ? (
                             <img 
                               src={`${api.baseURL}${item.image}`} 
                               alt={item.name}
-                              className="h-12 w-12 rounded-lg object-cover mr-3"
+                              className="h-8 w-8 sm:h-12 sm:w-12 rounded-lg object-cover mr-2 sm:mr-3"
                             />
                           ) : (
-                            <div className="h-12 w-12 bg-gray-100 rounded-lg flex items-center justify-center mr-3">
-                              <Package className="h-6 w-6 text-gray-400" />
+                            <div className="h-8 w-8 sm:h-12 sm:w-12 bg-gray-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3">
+                              <Package className="h-4 w-4 sm:h-6 sm:w-6 text-gray-400" />
                             </div>
                           )}
-                          <div>
-                            <div className="text-sm font-medium text-gray-900">{item.name}</div>
-                            <div className="text-sm text-gray-500">{item.description}</div>
+                          <div className="min-w-0 flex-1">
+                            <div className="text-xs sm:text-sm font-medium text-gray-900 truncate">{item.name}</div>
+                            <div className="text-xs text-gray-500 truncate hidden sm:block">{item.description}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                           {item.shoeType}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 hidden lg:table-cell">
+                        <div className="text-xs sm:text-sm text-gray-900">
                           <div>Base: ${item.basePrice}</div>
                           <div>Selling: ${item.sellingPrice}</div>
                           <div className={`text-xs ${
@@ -655,30 +660,30 @@ export default function InventoryPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900">{item.quantity}</div>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4">
+                        <div className="text-xs sm:text-sm text-gray-900">{item.quantity}</div>
                       </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(item.status)}`}>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(item.status)}`}>
                           {getStatusText(item.status)}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900">{item.supplier}</div>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
+                        <div className="text-xs sm:text-sm text-gray-900 truncate">{item.supplier}</div>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex gap-2">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4">
+                        <div className="flex gap-1 sm:gap-2">
                           <button
                             onClick={() => handleEdit(item)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                            className="p-1.5 sm:p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
                           >
-                            <Edit size={16} />
+                            <Edit size={14} />
                           </button>
                           <button
                             onClick={() => handleDelete(item._id)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                            className="p-1.5 sm:p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
                           >
-                            <Trash2 size={16} />
+                            <Trash2 size={14} />
                           </button>
                         </div>
                       </td>
