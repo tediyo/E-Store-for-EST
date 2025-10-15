@@ -52,8 +52,9 @@ export default function Home() {
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
             Every great business once started as a small idea. stay consistent, keep learning, and your persistence will turn that idea into success.
-            {getDayGreeting()}
+            
             </p>
+             <p className="text-yellow-500 font-bold italic text-center">{getDayGreeting()}</p>
           </div>
           
           <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-200 dark:border-gray-700">
