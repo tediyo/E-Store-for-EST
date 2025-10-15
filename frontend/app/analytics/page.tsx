@@ -818,54 +818,54 @@ export default function AnalyticsPage() {
                 </div>
               </div>
               
-              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105 group">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 bg-emerald-500/30 rounded-xl">
-                    <TrendingUp className="h-6 w-6 text-white" />
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105 group">
+                <div className="flex items-center justify-between mb-2 sm:mb-3 lg:mb-4">
+                  <div className="p-2 sm:p-3 bg-emerald-500/30 rounded-lg sm:rounded-xl">
+                    <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
                   </div>
-                  <ArrowUpRight className="h-5 w-5 text-green-300 group-hover:scale-110 transition-transform duration-300" />
+                  <ArrowUpRight className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-green-300 group-hover:scale-110 transition-transform duration-300" />
                 </div>
-                <div className="text-3xl font-bold text-white mb-1">
+                <div className="text-lg sm:text-xl lg:text-3xl font-bold text-white mb-1 truncate">
                   {analyticsData ? formatCurrency(
                     analyticsData.salesTrend.reduce((sum, trend) => sum + trend.profit, 0) +
                     analyticsData.tasksTrend.reduce((sum, trend) => sum + trend.profit, 0)
                   ) : '$0'}
                 </div>
-                <div className="text-sm text-blue-100">Total Profit</div>
-                <div className="w-full bg-white/20 rounded-full h-1 mt-3">
-                  <div className="bg-green-300 rounded-full h-1" style={{ width: '92%' }}></div>
+                <div className="text-xs sm:text-sm text-blue-100">Total Profit</div>
+                <div className="w-full bg-white/20 rounded-full h-1 sm:h-1.5 mt-2 sm:mt-3">
+                  <div className="bg-green-300 rounded-full h-1 sm:h-1.5" style={{ width: '92%' }}></div>
                 </div>
               </div>
               
-              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105 group">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 bg-orange-500/30 rounded-xl">
-                    <Package className="h-6 w-6 text-white" />
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105 group">
+                <div className="flex items-center justify-between mb-2 sm:mb-3 lg:mb-4">
+                  <div className="p-2 sm:p-3 bg-orange-500/30 rounded-lg sm:rounded-xl">
+                    <Package className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
                   </div>
-                  <ArrowUpRight className="h-5 w-5 text-green-300 group-hover:scale-110 transition-transform duration-300" />
+                  <ArrowUpRight className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-green-300 group-hover:scale-110 transition-transform duration-300" />
                 </div>
-                <div className="text-3xl font-bold text-white mb-1">
+                <div className="text-lg sm:text-xl lg:text-3xl font-bold text-white mb-1">
                   {analyticsData ? analyticsData.tasksTrend.reduce((sum, trend) => sum + trend.tasks, 0) : 0}
                 </div>
-                <div className="text-sm text-blue-100">Total Tasks</div>
-                <div className="w-full bg-white/20 rounded-full h-1 mt-3">
-                  <div className="bg-green-300 rounded-full h-1" style={{ width: '78%' }}></div>
+                <div className="text-xs sm:text-sm text-blue-100">Total Tasks</div>
+                <div className="w-full bg-white/20 rounded-full h-1 sm:h-1.5 mt-2 sm:mt-3">
+                  <div className="bg-green-300 rounded-full h-1 sm:h-1.5" style={{ width: '78%' }}></div>
                 </div>
               </div>
               
-              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105 group">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 bg-red-500/30 rounded-xl">
-                    <Activity className="h-6 w-6 text-white" />
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-105 group">
+                <div className="flex items-center justify-between mb-2 sm:mb-3 lg:mb-4">
+                  <div className="p-2 sm:p-3 bg-red-500/30 rounded-lg sm:rounded-xl">
+                    <Activity className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
                   </div>
-                  <ArrowDownRight className="h-5 w-5 text-red-300 group-hover:scale-110 transition-transform duration-300" />
+                  <ArrowDownRight className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-red-300 group-hover:scale-110 transition-transform duration-300" />
                 </div>
-                <div className="text-3xl font-bold text-white mb-1">
+                <div className="text-lg sm:text-xl lg:text-3xl font-bold text-white mb-1 truncate">
                   {analyticsData ? formatCurrency(analyticsData.tasksTrend.reduce((sum, trend) => sum + trend.costs, 0)) : '$0'}
                 </div>
-                <div className="text-sm text-blue-100">Total Costs</div>
-                <div className="w-full bg-white/20 rounded-full h-1 mt-3">
-                  <div className="bg-red-300 rounded-full h-1" style={{ width: '45%' }}></div>
+                <div className="text-xs sm:text-sm text-blue-100">Total Costs</div>
+                <div className="w-full bg-white/20 rounded-full h-1 sm:h-1.5 mt-2 sm:mt-3">
+                  <div className="bg-red-300 rounded-full h-1 sm:h-1.5" style={{ width: '45%' }}></div>
                 </div>
               </div>
             </div>
@@ -876,22 +876,23 @@ export default function AnalyticsPage() {
           <>
             {/* Interactive Charts Section - Only show in Overview mode */}
             {viewMode === 'overview' && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
                 {/* Performance Trends Chart */}
-                <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                      <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl">
-                        <TrendingUp className="h-6 w-6 text-white" />
+                <div className="bg-white rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-xl border border-gray-100 p-4 sm:p-6 lg:p-8 hover:shadow-2xl transition-all duration-300">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
+                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+                      <div className="p-1.5 sm:p-2 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg sm:rounded-xl">
+                        <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
                       </div>
-                      Performance Trends
+                      <span className="hidden sm:inline">Performance Trends</span>
+                      <span className="sm:hidden">Trends</span>
                     </h3>
-                    <div className="flex gap-2">
+                    <div className="flex gap-1 sm:gap-2">
                       {['line', 'area', 'bar'].map((type) => (
                         <button
                           key={type}
                           onClick={() => setSelectedChart(type)}
-                          className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
+                          className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
                             selectedChart === type
                               ? 'bg-blue-500 text-white shadow-lg'
                               : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -903,7 +904,7 @@ export default function AnalyticsPage() {
                     </div>
                   </div>
                   
-                  <div className="h-80">
+                  <div className="h-64 sm:h-72 lg:h-80">
                     {enhancedChartData.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
                         {selectedChart === 'line' ? (
@@ -999,7 +1000,7 @@ export default function AnalyticsPage() {
                 </div>
                   </div>
                   
-                  <div className="h-80">
+                  <div className="h-64 sm:h-72 lg:h-80">
                     {performanceData.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
                         <ComposedChart data={performanceData} layout="horizontal">

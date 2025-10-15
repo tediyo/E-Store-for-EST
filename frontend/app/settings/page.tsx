@@ -208,29 +208,33 @@ export default function SettingsPage() {
 
   return (
     <PageLayout>
-      <div className="space-y-8">
+      <div className="space-y-4 sm:space-y-6 lg:space-y-8">
         {/* Enhanced Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 text-white">
-          <div className="flex items-center justify-between">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 text-white">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
             <div>
-              <h1 className="text-4xl font-bold mb-2">Settings & Preferences</h1>
-              <p className="text-blue-100 text-lg">Manage your account, security, and personalization</p>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">
+                <span className="hidden sm:inline">Settings & Preferences</span>
+                <span className="sm:hidden">Settings</span>
+              </h1>
+              <p className="text-blue-100 text-sm sm:text-base lg:text-lg">Manage your account, security, and personalization</p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <button
                 onClick={handleExportData}
-                className="px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-white font-semibold hover:bg-white/30 transition-all duration-300"
+                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl sm:rounded-2xl text-white font-semibold hover:bg-white/30 transition-all duration-300 text-xs sm:text-sm"
               >
-                <Download className="h-5 w-5 inline mr-2" />
-                Export Settings
+                <Download className="h-4 w-4 sm:h-5 sm:w-5 inline mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Export Settings</span>
+                <span className="sm:hidden">Export</span>
               </button>
             </div>
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-2">
-          <div className="flex space-x-2 p-2">
+        <div className="bg-white rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-xl border border-gray-100 p-1 sm:p-2">
+          <div className="flex flex-wrap gap-1 sm:gap-2 p-1 sm:p-2">
             {[
               { id: 'profile', name: 'Profile', icon: User },
               { id: 'security', name: 'Security', icon: Shield },
@@ -243,14 +247,15 @@ export default function SettingsPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center px-6 py-3 rounded-2xl font-medium transition-all duration-200 ${
+                  className={`flex items-center px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-medium transition-all duration-200 text-xs sm:text-sm ${
                     activeTab === tab.id
                       ? 'bg-blue-600 text-white shadow-lg'
                       : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                   }`}
                 >
-                  <Icon className="h-5 w-5 mr-2" />
-                  {tab.name}
+                  <Icon className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">{tab.name}</span>
+                  <span className="sm:hidden">{tab.name.charAt(0)}</span>
                 </button>
               )
             })}
@@ -261,22 +266,22 @@ export default function SettingsPage() {
         <div className="space-y-6">
           {/* Profile Tab */}
           {activeTab === 'profile' && (
-            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
-              <div className="flex items-center mb-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mr-6">
-                  <User className="h-8 w-8 text-white" />
+            <div className="bg-white rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-xl border border-gray-100 p-4 sm:p-6 lg:p-8">
+              <div className="flex flex-col sm:flex-row sm:items-center mb-6 sm:mb-8 gap-4 sm:gap-6">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl sm:rounded-2xl flex items-center justify-center mr-0 sm:mr-6">
+                  <User className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Profile Information</h2>
-                  <p className="text-gray-600">Update your personal information and account details</p>
+                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Profile Information</h2>
+                  <p className="text-gray-600 text-sm sm:text-base">Update your personal information and account details</p>
                 </div>
               </div>
 
               {editing ? (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
-                      <label htmlFor="username" className="block text-sm font-semibold text-gray-700 mb-3">
+                      <label htmlFor="username" className="block text-sm font-semibold text-gray-700 mb-2 sm:mb-3">
                         Username
                       </label>
                       <input
@@ -285,13 +290,13 @@ export default function SettingsPage() {
                         name="username"
                         value={formData.username}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200"
+                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl sm:rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 text-sm sm:text-base"
                         required
                       />
                     </div>
 
                     <div>
-                      <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-3">
+                      <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2 sm:mb-3">
                         Email Address
                       </label>
                       <input
@@ -300,18 +305,18 @@ export default function SettingsPage() {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200"
+                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl sm:rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 text-sm sm:text-base"
                         required
                       />
                     </div>
                   </div>
 
-                  <div className="flex gap-4 pt-6">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6">
                     <button
                       type="submit"
-                      className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-2xl hover:shadow-lg transition-all duration-200 hover:scale-105"
+                      className="px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl sm:rounded-2xl hover:shadow-lg transition-all duration-200 hover:scale-105 text-sm sm:text-base"
                     >
-                      <Save className="h-5 w-5 inline mr-2" />
+                      <Save className="h-4 w-4 sm:h-5 sm:w-5 inline mr-1 sm:mr-2" />
                       Save Changes
                     </button>
                     <button
@@ -323,9 +328,9 @@ export default function SettingsPage() {
                           email: profile?.email || ''
                         })
                       }}
-                      className="px-8 py-3 bg-gray-100 text-gray-700 font-semibold rounded-2xl hover:bg-gray-200 transition-all duration-200"
+                      className="px-6 sm:px-8 py-2.5 sm:py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl sm:rounded-2xl hover:bg-gray-200 transition-all duration-200 text-sm sm:text-base"
                     >
-                      <X className="h-5 w-5 inline mr-2" />
+                      <X className="h-4 w-4 sm:h-5 sm:w-5 inline mr-1 sm:mr-2" />
                       Cancel
                     </button>
                   </div>
