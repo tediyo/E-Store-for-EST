@@ -27,23 +27,23 @@ export default function PageLayout({
       {/* Background Pattern */}
       <div className="fixed inset-0 bg-pattern-dots opacity-5 pointer-events-none"></div>
       
-      {/* Decorative Elements */}
-      <div className="fixed bottom-0 right-1/4 w-80 h-80 bg-gradient-to-br from-indigo-500/5 to-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
+      {/* Decorative Elements - Hidden on mobile for performance */}
+      <div className="hidden lg:block fixed bottom-0 right-1/4 w-80 h-80 bg-gradient-to-br from-indigo-500/5 to-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
       
       {showHeader && <Header />}
       {showSidebar && <Sidebar />}
       
-      {/* Theme Selector - Top Right Corner */}
+      {/* Theme Selector - Responsive positioning */}
       <div className="fixed top-4 right-4 z-50">
         <div className="bg-gray-900/95 dark:bg-white/95 backdrop-blur-xl border border-gray-700/50 dark:border-gray-200/50 rounded-xl shadow-lg shadow-gray-500/10 p-1">
           <ThemeToggle />
         </div>
       </div>
       
-      <main className={`transition-all duration-300 ${showSidebar ? 'lg:ml-72' : ''} ${showHeader ? 'pt-20' : 'pt-0'}`}>
+      <main className={`transition-all duration-300 ${showSidebar ? 'lg:ml-72' : ''} ${showHeader ? 'pt-16 lg:pt-20' : 'pt-0'}`}>
         <div className="min-h-screen">
-          {/* Main Content */}
-          <div className="px-8 py-8">
+          {/* Main Content - Mobile optimized padding */}
+          <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
             <div className="animate-fade-in-up">
               {children}
             </div>
@@ -73,31 +73,31 @@ export function PageSection({
   variant?: 'default' | 'glass' | 'gradient'
 }) {
   const variantClasses = {
-    default: "bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700",
-    glass: "bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20",
-    gradient: "bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-3xl shadow-xl border border-gray-200/50 dark:border-gray-700/50"
+    default: "bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700",
+    glass: "bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl sm:rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20",
+    gradient: "bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl sm:rounded-3xl shadow-xl border border-gray-200/50 dark:border-gray-700/50"
   }
   
   return (
-    <section className={`${variantClasses[variant]} p-8 mb-8 transition-all duration-300 hover:shadow-2xl ${className}`}>
+    <section className={`${variantClasses[variant]} p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 transition-all duration-300 hover:shadow-2xl ${className}`}>
       {/* Section Header */}
       {(title || subtitle || actions) && (
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
           <div className="flex-1">
             {title && (
-              <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-1 sm:mb-2">
                 {title}
               </h2>
             )}
             {subtitle && (
-              <p className="text-gray-600 dark:text-gray-400 font-medium">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium">
                 {subtitle}
               </p>
             )}
           </div>
           
           {actions && (
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               {actions}
             </div>
           )}
@@ -125,15 +125,15 @@ export function ContentGrid({
 }) {
   const gridCols = {
     1: 'grid-cols-1',
-    2: 'grid-cols-1 lg:grid-cols-2',
-    3: 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3',
-    4: 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4'
+    2: 'grid-cols-1 sm:grid-cols-2',
+    3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+    4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
   }
   
   const gapClasses = {
-    small: 'gap-4',
-    default: 'gap-6',
-    large: 'gap-8'
+    small: 'gap-3 sm:gap-4',
+    default: 'gap-4 sm:gap-6',
+    large: 'gap-6 sm:gap-8'
   }
   
   return (
