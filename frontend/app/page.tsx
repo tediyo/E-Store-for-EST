@@ -27,6 +27,13 @@ export default function Home() {
     setShowLogin(prev => !prev)
   }, [])
 
+  // Function to get current day greeting
+  const getDayGreeting = () => {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    const currentDay = new Date().getDay()
+    return `Happy ${days[currentDay]}!`
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -45,7 +52,7 @@ export default function Home() {
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
             Every great business once started as a small idea. stay consistent, keep learning, and your persistence will turn that idea into success.
-            Have a great day!
+            {getDayGreeting()}
             </p>
           </div>
           
