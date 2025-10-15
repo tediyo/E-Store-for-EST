@@ -305,7 +305,7 @@ export default function SettingsPage() {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl sm:rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 text-sm sm:text-base"
+                        className="w-full px-2 sm:px-3 py-2 sm:py-2.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 text-[10px] sm:text-xs"
                         required
                       />
                     </div>
@@ -342,9 +342,9 @@ export default function SettingsPage() {
                       <div className="text-sm text-gray-500 mb-2">Username</div>
                       <div className="text-lg font-semibold text-gray-900">{profile?.username}</div>
                     </div>
-                    <div className="p-6 bg-gray-50 rounded-2xl">
-                      <div className="text-sm text-gray-500 mb-2">Email</div>
-                      <div className="text-lg font-semibold text-gray-900">{profile?.email}</div>
+                    <div className="p-4 sm:p-6 bg-gray-50 rounded-xl sm:rounded-2xl">
+                      <div className="text-xs sm:text-sm text-gray-500 mb-2">Email</div>
+                      <div className="text-xs sm:text-sm lg:text-lg font-semibold text-gray-900 break-all">{profile?.email}</div>
                     </div>
                     <div className="p-6 bg-gray-50 rounded-2xl">
                       <div className="text-sm text-gray-500 mb-2">Role</div>
