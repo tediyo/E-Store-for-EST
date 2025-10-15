@@ -751,7 +751,16 @@ export default function AnalyticsPage() {
               
               {/* Enhanced Controls */}
               <div className="mt-4 sm:mt-0 space-y-2 sm:space-y-3">
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <button
+                    onClick={() => fetchAnalytics()}
+                    disabled={loading}
+                    className="p-2 text-white hover:text-blue-200 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    title={loading ? 'Loading...' : 'Refresh'}
+                  >
+                    <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''}`} />
+                  </button>
+                  
                   <div className="relative group">
                     <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 rounded-xl sm:rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <select
@@ -764,15 +773,6 @@ export default function AnalyticsPage() {
                       <option value="year">📈 This Year</option>
                     </select>
                   </div>
-                  
-                  <button
-                    onClick={() => fetchAnalytics()}
-                    disabled={loading}
-                    className="p-2 text-white hover:text-blue-200 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                    title={loading ? 'Loading...' : 'Refresh'}
-                  >
-                    <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''}`} />
-                  </button>
                 </div>
                 
                 <div className="flex gap-1 sm:gap-2">
