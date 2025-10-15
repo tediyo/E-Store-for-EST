@@ -768,7 +768,7 @@ export default function AnalyticsPage() {
                   <button
                     onClick={() => fetchAnalytics()}
                     disabled={loading}
-                    className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl sm:rounded-2xl text-white font-semibold hover:bg-white/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 sm:gap-2"
+                    className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl sm:rounded-2xl text-white font-semibold hover:bg-white/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 sm:gap-2"
                   >
                     <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''}`} />
                     <span className="text-xs sm:text-sm">{loading ? 'Loading...' : 'Refresh'}</span>
