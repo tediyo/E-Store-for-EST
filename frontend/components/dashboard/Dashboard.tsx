@@ -356,7 +356,24 @@ export default function Dashboard() {
         
             {/* Enhanced Period Filter */}
             <div className="mt-4 sm:mt-0">
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <button
+                  onClick={() => fetchDashboardData()}
+                  disabled={loading}
+                  className="p-2 text-white hover:text-blue-200 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  title={loading ? 'Refreshing...' : 'Refresh'}
+                >
+                  <div className={`w-4 h-4 sm:w-5 sm:h-5 ${loading ? 'animate-spin' : ''}`}>
+                    {loading ? (
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full"></div>
+                    ) : (
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                    )}
+                  </div>
+                </button>
+                
                 <div className="relative group">
                   <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 rounded-xl sm:rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <select
@@ -371,26 +388,6 @@ export default function Dashboard() {
                     <option value="year">📊 This Year</option>
           </select>
                 </div>
-                
-                {/* Refresh Button */}
-                <button
-                  onClick={() => fetchDashboardData()}
-                  disabled={loading}
-                  className="relative group px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl sm:rounded-2xl text-white font-semibold hover:bg-white/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <div className="flex items-center gap-1 sm:gap-2">
-                    <div className={`w-4 h-4 sm:w-5 sm:h-5 ${loading ? 'animate-spin' : ''}`}>
-                      {loading ? (
-                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full"></div>
-                      ) : (
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                      )}
-                    </div>
-                    <span className="text-xs sm:text-sm">{loading ? 'Refreshing...' : 'Refresh'}</span>
-                  </div>
-                </button>
               </div>
             </div>
           </div>
