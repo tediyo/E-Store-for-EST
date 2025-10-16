@@ -20,6 +20,12 @@ const nextConfig = {
       }
     }
     return config
+  },
+  // Suppress specific warnings in development
+  onDemandEntries: {
+    // Suppress bbai-tooltip-injected warnings
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 2,
   }
 }
 
